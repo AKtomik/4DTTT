@@ -1,67 +1,5 @@
 
 
-//--- settings ---
-let boxFull = 1000;
-let boxMargin = 200;
-
-
-//--- resize ---
-class Scale {
-  //static values
-  static ON=1000;
-  static SIZE=[0,0];
-  static SCALER=[0,0];
-  static DIAG=0;
-  static MIN_I=0;
-  static MAX_I=0;
-  static resize()
-  {
-    Scale.SIZE = [window.innerWidth, window.innerHeight];
-    
-    Scale.SCALER = [Scale.SIZE[0]/Scale.ON, Scale.SIZE[1]/Scale.ON];
-    Scale.DIAG = Math.pow((Math.pow(Scale.SCALER[0],2)+Math.pow(Scale.SCALER[1],2)),1/2);
-    //Scale.DIAG = Math.pow((Math.pow(Scale.SIZE[0],2)+Math.pow(Scale.SIZE[1],2)),1/2);
-    if (Scale.SIZE[0]<Scale.SIZE[1])
-    {
-      Scale.MIN_I = 0;
-      Scale.MAX_I = 1;
-    } else {
-      Scale.MIN_I = 1;
-      Scale.MAX_I = 0;
-    }
-    
-    return Scale.SIZE;
-  }
-
-  //resize
-  static x(number)
-  {
-    return number*Scale.SCALER[0];
-  }
-  static y(number)
-  {
-    return number*Scale.SCALER[1];
-  }
-  static diag(number)
-  {
-    return number*Scale.DIAG;
-  }
-  static min(number)
-  {
-    return number*Scale.SCALER[Scale.MIN_I];
-  }
-  static max(number)
-  {
-    return number*Scale.SCALER[Scale.MAX_I];
-  }
-}
-
-//Scale.resize();
-
-window.onresize = function() {
-  resizeCanvas(...Scale.resize());
-}
-
 //--- in ---
 class Box {
   //static
@@ -106,29 +44,11 @@ class Box {
   }
 };
 
-const BOX_WIDTH=3;
-const BOX_D=2;
+Box.create_map(Settings.RULE_BOX_WIDTH, Settings.RULE_BOX_D);
 
-Box.create_map(BOX_WIDTH, BOX_D);
-
-
-function make_rectangle(x0,y0,w,h)
-{
-  return [createVector(x0,y0), createVector(x0+w,y0), createVector(x0+w,y0+h), createVector(x0,y0+h)];
-}
 
 //--- click ---
 
-class Game {
-  constructor() {
-    this.player_playing=Math.round(Math.random())+1;
-  }
-  place() {
-    const v=this.player_playing;
-    this.player_playing=(this.player_playing)%2+1;
-    return v;
-  }
-};
 var game=new Game();
 
 
@@ -171,22 +91,22 @@ function draw() {
   // Set angle based on frameCount, and display current value
   //let angle = frameCount % 360;
 
-
-  fill(255);
-  textSize(20);
-  textAlign(LEFT, CENTER);
-  strokeWeight(1);
-  text(`4D Tick Tac Toe`, 25, 25);
+  {//title text
+    fill(255);
+    textSize(20);
+    textAlign(LEFT, CENTER);
+    strokeWeight(1);
+    text(`4D Tick Tac Toe`, 25, 25);
+  }
 
   // Draw grid
   {
-    stroke(255);
-    strokeWeight(6);
-    //values
-    let margin = Scale.min(boxMargin);
-    let square_top = [(Scale.x(boxFull) - Scale.min(boxFull))/2 + margin, (Scale.y(boxFull) - Scale.min(boxFull))/2 + margin];
-    let square_size = [Scale.min(boxFull) - 2*margin, Scale.min(boxFull) - 2*margin];
+    const margin = Scale.min(Settings.POS_BOX_MARGIN);
+    let square_top = [(Scale.x(Settings.POS_BOX_FULL) - Scale.min(Settings.POS_BOX_FULL))/2 + margin, (Scale.y(Settings.POS_BOX_FULL) - Scale.min(Settings.POS_BOX_FULL))/2 + margin];
+    let square_size = [Scale.min(Settings.POS_BOX_FULL) - 2*margin, Scale.min(Settings.POS_BOX_FULL) - 2*margin];
+    
     //little box
+    stroke(255);
     strokeWeight(3);
     for (let i=0;i<3;i+=1)
     {
@@ -205,7 +125,7 @@ function draw() {
     noFill();
     rect(...square_top, ...square_size);
   }
-
+}
 /*
   // Draw moving points
 
@@ -295,4 +215,3 @@ function draw() {
   fill('red');
   circle(lineX, redY, 10);
 */
-}
