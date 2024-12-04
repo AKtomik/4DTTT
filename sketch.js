@@ -10,8 +10,72 @@ let graphY = 300;
 let graphAmplitude = 50;
 let graphPeriod = 300;
 
+
+//--- resize ---
+class Scale {
+  //static values
+  static ON=400;
+  static SIZE=[0,0];
+  static SCALER=[0,0];
+  static DIAG=0;
+  static MIN_I=0;
+  static MAX_I=0;
+  static resize()
+  {
+    Scale.SIZE = [window.innerWidth, window.innerHeight];
+    
+    Scale.SCALER = [Scale.SIZE[0]/Scale.ON, Scale.SIZE[1]/Scale.ON];
+    Scale.DIAG = Math.pow((Math.pow(Scale.SCALER[0],2)+Math.pow(Scale.SCALER[1],2)),1/2);
+    //Scale.DIAG = Math.pow((Math.pow(Scale.SIZE[0],2)+Math.pow(Scale.SIZE[1],2)),1/2);
+    if (Scale.SIZE[0]<Scale.SIZE[1])
+    {
+      Scale.MIN_I = 0;
+      Scale.MAX_I = 1;
+    } else {
+      Scale.MIN_I = 1;
+      Scale.MAX_I = 0;
+    }
+    
+    console.log(Scale.SIZE);
+    console.log(Scale.ON);
+    console.log(Scale.SCALER);
+    return Scale.SIZE;
+  }
+
+  //resize
+  static x(number)
+  {
+    return number*Scale.SCALER[0];
+  }
+  static y(number)
+  {
+    return number*Scale.SCALER[1];
+  }
+  static diag(number)
+  {
+    return number*Scale.DIAG;
+  }
+  static min(number)
+  {
+    return number*Scale.SCALER[Scale.MIN_I];
+  }
+  static max(number)
+  {
+    return number*Scale.SCALER[Scale.MAX_I];
+  }
+}
+
+//Scale.resize();
+
+window.onresize = function() {
+  resizeCanvas(...Scale.resize());
+}
+
+
+//--- draw ---
+
 function setup() {
-  createCanvas(...SIZE);
+  createCanvas(...Scale.resize());
   background(0);
   //ellipseMode(CORNERS);
   angleMode(DEGREES);//!
@@ -19,37 +83,6 @@ function setup() {
   //frameRate(Settings.FPS);
   describe('ttt');
 }
-
-
-//--- resize ---
-var SIZE = [window.innerWidth, window.innerHeight];
-var DIAG = Math.pow((Math.pow(SIZE[0],2)+Math.pow(SIZE[1],2)),1/2);
-
-window.onresize = function() {
-  // assigns new values for width and height variables
-  SIZE = [window.innerWidth, window.innerHeight];
-  DIAG = Math.pow((Math.pow(SIZE[0],2)+Math.pow(SIZE[1],2)),1/2);
-  console.log("TTT : resize : ",SIZE,DIAG);
-  resizeCanvas(...SIZE);
-}
-
-function scale_x(number)
-{
-  return number*SIZE[0]/400;
-}
-
-function scale_y(number)
-{
-  return number*SIZE[1]/400;
-}
-
-function scale_xy(number)
-{
-  return number*DIAG/400;
-}
-
-
-//--- draw ---
 
 function draw() {
   background(0);
@@ -68,16 +101,16 @@ function draw() {
   noFill();
   stroke(128);
   strokeWeight(3);
-  //circle(scale_x(circleX), scale_y(circleY), 2 * scale_x(circleRadius));
-  line(scale_x(circleX), scale_y(circleY) - scale_x(circleRadius), scale_x(circleX), scale_y(circleY) + scale_x(circleRadius));
-  line(scale_x(circleX) - scale_x(circleRadius), scale_y(circleY), scale_x(circleX) + scale_x(circleRadius), scale_y(circleY));
+  //circle(Scale.x(circleX), Scale.y(circleY), 2 * Scale.x(circleRadius));
+  line(Scale.x(circleX), Scale.y(circleY) - Scale.x(circleRadius), Scale.x(circleX), Scale.y(circleY) + Scale.x(circleRadius));
+  line(Scale.x(circleX) - Scale.x(circleRadius), Scale.y(circleY), Scale.x(circleX) + Scale.x(circleRadius), Scale.y(circleY));
 
   // Draw moving points
 
-  let pointX = scale_x(circleX) + scale_x(circleRadius) * cos(angle);
-  let pointY = scale_y(circleY) - scale_x(circleRadius) * sin(angle);
+  let pointX = Scale.x(circleX) + Scale.x(circleRadius) * cos(angle);
+  let pointY = Scale.y(circleY) - Scale.x(circleRadius) * sin(angle);
 
-  line(scale_x(circleX), scale_y(circleY), pointX, pointY);
+  line(Scale.x(circleX), Scale.y(circleY), pointX, pointY);
 
   noStroke();
 
@@ -85,37 +118,37 @@ function draw() {
   circle(pointX, pointY, 10);
 
   fill('orange');
-  circle(pointX, scale_y(circleY), 10);
+  circle(pointX, Scale.y(circleY), 10);
 
   fill('red');
-  circle(scale_x(circleX), pointY, 10);
+  circle(Scale.x(circleX), pointY, 10);
 
   // Draw graph
 
   stroke('grey');
   strokeWeight(3);
-  line(scale_x(graphX), scale_y(graphY), scale_x(graphX) + 300, scale_y(graphY));
-  line(scale_x(graphX), scale_y(graphY) - scale_y(graphAmplitude), scale_x(graphX), scale_y(graphY) + scale_y(graphAmplitude));
+  line(Scale.x(graphX), Scale.y(graphY), Scale.x(graphX) + 300, Scale.y(graphY));
+  line(Scale.x(graphX), Scale.y(graphY) - Scale.y(graphAmplitude), Scale.x(graphX), Scale.y(graphY) + Scale.y(graphAmplitude));
   line(
-    scale_x(graphX) + scale_x(graphPeriod),
-    scale_y(graphY) - scale_y(graphAmplitude),
-    scale_x(graphX) + scale_x(graphPeriod),
-    scale_y(graphY) + scale_y(graphAmplitude)
+    Scale.x(graphX) + Scale.x(graphPeriod),
+    Scale.y(graphY) - Scale.y(graphAmplitude),
+    Scale.x(graphX) + Scale.x(graphPeriod),
+    Scale.y(graphY) + Scale.y(graphAmplitude)
   );
 
   fill('grey');
   strokeWeight(1);
   textAlign(CENTER, CENTER);
-  text('0', scale_x(graphX), scale_y(graphY) + scale_y(graphAmplitude) + 20);
-  text('360', scale_x(graphX) + scale_x(graphPeriod), scale_y(graphY) + scale_y(graphAmplitude) + 20);
-  text('1', scale_x(graphX) / 2, scale_y(graphY) - scale_y(graphAmplitude));
-  text('0', scale_x(graphX) / 2, scale_y(graphY));
-  text('-1', scale_x(graphX) / 2, scale_y(graphY) + scale_y(graphAmplitude));
+  text('0', Scale.x(graphX), Scale.y(graphY) + Scale.y(graphAmplitude) + 20);
+  text('360', Scale.x(graphX) + Scale.x(graphPeriod), Scale.y(graphY) + Scale.y(graphAmplitude) + 20);
+  text('1', Scale.x(graphX) / 2, Scale.y(graphY) - Scale.y(graphAmplitude));
+  text('0', Scale.x(graphX) / 2, Scale.y(graphY));
+  text('-1', Scale.x(graphX) / 2, Scale.y(graphY) + Scale.y(graphAmplitude));
 
   fill('orange');
-  text('cos', scale_x(graphX) + scale_x(graphPeriod) + scale_x(graphX) / 2, scale_y(graphY) - scale_y(graphAmplitude));
+  text('cos', Scale.x(graphX) + Scale.x(graphPeriod) + Scale.x(graphX) / 2, Scale.y(graphY) - Scale.y(graphAmplitude));
   fill('red');
-  text('sin', scale_x(graphX) + scale_x(graphPeriod) + scale_x(graphX) / 2, scale_y(graphY));
+  text('sin', Scale.x(graphX) + Scale.x(graphPeriod) + Scale.x(graphX) / 2, Scale.y(graphY));
 
   // Draw cosine curve
 
@@ -123,8 +156,8 @@ function draw() {
   stroke('orange');
   beginShape();
   for (let t = 0; t <= 360; t++) {
-    let x = map(t, 0, 360, scale_x(graphX), scale_x(graphX) + scale_x(graphPeriod));
-    let y = scale_y(graphY) - scale_y(graphAmplitude) * cos(t);
+    let x = map(t, 0, 360, Scale.x(graphX), Scale.x(graphX) + Scale.x(graphPeriod));
+    let y = Scale.y(graphY) - Scale.y(graphAmplitude) * cos(t);
     vertex(x, y);
   }
   endShape();
@@ -135,22 +168,22 @@ function draw() {
   stroke('red');
   beginShape();
   for (let t = 0; t <= 360; t++) {
-    let x = map(t, 0, 360, scale_x(graphX), scale_x(graphX) + scale_x(graphPeriod));
-    let y = scale_y(graphY) - scale_y(graphAmplitude) * sin(t);
+    let x = map(t, 0, 360, Scale.x(graphX), Scale.x(graphX) + Scale.x(graphPeriod));
+    let y = Scale.y(graphY) - Scale.y(graphAmplitude) * sin(t);
     vertex(x, y);
   }
   endShape();
 
   // Draw moving line
 
-  let lineX = map(angle, 0, 360, scale_x(graphX), scale_x(graphX) + scale_x(graphPeriod));
+  let lineX = map(angle, 0, 360, Scale.x(graphX), Scale.x(graphX) + Scale.x(graphPeriod));
   stroke('grey');
-  line(lineX, scale_y(graphY) - scale_y(graphAmplitude), lineX, scale_y(graphY) + scale_y(graphAmplitude));
+  line(lineX, Scale.y(graphY) - Scale.y(graphAmplitude), lineX, Scale.y(graphY) + Scale.y(graphAmplitude));
 
   // Draw moving points on graph
 
-  let orangeY = scale_y(graphY) - scale_y(graphAmplitude) * cos(angle);
-  let redY = scale_y(graphY) - scale_y(graphAmplitude) * sin(angle);
+  let orangeY = Scale.y(graphY) - Scale.y(graphAmplitude) * cos(angle);
+  let redY = Scale.y(graphY) - Scale.y(graphAmplitude) * sin(angle);
 
   noStroke();
 
