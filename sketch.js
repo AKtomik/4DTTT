@@ -30,9 +30,6 @@ class Scale {
       Scale.MAX_I = 0;
     }
     
-    console.log(Scale.SIZE);
-    console.log(Scale.ON);
-    console.log(Scale.SCALER);
     return Scale.SIZE;
   }
 
@@ -66,7 +63,6 @@ window.onresize = function() {
 }
 
 //--- in ---
-
 class Box {
   //static
   static state_to_color = {
@@ -74,27 +70,87 @@ class Box {
     1: [0,255,0,128],
     2: [255,0,0,128],
   };
+
+  //map
+  static box_map = [];
+  static map_deepth = 0;
+  static map_width = 0;
+  static create_map(width, deepth)
+  {
+    Box.map_deepth = deepth;
+    Box.map_width = width;
+    Box.box_map = Box.build_deep(width, deepth);
+    console.log("Box.box_map:", Box.box_map);
+  };
   static build_deep(width, layer)
   {
-    if (layer===0) return new Box();
-    return Array(width).fill(Box.build_deep(width, layer-1));
+    if (layer===0) return (new Box());
+    return Array(width).fill(0).map(() => Box.build_deep(width, layer-1));
   };
+
   //object
   constructor()
   {
     this.state=0;
+    this.shape=new Polygon();
+    return this;
   };
   get color()
   {
     return color(Box.state_to_color[this.state]);
+  };
+  display()
+  {
+    fill(this.color);
+    this.shape.display();
   }
 };
 
 const BOX_WIDTH=3;
 const BOX_D=2;
 
-let box_map=Box.build_deep(BOX_WIDTH, BOX_D);
-console.log(box_map);
+Box.create_map(BOX_WIDTH, BOX_D);
+
+
+function make_rectangle(x0,y0,w,h)
+{
+  return [createVector(x0,y0), createVector(x0+w,y0), createVector(x0+w,y0+h), createVector(x0,y0+h)];
+}
+
+//--- click ---
+
+class Game {
+  constructor() {
+    this.player_playing=Math.round(Math.random())+1;
+  }
+  place() {
+    const v=this.player_playing;
+    this.player_playing=(this.player_playing)%2+1;
+    return v;
+  }
+};
+var game=new Game();
+
+
+function mousePressed(event) {
+  
+  const pointer_at=createVector(mouseX, mouseY);
+  console.log("mousePressed event: ",event,pointer_at);
+
+  for (let i=0;i<3;i+=1)
+  {
+    for (let j=0;j<3;j+=1)
+    {
+      let h_box = Box.box_map[i][j];
+      if (h_box.shape.isInside(pointer_at))
+      {
+        console.log("HIT BOX AT ",i,j);
+        h_box.state=game.place();
+      }
+    }
+  }
+
+}
 
 
 //--- draw ---
@@ -119,13 +175,13 @@ function draw() {
   fill(255);
   textSize(20);
   textAlign(LEFT, CENTER);
+  strokeWeight(1);
   text(`4D Tick Tac Toe`, 25, 25);
 
   // Draw grid
-  noFill();
-  stroke(255);
-  strokeWeight(6);
   {
+    stroke(255);
+    strokeWeight(6);
     //values
     let margin = Scale.min(boxMargin);
     let square_top = [(Scale.x(boxFull) - Scale.min(boxFull))/2 + margin, (Scale.y(boxFull) - Scale.min(boxFull))/2 + margin];
@@ -136,12 +192,17 @@ function draw() {
     {
       for (let j=0;j<3;j+=1)
       {
-        fill(box_map[i][j].color);
-        rect(square_top[0]+square_size[0]*i/3, square_top[1]+square_size[1]*j/3, square_size[0]/3, square_size[1]/3);
+        let h_box = Box.box_map[i][j];
+        //position
+        h_box.shape.set_points(make_rectangle(square_top[0]+square_size[0]*i/3, square_top[1]+square_size[1]*j/3, square_size[0]/3, square_size[1]/3));
+        //display
+        h_box.display();
       }
     }
+    
     //rectangle as outline
     strokeWeight(6);
+    noFill();
     rect(...square_top, ...square_size);
   }
 
