@@ -1,20 +1,14 @@
 
 
 //--- settings ---
-let circleX = 200;
-let circleY = 150;
-let circleRadius = 75;
-
-let graphX = 50;
-let graphY = 300;
-let graphAmplitude = 50;
-let graphPeriod = 300;
+let boxFull = 1000;
+let boxMargin = 200;
 
 
 //--- resize ---
 class Scale {
   //static values
-  static ON=400;
+  static ON=1000;
   static SIZE=[0,0];
   static SCALER=[0,0];
   static DIAG=0;
@@ -71,40 +65,87 @@ window.onresize = function() {
   resizeCanvas(...Scale.resize());
 }
 
+//--- in ---
+
+class Box {
+  //static
+  static state_to_color = {
+    0: [0,0],
+    1: [0,255,0,128],
+    2: [255,0,0,128],
+  };
+  static build_deep(width, layer)
+  {
+    if (layer===0) return new Box();
+    return Array(width).fill(Box.build_deep(width, layer-1));
+  };
+  //object
+  constructor()
+  {
+    this.state=0;
+  };
+  get color()
+  {
+    return color(Box.state_to_color[this.state]);
+  }
+};
+
+const BOX_WIDTH=3;
+const BOX_D=2;
+
+let box_map=Box.build_deep(BOX_WIDTH, BOX_D);
+console.log(box_map);
+
 
 //--- draw ---
 
 function setup() {
   createCanvas(...Scale.resize());
-  background(0);
+  background(color(0,100,200));
   //ellipseMode(CORNERS);
-  angleMode(DEGREES);//!
+  //angleMode(DEGREES);//!
   textFont('Courier New'); // Good font
   //frameRate(Settings.FPS);
   describe('ttt');
 }
 
 function draw() {
-  background(0);
+  background(color(0,100,200));
 
   // Set angle based on frameCount, and display current value
+  //let angle = frameCount % 360;
 
-  let angle = frameCount % 360;
 
   fill(255);
   textSize(20);
   textAlign(LEFT, CENTER);
-  text(`angle: ${angle}`, 25, 25);
+  text(`4D Tick Tac Toe`, 25, 25);
 
-  // Draw circle and diameters
-
+  // Draw grid
   noFill();
-  stroke(128);
-  strokeWeight(3);
-  //circle(Scale.x(circleX), Scale.y(circleY), 2 * Scale.x(circleRadius));
-  line(Scale.x(circleX), Scale.y(circleY) - Scale.x(circleRadius), Scale.x(circleX), Scale.y(circleY) + Scale.x(circleRadius));
-  line(Scale.x(circleX) - Scale.x(circleRadius), Scale.y(circleY), Scale.x(circleX) + Scale.x(circleRadius), Scale.y(circleY));
+  stroke(255);
+  strokeWeight(6);
+  {
+    //values
+    let margin = Scale.min(boxMargin);
+    let square_top = [(Scale.x(boxFull) - Scale.min(boxFull))/2 + margin, (Scale.y(boxFull) - Scale.min(boxFull))/2 + margin];
+    let square_size = [Scale.min(boxFull) - 2*margin, Scale.min(boxFull) - 2*margin];
+    //little box
+    strokeWeight(3);
+    for (let i=0;i<3;i+=1)
+    {
+      for (let j=0;j<3;j+=1)
+      {
+        fill(box_map[i][j].color);
+        rect(square_top[0]+square_size[0]*i/3, square_top[1]+square_size[1]*j/3, square_size[0]/3, square_size[1]/3);
+      }
+    }
+    //rectangle as outline
+    strokeWeight(6);
+    rect(...square_top, ...square_size);
+  }
 
+/*
   // Draw moving points
 
   let pointX = Scale.x(circleX) + Scale.x(circleRadius) * cos(angle);
@@ -192,4 +233,5 @@ function draw() {
 
   fill('red');
   circle(lineX, redY, 10);
+*/
 }
