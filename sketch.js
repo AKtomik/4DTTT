@@ -31,7 +31,7 @@ var grid;
 function setup() {
   //init
   createCanvas(...Scale.resize());
-  background(color(0,100,200));
+  background(color(Settings.COLOR_BACKGROUND));
   //ellipseMode(CORNERS);
   //angleMode(DEGREES);//!
   textFont('Courier New'); // Good font
@@ -40,13 +40,13 @@ function setup() {
 
   //objects
   grid = new Grid(Settings.RULE_BOX_WIDTH, Settings.RULE_BOX_D);
-  let player_1 = new Player(false, color(0,255,0,100), color(0,255,0,200));
-  let player_2 = new Player(true, color(255,0,0,100), color(255,0,0,200));
+  let player_1 = new Player(false, color(Settings.COLOR_BOX_P1_FILL), color(Settings.COLOR_BOX_P1_WON));
+  let player_2 = new Player(true, color(Settings.COLOR_BOX_P2_FILL), color(Settings.COLOR_BOX_P2_WON));
   game = new Game(grid, [player_1, player_2]);
 }
 
 function draw() {
-  background(color(0,100,200));
+  background(color(Settings.COLOR_BACKGROUND));
 
   // Set angle based on frameCount, and display current value
   //let angle = frameCount % 360;
@@ -104,10 +104,10 @@ function draw() {
       h_box.display();
     }
 
-    //rectangle as outline
-    strokeWeight(6);
-    noFill();
-    rect(...square_top, ...square_size);
+    ////rectangle as outline
+    //strokeWeight(6);
+    //noFill();
+    //rect(...square_top, ...square_size);
   }
 }
 /*

@@ -74,7 +74,7 @@ class Box {
 		switch (this.state)
 		{
 			case (BoxStateType.EMPTY):
-    		return color(0,0);
+    		return color(Settings.COLOR_BOX_EMPTY);
 			case (BoxStateType.FILL_BY):
 				return this.checker.color_fill;
 			case (BoxStateType.WON_BY):
