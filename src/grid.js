@@ -52,6 +52,21 @@ class Grid {
 	};
 
 	//display
+	sort_positions()
+	{
+		this.positions=this.positions.sort((a,b) => this.is_in_front(a,b));
+	}
+	is_in_front(posKey1, posKey2)
+	{
+		for (let i=posKey1.length-1;i>=0;i-=1)
+		{
+			if (posKey1[i]<posKey2[i])
+				return false;
+			else if (posKey1[i]>posKey2[i])
+				return true;
+		}
+		throw new Error("no one in front between "+posKey1+posKey2);
+	}
 };
 
 

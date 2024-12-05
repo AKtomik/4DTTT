@@ -9,19 +9,24 @@ function mousePressed(event) {
   console.log("mousePressed event: ",event,pointer_at);
 
   //boxs_clicked
+  let checkPosKey = undefined;
   for (let posKey of grid.positions)
   {
     const i = posKey[0];
     const j = posKey[1];
     const h_box = grid.at(posKey);
     
-    if (h_box.shape.isInside(pointer_at))
+    if (h_box.shape.isInside(pointer_at) && (!checkPosKey || grid.is_in_front(posKey, checkPosKey)))
     {
-      if (game.player_check_at(posKey))
-      console.log("HIT BOX AT ",i,j);
+      checkPosKey = posKey;
+      console.log("HIT BOX ",i,j);
     }
   }
 
+  if (checkPosKey)
+  {
+    game.player_check_at(checkPosKey);
+  }
 }
 
 
@@ -92,11 +97,13 @@ function draw() {
     //little box
     stroke(255);
     strokeWeight(3);
+    grid.sort_positions();
     for (let posKey of grid.positions)
     {
       const i = posKey[0];
       const j = posKey[1];
       const k = posKey[2];
+      strokeWeight((k+1)*2);
       const h_box = grid.at(posKey);
       //position
       h_box.shape.set_points(make_rectangle(square_top[0]+square_size[0]*((i*3+k)/10), square_top[1]+square_size[1]*((j*3+k)/10), square_size[0]*2/10, square_size[1]*2/10));
