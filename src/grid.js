@@ -9,9 +9,13 @@ class Grid {
     this.map_width = width;
     this.map = {};
 		this.positions = [];
+		this.vectors = [];
 		this.build_map_deep(width, deepth);
     console.log("Grid: this.map:", this.map);
     console.log("Grid: this.positions:", this.positions);
+		this.build_vectors_deep(deepth);
+		this.vectors=this.vectors.filter((v, i) => i!==Math.floor(this.vectors.length/2));
+    console.log("Grid: this.vectors:", this.vectors);
   };
   build_map_deep(width, layer, posKey=[])
   {
@@ -26,6 +30,19 @@ class Grid {
 			this.build_map_deep(width, layer-1, posKey.concat(i));
 		}
   };
+	
+  build_vectors_deep(layer, posDir=[])
+  {
+    if (layer===0) 
+		{
+			this.vectors.push(posDir);
+			return;
+		};
+    for (let i of [-1, 0, 1])
+		{
+			this.build_vectors_deep(layer-1, posDir.concat(i));
+		}
+  };
 
 	//get
 	at(posKey)
@@ -33,6 +50,8 @@ class Grid {
 		return this.map[posKey];
 		//return undefined if not set
 	};
+
+	//display
 };
 
 

@@ -22,6 +22,10 @@ class Game {
     box.checker=placer;
 
 		//check won
+		if (this.check_won_at(posKey))
+		{
+			box.state=BoxStateType.WON_BY;
+		}
 
 		//switch user
 		this.player_i=(this.player_i+1)%this.players.length;//skip
@@ -29,7 +33,39 @@ class Game {
   }
 	check_won_at(posKey) {
 
-		return;
+		let checker=this.grid.at(posKey).checker;
+
+		for (let dir of this.grid.vectors)
+		{
+			let posKeyMove=[...posKey];
+			
+			let box;
+			let row=0;
+			do {
+				box=this.grid.at(posKeyMove);
+				
+				//win line
+				if (!(box.checker==checker))//not same pointers
+				{
+					box=false;
+				} else {
+					row+=1;
+					if (row>=Settings.RULE_BOX_ROW)
+					{
+						return true;
+					}
+				}
+
+				//out
+				posKeyMove=posKeyMove.map((x, i) => x+dir[i]);//apply vector for next
+				for (let keyElement of posKeyMove)
+				{
+					if (keyElement<0 || keyElement>=this.grid.map_width)
+						box=false;
+				}
+			} while (box)
+		}
+		return false;
 	}
 };
 
