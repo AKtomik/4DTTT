@@ -1,72 +1,24 @@
 
-
-//--- in ---
-class Box {
-  //static
-  static state_to_color = {
-    0: [0,0],
-    1: [0,255,0,128],
-    2: [255,0,0,128],
-  };
-
-  //map
-  static box_map = [];
-  static map_deepth = 0;
-  static map_width = 0;
-  static create_map(width, deepth)
-  {
-    Box.map_deepth = deepth;
-    Box.map_width = width;
-    Box.box_map = Box.build_deep(width, deepth);
-    console.log("Box.box_map:", Box.box_map);
-  };
-  static build_deep(width, layer)
-  {
-    if (layer===0) return (new Box());
-    return Array(width).fill(0).map(() => Box.build_deep(width, layer-1));
-  };
-
-  //object
-  constructor()
-  {
-    this.state=0;
-    this.shape=new Polygon();
-    return this;
-  };
-  get color()
-  {
-    return color(Box.state_to_color[this.state]);
-  };
-  display()
-  {
-    fill(this.color);
-    this.shape.display();
-  }
-};
-
-Box.create_map(Settings.RULE_BOX_WIDTH, Settings.RULE_BOX_D);
+//--- create ---
 
 
 //--- click ---
-
-var game=new Game();
-
-
 function mousePressed(event) {
   
   const pointer_at=createVector(mouseX, mouseY);
   console.log("mousePressed event: ",event,pointer_at);
 
-  for (let i=0;i<3;i+=1)
+  //boxs_clicked
+  for (let posKey of grid.positions)
   {
-    for (let j=0;j<3;j+=1)
+    const i = posKey[0];
+    const j = posKey[1];
+    const h_box = grid.at(posKey);
+    
+    if (h_box.shape.isInside(pointer_at))
     {
-      let h_box = Box.box_map[i][j];
-      if (h_box.shape.isInside(pointer_at))
-      {
-        console.log("HIT BOX AT ",i,j);
-        h_box.state=game.place();
-      }
+      if (game.player_check_at(posKey))
+      console.log("HIT BOX AT ",i,j);
     }
   }
 
@@ -74,8 +26,10 @@ function mousePressed(event) {
 
 
 //--- draw ---
-
+var game;
+var grid;
 function setup() {
+  //init
   createCanvas(...Scale.resize());
   background(color(0,100,200));
   //ellipseMode(CORNERS);
@@ -83,6 +37,12 @@ function setup() {
   textFont('Courier New'); // Good font
   //frameRate(Settings.FPS);
   describe('ttt');
+
+  //objects
+  grid = new Grid(Settings.RULE_BOX_WIDTH, Settings.RULE_BOX_D);
+  let player_1 = new Player(false, color(0,255,0,100), color(0,255,0,200));
+  let player_2 = new Player(true, color(255,0,0,100), color(255,0,0,200));
+  game = new Game(grid, [player_1, player_2]);
 }
 
 function draw() {
@@ -108,16 +68,15 @@ function draw() {
     //little box
     stroke(255);
     strokeWeight(3);
-    for (let i=0;i<3;i+=1)
+    for (let posKey of grid.positions)
     {
-      for (let j=0;j<3;j+=1)
-      {
-        let h_box = Box.box_map[i][j];
-        //position
-        h_box.shape.set_points(make_rectangle(square_top[0]+square_size[0]*i/3, square_top[1]+square_size[1]*j/3, square_size[0]/3, square_size[1]/3));
-        //display
-        h_box.display();
-      }
+      const i = posKey[0];
+      const j = posKey[1];
+      const h_box = grid.at(posKey);
+      //position
+      h_box.shape.set_points(make_rectangle(square_top[0]+square_size[0]*i/3, square_top[1]+square_size[1]*j/3, square_size[0]/3, square_size[1]/3));
+      //display
+      h_box.display();
     }
     
     //rectangle as outline
