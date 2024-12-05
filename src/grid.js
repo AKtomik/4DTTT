@@ -14,7 +14,7 @@ class Grid {
     console.log("Grid: this.map:", this.map);
     console.log("Grid: this.positions:", this.positions);
 		this.build_vectors_deep(deepth);
-		this.vectors=this.vectors.filter((v, i) => i!==Math.floor(this.vectors.length/2));
+		this.vectors=this.vectors.slice(Math.floor(this.vectors.length/2)+1);//remove nul and all mirror vector
     console.log("Grid: this.vectors:", this.vectors);
   };
   build_map_deep(width, layer, posKey=[])

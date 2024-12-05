@@ -22,10 +22,7 @@ class Game {
     box.checker=placer;
 
 		//check won
-		if (this.check_won_at(posKey))
-		{
-			box.state=BoxStateType.WON_BY;
-		}
+		this.check_won_at(posKey);
 
 		//switch user
 		this.player_i=(this.player_i+1)%this.players.length;//skip
@@ -41,28 +38,52 @@ class Game {
 			
 			let box;
 			let row=0;
+			let sens=1;
+			let checked=[];
+
 			do {
 				box=this.grid.at(posKeyMove);
-				
-				//win line
-				if (!(box.checker==checker))//not same pointers
+
+				if (box && (box.checker==checker))//is in && have the player as checker
 				{
-					box=false;
-				} else {
+					//in a row
 					row+=1;
+					checked.push(box);
+					//console.log(`YEP dir ${dir} row ${row} at ${posKeyMove}`);
 					if (row>=Settings.RULE_BOX_ROW)
 					{
+						for (let boxChecking of checked)
+						{
+							boxChecking.state=BoxStateType.WON_BY;
+						}
 						return true;
+					}
+				} else {
+					//not checked
+					if (sens===1)
+					{//change sens
+						//console.log(`FLIP dir ${dir} row ${row} at ${posKeyMove}`);
+						box=true;
+						posKeyMove=[...posKey];
+						sens=-1;
+					}
+					else
+					{//no
+						//console.log(`BREAK dir ${dir} row ${row} at ${posKeyMove}`);
+						box=false;
+						break;
 					}
 				}
 
-				//out
-				posKeyMove=posKeyMove.map((x, i) => x+dir[i]);//apply vector for next
-				for (let keyElement of posKeyMove)
-				{
-					if (keyElement<0 || keyElement>=this.grid.map_width)
+				//move coord
+				posKeyMove=posKeyMove.map((x, i) => x+(dir[i]*sens));//apply vector for next
+				//if coord out
+				/*
+				posKeyMove.forEach(v => {
+					if (v<0 || v>=this.grid.map_width)
 						box=false;
-				}
+				});
+				*/
 			} while (box)
 		}
 		return false;
