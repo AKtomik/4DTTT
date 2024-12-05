@@ -31,6 +31,7 @@ class Game {
 	check_won_at(posKey) {
 
 		let checker=this.grid.at(posKey).checker;
+		let return_value=false;
 
 		for (let dir of this.grid.vectors)
 		{
@@ -56,7 +57,9 @@ class Game {
 						{
 							boxChecking.state=BoxStateType.WON_BY;
 						}
-						return true;
+						checker.score_add();
+						box=false;
+						break;
 					}
 				} else {
 					//not checked
@@ -86,14 +89,20 @@ class Game {
 				*/
 			} while (box)
 		}
-		return false;
+		return return_value;
 	}
 };
 
 class Player {
 	constructor(is_bot, color_fill, color_won) {
 		this.is_bot=is_bot;
+		this.score=0;
 		this.color_fill=color_fill;
 		this.color_won=color_won;
+	}
+	//score
+	score_add()
+	{
+		this.score+=1;
 	}
 }
