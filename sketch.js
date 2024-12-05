@@ -59,8 +59,8 @@ function draw() {
     text(`4D Tick Tac Toe`, 25, 25);
   }
 
-  // Draw grid
-  {
+  //2D
+  if (false) {// Draw grid
     const margin = Scale.min(Settings.POS_BOX_MARGIN);
     let square_top = [(Scale.x(Settings.POS_BOX_FULL) - Scale.min(Settings.POS_BOX_FULL))/2 + margin, (Scale.y(Settings.POS_BOX_FULL) - Scale.min(Settings.POS_BOX_FULL))/2 + margin];
     let square_size = [Scale.min(Settings.POS_BOX_FULL) - 2*margin, Scale.min(Settings.POS_BOX_FULL) - 2*margin];
@@ -79,6 +79,31 @@ function draw() {
       h_box.display();
     }
     
+    //rectangle as outline
+    strokeWeight(6);
+    noFill();
+    rect(...square_top, ...square_size);
+  }
+  {
+    const margin = Scale.min(Settings.POS_BOX_MARGIN);
+    let square_top = [(Scale.x(Settings.POS_BOX_FULL) - Scale.min(Settings.POS_BOX_FULL))/2 + margin, (Scale.y(Settings.POS_BOX_FULL) - Scale.min(Settings.POS_BOX_FULL))/2 + margin];
+    let square_size = [Scale.min(Settings.POS_BOX_FULL) - 2*margin, Scale.min(Settings.POS_BOX_FULL) - 2*margin];
+    //3D
+    //little box
+    stroke(255);
+    strokeWeight(3);
+    for (let posKey of grid.positions)
+    {
+      const i = posKey[0];
+      const j = posKey[1];
+      const k = posKey[2];
+      const h_box = grid.at(posKey);
+      //position
+      h_box.shape.set_points(make_rectangle(square_top[0]+square_size[0]*((i*3+k)/10), square_top[1]+square_size[1]*((j*3+k)/10), square_size[0]*2/10, square_size[1]*2/10));
+      //display
+      h_box.display();
+    }
+
     //rectangle as outline
     strokeWeight(6);
     noFill();
