@@ -7,7 +7,7 @@ function perspective_by_2D_flat(grid)
   //little box
   stroke(255);
   strokeWeight(3);
-  for (let posKey of grid.positions)
+  for (let posKey of grid.map_keys)
   {
     const i = posKey[0];
     const j = posKey[1];
@@ -33,8 +33,8 @@ function perspective_by_3D_flat(grid)
   //little box
   stroke(255);
   strokeWeight(3);
-  grid.sort_positions();
-  for (let posKey of grid.positions)
+  grid.sort_keys();
+  for (let posKey of grid.map_keys)
   {
     const i = posKey[0];
     const j = posKey[1];

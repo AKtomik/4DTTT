@@ -6,14 +6,19 @@ class Grid {
   //build
   constructor(width, deepth)
   {
+		//map
     this.map_deepth = deepth;
     this.map_width = width;
     this.map = {};
-		this.positions = [];
-		this.vectors = [];
+		this.map_keys = [];
+
+		//
 		this.build_map_deep(width, deepth);
     console.log("Grid: this.map:", this.map);
-    console.log("Grid: this.positions:", this.positions);
+    console.log("Grid: this.map_keys:", this.map_keys);
+
+		//vectors
+		this.vectors = [];
 		this.build_vectors_deep(deepth);
 		this.vectors=this.vectors.slice(Math.floor(this.vectors.length/2)+1);//remove nul and all mirror vector
     console.log("Grid: this.vectors:", this.vectors);
@@ -22,7 +27,7 @@ class Grid {
   {
     if (layer===0) 
 		{
-			this.positions.push(posKey);
+			this.map_keys.push(posKey);
 			this.map[posKey]=new Box();
 			return;
 		};
@@ -53,9 +58,9 @@ class Grid {
 	};
 
 	//display
-	sort_positions()
+	sort_keys()
 	{
-		this.positions=this.positions.sort((a,b) => this.is_in_front(a,b));
+		this.map_keys=this.map_keys.sort((a,b) => this.is_in_front(a,b));
 	}
 	is_in_front(posKey1, posKey2)
 	{

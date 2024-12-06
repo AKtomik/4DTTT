@@ -1,7 +1,7 @@
 function collision_by_front(pointer_at, game)
 {
   let checkPosKey = undefined;
-  for (let posKey of game.grid.positions)
+  for (let posKey of game.grid.map_keys)
   {
     const i = posKey[0];
     const j = posKey[1];
