@@ -1,3 +1,4 @@
+//not dimensionnal dependant
 class Game {
   constructor(grid, ptrPlayers, state=0) {
     

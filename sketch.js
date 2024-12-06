@@ -1,5 +1,8 @@
 
-//--- create ---
+//--- settings ---
+
+const COLLISION_BY=(pointer_at, game) => collision_by_front(pointer_at, game);
+const PERSPECTIVE_BY=(grid) => perspective_by_3D_flat(grid);
 
 
 //--- click ---
@@ -9,30 +12,15 @@ function mousePressed(event) {
   console.log("mousePressed event: ",event,pointer_at);
 
   //boxs_clicked
-  let checkPosKey = undefined;
-  for (let posKey of grid.positions)
-  {
-    const i = posKey[0];
-    const j = posKey[1];
-    const h_box = grid.at(posKey);
-    
-    if (h_box.shape.isInside(pointer_at) && (!checkPosKey || grid.is_in_front(posKey, checkPosKey)))
-    {
-      checkPosKey = posKey;
-      console.log("HIT BOX ",i,j);
-    }
-  }
-
-  if (checkPosKey)
-  {
-    game.player_check_at(checkPosKey);
-  }
+  COLLISION_BY(pointer_at, game);
 }
 
 
 //--- draw ---
 var game;
 var grid;
+var player_1;
+var player_2;
 function setup() {
   //init
   createCanvas(...Scale.resize());
@@ -45,8 +33,8 @@ function setup() {
 
   //objects
   grid = new Grid(Settings.RULE_BOX_WIDTH, Settings.RULE_BOX_D);
-  let player_1 = new Player(false, color(Settings.COLOR_BOX_P1_FILL), color(Settings.COLOR_BOX_P1_WON));
-  let player_2 = new Player(true, color(Settings.COLOR_BOX_P2_FILL), color(Settings.COLOR_BOX_P2_WON));
+  player_1 = new Player(false, color(Settings.COLOR_BOX_P1_FILL), color(Settings.COLOR_BOX_P1_WON));
+  player_2 = new Player(true, color(Settings.COLOR_BOX_P2_FILL), color(Settings.COLOR_BOX_P2_WON));
   game = new Game(grid, [player_1, player_2]);
 }
 
@@ -56,66 +44,24 @@ function draw() {
   // Set angle based on frameCount, and display current value
   //let angle = frameCount % 360;
 
-  {//title text
+  {//texts
     fill(255);
     textSize(20);
     textAlign(LEFT, CENTER);
     strokeWeight(1);
     text(`4D Tick Tac Toe`, 25, 25);
+    
+    textSize(40);
+    textAlign(CENTER, CENTER);
+    text(`scores`, Scale.x(100), Scale.y(400));
+    textSize(60);
+    fill((player_1.score) ? player_1.color_won : player_1.color_fill);
+    text(`${player_1.score}`, Scale.x(100), Scale.y(500));
+    fill((player_2.score) ? player_2.color_won : player_2.color_fill);
+    text(`${player_2.score}`, Scale.x(100), Scale.y(600));
   }
 
-  //2D
-  if (false) {// Draw grid
-    const margin = Scale.min(Settings.POS_BOX_MARGIN);
-    let square_top = [(Scale.x(Settings.POS_BOX_FULL) - Scale.min(Settings.POS_BOX_FULL))/2 + margin, (Scale.y(Settings.POS_BOX_FULL) - Scale.min(Settings.POS_BOX_FULL))/2 + margin];
-    let square_size = [Scale.min(Settings.POS_BOX_FULL) - 2*margin, Scale.min(Settings.POS_BOX_FULL) - 2*margin];
-    
-    //little box
-    stroke(255);
-    strokeWeight(3);
-    for (let posKey of grid.positions)
-    {
-      const i = posKey[0];
-      const j = posKey[1];
-      const h_box = grid.at(posKey);
-      //position
-      h_box.shape.set_points(make_rectangle(square_top[0]+square_size[0]*i/3, square_top[1]+square_size[1]*j/3, square_size[0]/3, square_size[1]/3));
-      //display
-      h_box.display();
-    }
-    
-    //rectangle as outline
-    strokeWeight(6);
-    noFill();
-    rect(...square_top, ...square_size);
-  }
-  {
-    const margin = Scale.min(Settings.POS_BOX_MARGIN);
-    let square_top = [(Scale.x(Settings.POS_BOX_FULL) - Scale.min(Settings.POS_BOX_FULL))/2 + margin, (Scale.y(Settings.POS_BOX_FULL) - Scale.min(Settings.POS_BOX_FULL))/2 + margin];
-    let square_size = [Scale.min(Settings.POS_BOX_FULL) - 2*margin, Scale.min(Settings.POS_BOX_FULL) - 2*margin];
-    //3D
-    //little box
-    stroke(255);
-    strokeWeight(3);
-    grid.sort_positions();
-    for (let posKey of grid.positions)
-    {
-      const i = posKey[0];
-      const j = posKey[1];
-      const k = posKey[2];
-      strokeWeight((k+1)*2);
-      const h_box = grid.at(posKey);
-      //position
-      h_box.shape.set_points(make_rectangle(square_top[0]+square_size[0]*((i*3+k)/10), square_top[1]+square_size[1]*((j*3+k)/10), square_size[0]*2/10, square_size[1]*2/10));
-      //display
-      h_box.display();
-    }
-
-    ////rectangle as outline
-    //strokeWeight(6);
-    //noFill();
-    //rect(...square_top, ...square_size);
-  }
+  PERSPECTIVE_BY(grid);
 }
 /*
   // Draw moving points

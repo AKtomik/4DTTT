@@ -1,3 +1,5 @@
+//is the 2D on screen projection
+
 // Finds direction (clockwise or anti) of point in relation to line
 function isClockwiseFromLine(linep0, linep1, p){
   let vec1 = p5.Vector.sub(linep0, linep1);
@@ -56,10 +58,10 @@ class Polygon {
 
 	//hitbox
   findOuterMostPoints(){
-    this.mostLeft = 999999;
-    this.mostRight = -999999;
-    this.mostTop = 999999;
-    this.mostBottom = -999999;
+    this.mostLeft = Infinity;
+    this.mostRight = -Infinity;
+    this.mostTop = Infinity;
+    this.mostBottom = -Infinity;
 
     for (let p of this.points){
       if (p.x < this.mostLeft) this.mostLeft = p.x;

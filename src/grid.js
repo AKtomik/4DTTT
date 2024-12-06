@@ -1,3 +1,4 @@
+//not dimensionnal dependant
 
 //--- in ---
 class Grid {
