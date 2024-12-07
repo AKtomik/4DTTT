@@ -43,6 +43,10 @@ function setup() {
   game = new Game(grid, [player_1, player_2]);
 
   PERSPECTIVE_INIT(grid);
+  //test
+  let m = new Matrix(4,4);
+  m.build_identity();
+  console.log(String(m));
 }
 
 function draw() {
