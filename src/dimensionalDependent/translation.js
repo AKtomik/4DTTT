@@ -33,8 +33,8 @@ class MatrixTranslation {
 };
 
 const matrix_identity = new Matrix(4,4).build_identity();
-const matrix_strength = .1;
-const matrix_angle = Math.PI/32;
+const matrix_strength = .1*Settings.SPEED;
+const matrix_angle = Math.PI/32*Settings.SPEED;
 
 const matrix_3D_translations = {
 	"x<->": new MatrixTranslation(matrix_identity.copy().set_column(3, [matrix_strength,0,0,1]), false, true),
@@ -61,13 +61,13 @@ let keycode_to_move = {};
 function translation_key_3D_cube(keyEvent, game)
 {
 	const translationKey=keycode_to_move[keyEvent.keyCode]?.translationKey;
-	console.log("keypress to move perspective:",keycode_to_move[keyEvent.keyCode]);
+	//console.log("keypress to move perspective:",keycode_to_move[keyEvent.keyCode]);
 	if (!translationKey)
 		return;
 	if (keyEvent.repeat)
 		return;
 	const sign=(keycode_to_move[keyEvent.keyCode].oppose) ? -1 : 1;
-	const power=Settings.VELOCITY_ADD_PUSH*(sign);
+	const power=Settings.VELOCITY_ADD_PUSH*(sign)*Settings.SPEED;
 	if (game.grid.velocity[translationKey]*sign<0)
 	{
 		game.grid.velocity[translationKey]=0;
@@ -95,11 +95,11 @@ function translation_draw_3D_cube(grid)
 		const down_negative=keyIsDown(move_to_keycode[moveKey].negative);
 		if (down_postivie)
 		{
-			grid.velocity[moveKey]+=Settings.VELOCITY_ADD_REMAIN;
+			grid.velocity[moveKey]+=Settings.VELOCITY_ADD_REMAIN*Settings.SPEED;
 		}
 		if (down_negative)
 		{
-			grid.velocity[moveKey]-=Settings.VELOCITY_ADD_REMAIN;
+			grid.velocity[moveKey]-=Settings.VELOCITY_ADD_REMAIN*Settings.SPEED;
 		}
 
 		if (grid.velocity[moveKey]!==0)
@@ -107,7 +107,7 @@ function translation_draw_3D_cube(grid)
 			if (!down_negative && !down_postivie)
 			{
 				const sign=(grid.velocity[moveKey]>0) ? 1 : -1;
-				grid.velocity[moveKey]=(grid.velocity[moveKey]*Settings.VELOCITY_FRICTION_Q)-(Settings.VELOCITY_FRICTION_R*sign);
+				grid.velocity[moveKey]=(grid.velocity[moveKey]*Math.pow(Settings.VELOCITY_FRICTION_Q,Settings.SPEED))-(Settings.VELOCITY_FRICTION_R*sign*Settings.SPEED);
 				if (!(grid.velocity[moveKey]*sign>0))
 				{
 					grid.velocity[moveKey]=0;
@@ -127,8 +127,6 @@ function translation_draw_3D_cube(grid)
 			    const h_box = grid.at(posKey);
 					h_box.morph.each(pos => translationObject.translate(pos, power, grid.center));
 				}
-				if (translationObject[1])
-				console.log("move to center:",grid.center);
 				grid.center=translationObject.translate(grid.center, power, grid.center);
 			}
 
