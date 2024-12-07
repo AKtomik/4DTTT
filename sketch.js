@@ -4,12 +4,12 @@
 const ACTION_PRESS= (event, game) => translation_key_3D_cube(event, game);
 const ACTION_CLICK= (event, game) => collision_by_front(event, game);
 const PERSPECTIVE_INIT= (grid) => {
-  perspective_init_3D_cube(grid);
   translation_init_3D_cube(grid);
+  perspective_init_3D_cube(grid);
 };
 const PERSPECTIVE_DRAW= (grid) => {
-  perspective_draw_3D_cube(grid);
   translation_draw_3D_cube(grid);
+  perspective_draw_3D_cube(grid);
 };
 
 

@@ -113,25 +113,28 @@ class AbstractPolygon {
 
 	//shape
   constructor() {
-    this.quadri = [];
+    this.points = [];
   }
 
 	clear() {
-		this.quadri = [];
+		this.points = [];
 	}
-	add_quadri(multidimQuadri) {
-		this.quadri.push(multidimQuadri);
+	add_point(multidimPoint) {
+		this.points.push(multidimPoint);
 	}
 
   
-	get_quadri(i) {
-		return this.quadri[i];
+	get_point(i) {
+		return this.points[i];
 	}
-	get_quadri_amount() {
-		return this.quadri.length;
+	get_points_amount() {
+		return this.points.length;
 	}
-  
-	set_quadri(i,v) {
-		this.quadri[i]=v;
+	each(mapFunction) {
+		this.points=this.points.map(mapFunction);
+	}
+
+	set_point(i,multidimPoint) {
+		this.points[i]=multidimPoint;
 	}
 }

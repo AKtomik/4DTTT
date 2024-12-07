@@ -1,12 +1,16 @@
 
 class MatrixTranslation {
-	constructor(matrix, if_aroundCenter=false, if_powerInPos=false, if_powerCalibre=false, power_calibration= (matrix, power) => matrix)
+	constructor(matrix, if_aroundCenter=false, if_powerInPos=false, power_calibration= (matrix, power) => matrix)
 	{
 		this.matrix=matrix;
 		this.center_around=if_aroundCenter;
-		this.power_calibrate=if_powerCalibre;
 		this.power_isLastPos=if_powerInPos;
 		this.calibration=power_calibration;
+	}
+	calibrate(power)
+	{
+		//this.matrix=
+		this.calibration(this.matrix, power);
 	}
 	translate(pos, power, center)
 	{
@@ -15,11 +19,6 @@ class MatrixTranslation {
 		if (this.center_around)
 		{//move origin to center
 			posMatrix=matrix_identity.copy().set_column(3, [-center[0], -center[1], -center[2], 1]).multiply_with(posMatrix);
-		}
-		
-		if (this.power_calibrate)
-		{//redefine matrix itself. modification must redefine same points each time.
-			this.matrix=this.calibration(this.matrix, power);
 		}
 
 		posMatrix=this.matrix.multiply_with(posMatrix);
@@ -38,13 +37,13 @@ const matrix_strength = .1;
 const matrix_angle = Math.PI/32;
 
 const matrix_3D_translations = {
-	"x<->": new MatrixTranslation(matrix_identity.copy().set_column(3, [matrix_strength,0,0,1]), false, true, false),
-	"y<->": new MatrixTranslation(matrix_identity.copy().set_column(3, [0,matrix_strength,0,1]), false, true, false),
-	"z<->": new MatrixTranslation(matrix_identity.copy().set_column(3, [0,0,matrix_strength,1]), false, true, false),
+	"x<->": new MatrixTranslation(matrix_identity.copy().set_column(3, [matrix_strength,0,0,1]), false, true),
+	"y<->": new MatrixTranslation(matrix_identity.copy().set_column(3, [0,matrix_strength,0,1]), false, true),
+	"z<->": new MatrixTranslation(matrix_identity.copy().set_column(3, [0,0,matrix_strength,1]), false, true),
 
-	"x/": new MatrixTranslation(matrix_identity.copy(), true, false, true, (matrix, power) => matrix.set_at(1,1,Math.cos(matrix_angle*power)).set_at(2,2,Math.cos(matrix_angle*power)).set_at(1,2,Math.sin(matrix_angle*power)).set_at(2,1,-Math.sin(matrix_angle*power))),
-	"y/": new MatrixTranslation(matrix_identity.copy(), true, false, true, (matrix, power) => matrix.set_at(0,0,Math.cos(matrix_angle*power)).set_at(2,2,Math.cos(matrix_angle*power)).set_at(0,2,-Math.sin(matrix_angle*power)).set_at(2,0,Math.sin(matrix_angle*power))),
-	"z/": new MatrixTranslation(matrix_identity.copy(), true, false, true, (matrix, power) => matrix.set_at(0,0,Math.cos(matrix_angle*power)).set_at(1,1,Math.cos(matrix_angle*power)).set_at(0,1,Math.sin(matrix_angle*power)).set_at(1,0,-Math.sin(matrix_angle*power)))
+	"x/": new MatrixTranslation(matrix_identity.copy(), true, false, (matrix, power) => matrix.set_at(1,1,Math.cos(matrix_angle*power)).set_at(2,2,Math.cos(matrix_angle*power)).set_at(1,2,Math.sin(matrix_angle*power)).set_at(2,1,-Math.sin(matrix_angle*power))),
+	"y/": new MatrixTranslation(matrix_identity.copy(), true, false, (matrix, power) => matrix.set_at(0,0,Math.cos(matrix_angle*power)).set_at(2,2,Math.cos(matrix_angle*power)).set_at(0,2,-Math.sin(matrix_angle*power)).set_at(2,0,Math.sin(matrix_angle*power))),
+	"z/": new MatrixTranslation(matrix_identity.copy(), true, false, (matrix, power) => matrix.set_at(0,0,Math.cos(matrix_angle*power)).set_at(1,1,Math.cos(matrix_angle*power)).set_at(0,1,Math.sin(matrix_angle*power)).set_at(1,0,-Math.sin(matrix_angle*power)))
 };
 
 const move_to_keycode = {
@@ -61,8 +60,8 @@ let keycode_to_move = {};
 
 function translation_key_3D_cube(keyEvent, game)
 {
-	console.log("keypress to move perspective with keyCode:",keyEvent.keyCode);
 	const translationKey=keycode_to_move[keyEvent.keyCode]?.translationKey;
+	console.log("keypress to move perspective:",keycode_to_move[keyEvent.keyCode]);
 	if (!translationKey)
 		return;
 	if (keyEvent.repeat)
@@ -122,15 +121,11 @@ function translation_draw_3D_cube(grid)
 				//console.log(`move with matrix: ${translationObject.matrix}`);
 
 				//do the translation
+				translationObject.calibrate(power);
 			  for (let posKey of game.grid.map_keys)
 			  {
 			    const h_box = grid.at(posKey);
-					for (let i=0;i<h_box.morph.get_quadri_amount();i+=1)
-					{
-						let quadri = h_box.morph.get_quadri(i);
-						quadri=quadri.map(pos => translationObject.translate(pos, power, grid.center));
-						h_box.morph.set_quadri(i, quadri);
-					}
+					h_box.morph.each(pos => translationObject.translate(pos, power, grid.center));
 				}
 				if (translationObject[1])
 				console.log("move to center:",grid.center);
