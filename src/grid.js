@@ -84,7 +84,8 @@ class Box {
   constructor()
   {
     this.state=BoxStateType.EMPTY;
-    this.shape=new Polygon();
+    this.shape=new ConcretePolygon();//the projected shape
+    this.morph=new AbstractPolygon();//the imaginary shape
 		this.checker=null;
     return this;
   };

@@ -2,7 +2,8 @@
 //--- settings ---
 
 const COLLISION_BY=(pointer_at, game) => collision_by_front(pointer_at, game);
-const PERSPECTIVE_BY=(grid) => perspective_by_3D_flat(grid);
+const PERSPECTIVE_INIT=(grid) => perspective_init_3D_cube(grid);
+const PERSPECTIVE_DRAW=(grid) => perspective_draw_3D_cube(grid);
 
 
 //--- click ---
@@ -36,6 +37,8 @@ function setup() {
   player_1 = new Player(false, color(Settings.COLOR_BOX_P1_FILL), color(Settings.COLOR_BOX_P1_WON));
   player_2 = new Player(true, color(Settings.COLOR_BOX_P2_FILL), color(Settings.COLOR_BOX_P2_WON));
   game = new Game(grid, [player_1, player_2]);
+
+  PERSPECTIVE_INIT(grid);
 }
 
 function draw() {
@@ -58,5 +61,5 @@ function draw() {
     text(`${player_2.score}`, Scale.x(100), Scale.y(600));
   }
 
-  PERSPECTIVE_BY(grid);
+  PERSPECTIVE_DRAW(grid);
 }

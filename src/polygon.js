@@ -37,7 +37,10 @@ function intersect(line0p0, line0p1, line1p0, line1p1){
 
 
 
-class Polygon {
+//https://editor.p5js.org/amygoodchild/sketches/L7X-WH6X0
+class ConcretePolygon {
+  //is in 2D
+  //can know if inside
 
 	//shape
   constructor() {
@@ -103,4 +106,37 @@ class Polygon {
     }
     endShape(CLOSE);
   }
+}
+
+
+class AbstractPolygon {
+
+	//shape
+  constructor() {
+    this.quadri = [];
+  }
+
+	clear() {
+		this.quadri = [];
+	}
+	add_quadri(multidimQuadri) {
+		this.quadri.push(multidimQuadri);
+	}
+
+  
+	get_quadri(i) {
+		return this.quadri[i];
+	}
+	get_quadri_amount() {
+		return this.quadri.length;
+	}
+  /*
+	set_points(multidimPointsArray) {
+		this.points=multidimPointsArray;
+	}
+
+	set_point(i, MultidimPoint) {
+		this.points[i]=MultidimPoint;
+	}
+  */
 }
