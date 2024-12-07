@@ -100,7 +100,6 @@ function perspective_draw_3D_cube(grid)
 				vector.y=square_top[1]+(vector.y+1)/2*square_size[1];
 				return vector;
 			});
-			console.log("quadri=",quadri);
 	    beginShape();
 	    for(let p of quadri){
 	      vertex(p.x, p.y);

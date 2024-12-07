@@ -1,19 +1,23 @@
 
 //--- settings ---
 
-const COLLISION_BY=(pointer_at, game) => collision_by_front(pointer_at, game);
+const ACTION_PRESS=(event, game) => translation_cube_key(event, game);
+const ACTION_CLICK=(event, game) => collision_by_front(event, game);
 const PERSPECTIVE_INIT=(grid) => perspective_init_3D_cube(grid);
 const PERSPECTIVE_DRAW=(grid) => perspective_draw_3D_cube(grid);
 
 
 //--- click ---
 function mousePressed(event) {
-  
-  const pointer_at=createVector(mouseX, mouseY);
-  console.log("mousePressed event: ",event,pointer_at);
-
+  console.log("mousePressed event: ",event);
   //boxs_clicked
-  COLLISION_BY(pointer_at, game);
+  ACTION_CLICK(event, game);
+}
+
+function keyPressed(event) {
+  console.log("keyPressed event: ",event);
+  //cube_translate
+  ACTION_PRESS(event, game);
 }
 
 

@@ -1,5 +1,6 @@
-function collision_by_front(pointer_at, game)
+function collision_by_front(mouseEvent, game)
 {
+  const pointer_at = createVector(mouseEvent.clientX, mouseEvent.clientY);
   let checkPosKey = undefined;
   for (let posKey of game.grid.map_keys)
   {
