@@ -1,4 +1,6 @@
 class Settings {	
+	static FPS = 18;
+
 	static POS_BOX_FULL = 1000;
 	static POS_BOX_MARGIN = 200;
 

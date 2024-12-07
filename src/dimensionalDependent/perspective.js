@@ -26,6 +26,22 @@ function perspective_draw_2D_flat(grid)
 }
 
 
+function perspective_init_3D_flat(grid)
+{
+  //front method
+  grid.set_front_method((grid, posKey1, posKey2) =>
+    {
+      for (let i=posKey1.length-1;i>=0;i-=1)//is 2 there
+  		{
+  			if (posKey1[i]<posKey2[i])
+  				return false;
+  			else if (posKey1[i]>posKey2[i])
+  				return true;
+  		}
+  		throw new Error("no one in front between "+posKey1+posKey2);
+    }
+  );
+}
 
 
 function perspective_draw_3D_flat(grid)
@@ -62,6 +78,7 @@ const cube_points = [//binnary to create points
   	[1,0,1],//5
   	[0,1,1],//6
   	[1,1,1],//7
+  	[.5,.5,.5]//8
   ]
 
 const cube_edges = [//link points between each others
@@ -113,22 +130,25 @@ function perspective_init_3D_cube(grid)
       let v=cube_points[i].slice();//copy
       for (let i2 of [0,1,2])
       {
-        v[i2]=(v[i2]) ? point_top[i2]+point_size[i2] : point_top[i2];//use bin
+        v[i2]=point_top[i2]+point_size[i2]*v[i2];//use bin
         v[i2]=v[i2]*2-1;//slide in order to origin be centered
       }
       v[2] += Settings.PERSPECTIVE_DISTANCE;//add distance
   	  h_box.morph.add_point(v);
     }
-
-	  //for each
-		for (let i=0;i<h_box.morph.get_points_amount();i+=1)
-		{
-		}
   }
 	//center
   grid.center=[0,0,0];
 	grid.center[2] += Settings.PERSPECTIVE_DISTANCE;
+
+  //front method
+  grid.set_front_method((grid, posKey1, posKey2) => {//check the z-axis of center
+  		return (grid.map[posKey1].morph.points[8][2]<grid.map[posKey2].morph.points[8][2]);
+  		//throw new Error("no one in front between "+posKey1+posKey2);
+    }
+  );
 }
+
 function perspective_draw_3D_cube(grid)
 {
 	//screen

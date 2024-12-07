@@ -20,11 +20,12 @@ function mousePressed(event) {
   ACTION_CLICK(event, game);
 }
 
-window.addEventListener("keydown", (event) => {
+//window.addEventListener("keydown", (event) => {})
+function keyPressed(event) {
   console.log("keyDown event: ",event);
   //cube_translate
   ACTION_PRESS(event, game);
-});
+};
 
 
 //--- draw ---
@@ -39,7 +40,7 @@ function setup() {
   //ellipseMode(CORNERS);
   //angleMode(DEGREES);//!
   textFont('Courier New'); // Good font
-  //frameRate(Settings.FPS);
+  frameRate(Settings.FPS);
   describe('ttt');
 
   //objects
