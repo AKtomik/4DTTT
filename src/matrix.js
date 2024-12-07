@@ -7,11 +7,22 @@ class Matrix {
 	//build
 	constructor(numberOfLine, numberOfColumn)
 	{
+		if (!numberOfLine)
+			throw new Error(`not dimension given to the matrix`);
+		if (!numberOfColumn)
+			numberOfColumn=numberOfLine;
+
 		this.size=[numberOfLine, numberOfColumn];
 		this.data=[];
 		this.data.length=numberOfLine*numberOfColumn;
 		return this;
 	};
+	copy()
+	{
+		let resultMatrix=new Matrix(...this.size);
+		resultMatrix.data=this.data.slice();
+		return resultMatrix;
+	}
 	build_null()
 	{
 		for (let i=0;i<this.size[0]*this.size[1];i++)
