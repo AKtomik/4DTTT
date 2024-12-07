@@ -7,7 +7,7 @@ class Settings {
 	
 	static VELOCITY_ADD_PUSH = .02;
 	static VELOCITY_ADD_REMAIN = .01;
-	static VELOCITY_FRICTION_Q = .0;
+	static VELOCITY_FRICTION_Q = .99;
 	static VELOCITY_FRICTION_R = -0.001;
 
 	static RULE_BOX_WIDTH=3;//const

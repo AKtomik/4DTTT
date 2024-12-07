@@ -121,7 +121,7 @@ const matrix_3D_translations = {
 	"z-": new MatrixTranslation(matrix_identity.copy().set_column(3, [0,-matrix_strength,0,1]), false, true, false),
 	"z+": new MatrixTranslation(matrix_identity.copy().set_column(3, [0,matrix_strength,0,1]), false, true, false),
 
-	"x>": new MatrixTranslation(matrix_identity.copy(), true, false, true, (matrix, power) => matrix.set_at(1,1,Math.cos(matrix_angle)).set_at(2,2,Math.cos(matrix_angle*power)).set_at(1,2,Math.sin(matrix_angle*power)).set_at(2,1,-Math.sin(matrix_angle*power))),
-	"y>": new MatrixTranslation(matrix_identity.copy(), true, false, true, (matrix, power) => matrix.set_at(0,0,Math.cos(matrix_angle)).set_at(2,2,Math.cos(matrix_angle*power)).set_at(0,2,-Math.sin(matrix_angle*power)).set_at(2,0,Math.sin(matrix_angle*power))),
-	"z>": new MatrixTranslation(matrix_identity.copy(), true, false, true, (matrix, power) => matrix.set_at(0,0,Math.cos(matrix_angle)).set_at(1,1,Math.cos(matrix_angle*power)).set_at(0,1,Math.sin(matrix_angle*power)).set_at(1,0,-Math.sin(matrix_angle*power)))
+	"x>": new MatrixTranslation(matrix_identity.copy(), true, false, true, (matrix, power) => matrix.set_at(1,1,Math.cos(matrix_angle*power)).set_at(2,2,Math.cos(matrix_angle*power)).set_at(1,2,Math.sin(matrix_angle*power)).set_at(2,1,-Math.sin(matrix_angle*power))),
+	"y>": new MatrixTranslation(matrix_identity.copy(), true, false, true, (matrix, power) => matrix.set_at(0,0,Math.cos(matrix_angle*power)).set_at(2,2,Math.cos(matrix_angle*power)).set_at(0,2,-Math.sin(matrix_angle*power)).set_at(2,0,Math.sin(matrix_angle*power))),
+	"z>": new MatrixTranslation(matrix_identity.copy(), true, false, true, (matrix, power) => matrix.set_at(0,0,Math.cos(matrix_angle*power)).set_at(1,1,Math.cos(matrix_angle*power)).set_at(0,1,Math.sin(matrix_angle*power)).set_at(1,0,-Math.sin(matrix_angle*power)))
 }
