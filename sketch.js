@@ -14,11 +14,11 @@ function mousePressed(event) {
   ACTION_CLICK(event, game);
 }
 
-function keyPressed(event) {
-  console.log("keyPressed event: ",event);
+document.addEventListener("keydown", (event) => {
+  console.log("keyDown event: ",event);
   //cube_translate
   ACTION_PRESS(event, game);
-}
+});
 
 
 //--- draw ---
