@@ -52,13 +52,15 @@ function perspective_draw_3D_flat(grid)
 function perspective_init_3D_cube(grid)
 {
 	//create cube
-	grid.at([0,0,0]).morph.clear();
-	grid.at([0,0,0]).morph.add_quadri([[-1,-1,-1],[1,-1,-1],[1,1,-1],[-1,1,-1]]);
-	grid.at([0,0,0]).morph.add_quadri([[-1,-1,1],[1,-1,1],[1,1,1],[-1,1,1]]);
-	grid.at([0,0,0]).morph.add_quadri([[-1,-1,-1],[1,-1,-1],[1,-1,1],[-1,-1,1]]);
-	grid.at([0,0,0]).morph.add_quadri([[-1,1,-1],[1,1,-1],[1,1,1],[-1,1,1]]);
-	grid.at([0,0,0]).morph.add_quadri([[-1,-1,-1],[-1,-1,1],[-1,1,1],[-1,1,-1]]);
-	grid.at([0,0,0]).morph.add_quadri([[1,-1,-1],[1,-1,1],[1,1,1],[1,1,-1]]);
+  const h_box=grid.at([0,0,0]);
+	h_box.morph.clear();
+	h_box.morph.add_quadri([[-1,-1,-1],[1,-1,-1],[1,1,-1],[-1,1,-1]]);
+	h_box.morph.add_quadri([[-1,-1,1],[1,-1,1],[1,1,1],[-1,1,1]]);
+	h_box.morph.add_quadri([[-1,-1,-1],[1,-1,-1],[1,-1,1],[-1,-1,1]]);
+	h_box.morph.add_quadri([[-1,1,-1],[1,1,-1],[1,1,1],[-1,1,1]]);
+	h_box.morph.add_quadri([[-1,-1,-1],[-1,-1,1],[-1,1,1],[-1,1,-1]]);
+	h_box.morph.add_quadri([[1,-1,-1],[1,-1,1],[1,1,1],[1,1,-1]]);
+	h_box.center=[0,0,0];
 
 	//add distance
   for (let posKey of grid.map_keys)
@@ -72,6 +74,7 @@ function perspective_init_3D_cube(grid)
 			})
 		}
 	}
+	grid.center[2] += Settings.PERSPECTIVE_DISTANCE;
 }
 function perspective_draw_3D_cube(grid)
 {

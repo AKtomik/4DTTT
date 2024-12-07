@@ -12,10 +12,13 @@ class Grid {
     this.map = {};
 		this.map_keys = [];
 
-		//
+		//build
 		this.build_map_deep(width, deepth);
     console.log("Grid: this.map:", this.map);
     console.log("Grid: this.map_keys:", this.map_keys);
+
+		//pos
+    this.center=[];//the imaginary center
 
 		//vectors
 		this.vectors = [];

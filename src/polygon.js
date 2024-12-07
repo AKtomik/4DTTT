@@ -134,13 +134,4 @@ class AbstractPolygon {
 	set_quadri(i,v) {
 		this.quadri[i]=v;
 	}
-  /*
-	set_points(multidimPointsArray) {
-		this.points=multidimPointsArray;
-	}
-
-	set_point(i, MultidimPoint) {
-		this.points[i]=MultidimPoint;
-	}
-  */
 }
