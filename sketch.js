@@ -46,6 +46,7 @@ function setup() {
   //test
   let m = new Matrix(4,4);
   m.build_identity();
+  m.set_column(3, ['x','y','z','s']);
   console.log(String(m));
 }
 
