@@ -5,10 +5,11 @@ class Settings {
 	static PERSPECTIVE_FOV = Math.PI/6;
 	static PERSPECTIVE_DISTANCE = 3;
 	
-	static VELOCITY_ADD_PUSH = .02;
+	static VELOCITY_ADD_PUSH = .1;
 	static VELOCITY_ADD_REMAIN = .01;
+	static VELOCITY_ADD_OPPOSE = .1;
 	static VELOCITY_FRICTION_Q = .99;
-	static VELOCITY_FRICTION_R = -0.001;
+	static VELOCITY_FRICTION_R = 0.01;
 
 	static RULE_BOX_WIDTH=3;//const
 	static RULE_BOX_D=3;//const
