@@ -25,6 +25,9 @@ function perspective_draw_2D_flat(grid)
   rect(...square_top, ...square_size);
 }
 
+
+
+
 function perspective_draw_3D_flat(grid)
 {
   const margin = Scale.min(Settings.POS_BOX_MARGIN);
@@ -108,18 +111,19 @@ function perspective_draw_3D_cube(grid)
   const margin = Scale.min(Settings.POS_BOX_MARGIN);
   let square_top = [(Scale.x(Settings.POS_BOX_FULL) - Scale.min(Settings.POS_BOX_FULL))/2 + margin, (Scale.y(Settings.POS_BOX_FULL) - Scale.min(Settings.POS_BOX_FULL))/2 + margin];
   let square_size = [Scale.min(Settings.POS_BOX_FULL) - 2*margin, Scale.min(Settings.POS_BOX_FULL) - 2*margin];
-	//draw
-  stroke(255);
-  fill(0,0);
-  strokeWeight(3);
-  grid.sort_keys();
-	//projection
+	
+	
+  //projection
 	const projectZ = 1/Math.tan(Settings.PERSPECTIVE_FOV);
   
+  //order
+  grid.sort_keys();
 
   for (let posKey of [[0,0,0]])
   {
     const h_box = grid.at(posKey);
+    
+    //project
 		let projections=h_box.morph.points.map(pos => {
 				let vector=perspective_draw_3D_cube_projection(pos,projectZ);
 				vector.x=square_top[0]+(vector.x+1)/2*square_size[0];
@@ -127,6 +131,10 @@ function perspective_draw_3D_cube(grid)
 				return vector;
 			});
 
+    //draw outline
+    stroke(255);
+    noFill();
+    strokeWeight(3);
 		for (let pairPointI of cube_edges)
 		{
 	    beginShape();
@@ -134,6 +142,25 @@ function perspective_draw_3D_cube(grid)
       {
 	      vertex(projections[pairPointI[i]].x, projections[pairPointI[i]].y);
 	      point(projections[pairPointI[i]]);
+	    }
+	    endShape(CLOSE);
+		}
+
+    //hitbox
+    h_box.shape.set_points(projections);
+    //display
+    //h_box.display();
+
+
+    //fill faces
+    noStroke();
+    fill(h_box.color);
+		for (let quadPointI of cube_faces)
+		{
+	    beginShape();
+	    for(let i of [0,1,2,3])
+      {
+	      vertex(projections[quadPointI[i]].x, projections[quadPointI[i]].y);
 	    }
 	    endShape(CLOSE);
 		}
