@@ -53,6 +53,7 @@ function perspective_init_3D_cube(grid)
 {
 	//create cube
   const h_box=grid.at([0,0,0]);
+	grid.center=[0,0,0];
 	h_box.morph.clear();
 	h_box.morph.add_quadri([[-1,-1,-1],[1,-1,-1],[1,1,-1],[-1,1,-1]]);
 	h_box.morph.add_quadri([[-1,-1,1],[1,-1,1],[1,1,1],[-1,1,1]]);
@@ -60,7 +61,6 @@ function perspective_init_3D_cube(grid)
 	h_box.morph.add_quadri([[-1,1,-1],[1,1,-1],[1,1,1],[-1,1,1]]);
 	h_box.morph.add_quadri([[-1,-1,-1],[-1,-1,1],[-1,1,1],[-1,1,-1]]);
 	h_box.morph.add_quadri([[1,-1,-1],[1,-1,1],[1,1,1],[1,1,-1]]);
-	h_box.center=[0,0,0];
 
 	//add distance
   for (let posKey of grid.map_keys)

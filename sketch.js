@@ -1,10 +1,16 @@
 
 //--- settings ---
 
-const ACTION_PRESS=(event, game) => translation_cube_key(event, game);
-const ACTION_CLICK=(event, game) => collision_by_front(event, game);
-const PERSPECTIVE_INIT=(grid) => perspective_init_3D_cube(grid);
-const PERSPECTIVE_DRAW=(grid) => perspective_draw_3D_cube(grid);
+const ACTION_PRESS= (event, game) => translation_key_3D_cube(event, game);
+const ACTION_CLICK= (event, game) => collision_by_front(event, game);
+const PERSPECTIVE_INIT= (grid) => {
+  perspective_init_3D_cube(grid);
+  translation_init_3D_cube(grid);
+};
+const PERSPECTIVE_DRAW= (grid) => {
+  perspective_draw_3D_cube(grid);
+  translation_draw_3D_cube(grid);
+};
 
 
 //--- click ---
@@ -14,7 +20,7 @@ function mousePressed(event) {
   ACTION_CLICK(event, game);
 }
 
-document.addEventListener("keydown", (event) => {
+window.addEventListener("keydown", (event) => {
   console.log("keyDown event: ",event);
   //cube_translate
   ACTION_PRESS(event, game);
@@ -76,4 +82,5 @@ function draw() {
   }
 
   PERSPECTIVE_DRAW(grid);
+  //console.log(grid.velocity);
 }

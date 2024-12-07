@@ -19,6 +19,7 @@ class Grid {
 
 		//pos
     this.center=[];//the imaginary center
+    this.velocity={};//the imaginary veolcity
 
 		//vectors
 		this.vectors = [];
