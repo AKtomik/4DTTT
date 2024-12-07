@@ -53,9 +53,18 @@ function perspective_draw_3D_flat(grid)
 }
 
 
+const cube_points = [//binnary to create points
+  	[0,0,0],//0
+  	[1,0,0],//1
+  	[0,1,0],//2
+  	[1,1,0],//3
+  	[0,0,1],//4
+  	[1,0,1],//5
+  	[0,1,1],//6
+  	[1,1,1],//7
+  ]
 
-
-const cube_edges = [
+const cube_edges = [//link points between each others
   [0,1],
   [0,2],
   [0,4],
@@ -70,7 +79,7 @@ const cube_edges = [
   [6,7],
 ];
 
-const cube_faces = [
+const cube_faces = [//link points between each others
   [0,2,3,1],
   [0,1,5,4],
   [0,4,6,2],
@@ -81,28 +90,43 @@ const cube_faces = [
 
 function perspective_init_3D_cube(grid)
 {
-	//create cube
-  const h_box=grid.at([0,0,0]);
-	grid.center=[0,0,0];
-	h_box.morph.clear();
-	h_box.morph.add_point([-1,-1,-1]);
-	h_box.morph.add_point([1,-1,-1]);
-	h_box.morph.add_point([-1,1,-1]);
-	h_box.morph.add_point([1,1,-1]);
-	h_box.morph.add_point([-1,-1,1]);
-	h_box.morph.add_point([1,-1,1]);
-	h_box.morph.add_point([-1,1,1]);
-	h_box.morph.add_point([1,1,1]);
-
-	//add distance
+	//create cubes
   for (let posKey of grid.map_keys)
   {
+    const i = posKey[0];
+    const j = posKey[1];
+    const k = posKey[2];
     const h_box = grid.at(posKey);
+
+    //imaginary point
+    const point_top = [
+      i*3/8, j*3/8, k*3/8
+    ]
+    const point_size = [//same for everyone
+      2/8, 2/8, 2/8
+    ]
+
+    //imaginary bin
+  	h_box.morph.clear();
+    for (let i in cube_points)
+    {
+      let v=cube_points[i].slice();//copy
+      for (let i2 of [0,1,2])
+      {
+        v[i2]=(v[i2]) ? point_top[i2]+point_size[i2] : point_top[i2];//use bin
+        v[i2]=v[i2]*2-1;//slide in order to origin be centered
+      }
+      v[2] += Settings.PERSPECTIVE_DISTANCE;//add distance
+  	  h_box.morph.add_point(v);
+    }
+
+	  //for each
 		for (let i=0;i<h_box.morph.get_points_amount();i+=1)
 		{
-			h_box.morph.get_point(i)[2] += Settings.PERSPECTIVE_DISTANCE;
 		}
-	}
+  }
+	//center
+  grid.center=[0,0,0];
 	grid.center[2] += Settings.PERSPECTIVE_DISTANCE;
 }
 function perspective_draw_3D_cube(grid)
@@ -119,15 +143,15 @@ function perspective_draw_3D_cube(grid)
   //order
   grid.sort_keys();
 
-  for (let posKey of [[0,0,0]])
+  for (let posKey of grid.map_keys)
   {
     const h_box = grid.at(posKey);
     
     //project
 		let projections=h_box.morph.points.map(pos => {
 				let vector=perspective_draw_3D_cube_projection(pos,projectZ);
-				vector.x=square_top[0]+(vector.x+1)/2*square_size[0];
-				vector.y=square_top[1]+(vector.y+1)/2*square_size[1];
+				vector.x=square_top[0]+(vector.x+.5)*square_size[0];
+				vector.y=square_top[1]+(vector.y+.5)*square_size[1];
 				return vector;
 			});
 
@@ -168,7 +192,7 @@ function perspective_draw_3D_cube(grid)
 }
 function perspective_draw_3D_cube_projection(pos3D, projectZ)
 {
-	const projectX = pos3D[0] * projectZ / pos3D[2];
-	const projectY = pos3D[1] * projectZ / pos3D[2];
+	const projectX = (pos3D[0]) * projectZ / (pos3D[2]);
+	const projectY = (pos3D[1]) * projectZ / (pos3D[2]);
 	return createVector(projectX, projectY);
 };

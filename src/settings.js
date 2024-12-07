@@ -3,7 +3,7 @@ class Settings {
 	static POS_BOX_MARGIN = 200;
 
 	static PERSPECTIVE_FOV = Math.PI/6;
-	static PERSPECTIVE_DISTANCE = 3;
+	static PERSPECTIVE_DISTANCE = 5;
 	
 	static VELOCITY_ADD_PUSH = .1;
 	static VELOCITY_ADD_REMAIN = .01;
