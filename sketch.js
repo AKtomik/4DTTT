@@ -44,10 +44,15 @@ function setup() {
 
   PERSPECTIVE_INIT(grid);
   //test
-  let m = new Matrix(4,4);
-  m.build_identity();
-  m.set_column(3, ['x','y','z','s']);
-  console.log(String(m));
+  let translationMatrix = new Matrix(4,4).build_identity();
+  translationMatrix.set_column(3, [2,3,4,1]);
+  console.log(String(translationMatrix));
+  let posMatrix = new Matrix(4, 1);
+  posMatrix.set_column(0, [10,20,30,2]);
+  console.log(String(posMatrix));
+  let resultMatrix=translationMatrix.multiply_with(posMatrix);
+  console.log(String(resultMatrix));
+  console.log(resultMatrix.data.slice(0,3));
 }
 
 function draw() {

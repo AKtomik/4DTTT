@@ -24,6 +24,7 @@ class Matrix {
 	{
 		if (this.size[0]!=this.size[1])
 			throw new Error(`must be a square matrix but is of size (${this.size[0]},${this.size[1]})`);
+
 		const order = this.size[0];
 		for (let i=0;i<order;i++)
 		{
@@ -38,15 +39,20 @@ class Matrix {
 	};
 
 	//set
+	set_raw(i, v)
+	{
+		this.data[i] = v;
+	}
 	set_at(lineIndex, columnIndex, v)
 	{
-		this.data[lineIndex*this.size[0]+columnIndex] = v;
+		this.data[lineIndex*this.size[1]+columnIndex] = v;
 		return this;
 	}
 	set_line(lineIndex, array)
 	{
-		if (array.length!=this.size[1])
+		if (array.length!==this.size[1])
 			throw new Error(`array's size not the same as matrix's number of column  (${this.size[0]},${this.size[1]})`);
+
 		for (let columnIndex=0;columnIndex<this.size[1];columnIndex++)
 		{
 			this.set_at(lineIndex, columnIndex, array[columnIndex]);
@@ -55,9 +61,10 @@ class Matrix {
 	}
 	set_column(columnIndex, array)
 	{
-		if (array.length!=this.size[0])
+		if (array.length!==this.size[0])
 			throw new Error(`array's size not the same as matrix's number of line  (${this.size[0]},${this.size[1]})`);
-		for (let lineIndex=0;lineIndex<this.size[1];lineIndex++)
+
+		for (let lineIndex=0;lineIndex<this.size[0];lineIndex++)
 		{
 			this.set_at(lineIndex, columnIndex, array[lineIndex]);
 		}
@@ -65,9 +72,47 @@ class Matrix {
 	}
 
 	//get
+	get_raw(i)
+	{
+		return this.data[i];
+	}
 	get_at(lineIndex, columnIndex)
 	{
-		return this.data[lineIndex*this.size[0]+columnIndex];
+		return this.data[lineIndex*this.size[1]+columnIndex];
+	}
+
+	//operation
+	add_with(other)
+	{
+		if (other.size!==this.size)
+			throw new Error(`matrices' sizes are not the same (${this.size[0]},${this.size[1]}) (${other.size[0]},${other.size[1]})`);
+
+		let resultMatrix=new Matrix(...this.size);
+		for (let i=0;i<this.size[0]*this.size[1];i++)
+		{
+			resultMatrix.set_raw(i, this.get_raw(i)+other.get_raw(i));
+		}
+		return resultMatrix;
+	}
+	multiply_with(other)
+	{
+		if (other.size[0]!==this.size[1])
+			throw new Error(`first matrix's number of column is not the same as second matrix's number of line (${this.size[0]},${this.size[1]}) (${other.size[0]},${other.size[1]})`);
+
+		let resultMatrix=new Matrix(this.size[0], other.size[1]);
+		for (let lineIndex=0;lineIndex<this.size[0];lineIndex++)
+		{
+			for (let columnIndex=0;columnIndex<other.size[1];columnIndex++)
+			{
+				let value=0;
+				for (let bothIndex=0;bothIndex<this.size[1];bothIndex++)
+				{
+					value+=(this.get_at(lineIndex, bothIndex)*other.get_at(bothIndex, columnIndex));
+				}
+				resultMatrix.set_at(lineIndex, columnIndex, value);
+			}
+		}
+		return resultMatrix;
 	}
 
 	//print
@@ -78,7 +123,7 @@ class Matrix {
 		{
 			for (let columnIndex=0;columnIndex<this.size[1];columnIndex++)
 			{
-				let str=String(this.data[lineIndex*this.size[0]+columnIndex]);
+				let str=String(this.data[lineIndex*this.size[1]+columnIndex]);
 				r+="  "+str;
 			}
 			r+="\n";
