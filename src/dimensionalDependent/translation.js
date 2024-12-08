@@ -74,6 +74,26 @@ function translation_key_3D_cube(keyEvent, game)
 	}
 	game.grid.velocity[translationKey]+=power;
 }
+
+function translation_drag_3D_cube(dragEvent, game)
+{
+	//console.log("drag to move perspective:",dragEvent);
+	const mouseVector=[winMouseX-pwinMouseX, winMouseY-pwinMouseY];
+	const translations={
+		"x/":-mouseVector[1]/Scale.y(1000),
+		"y/":mouseVector[0]/Scale.x(1000)
+	};
+	for (let translationKey in translations)
+	{
+		const power=Settings.VELOCITY_ADD_DRAG*(translations[translationKey])*Settings.SPEED;
+		if (game.grid.velocity[translationKey]*(Math.abs(power)/power)<=0)
+		{
+			game.grid.velocity[translationKey]=0;
+		}
+		game.grid.velocity[translationKey]+=power;
+	}
+}
+
 function translation_init_3D_cube(grid)
 {
 	for (let moveKey of Object.keys(move_to_keycode))

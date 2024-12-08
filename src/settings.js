@@ -11,6 +11,7 @@ class Settings {
 	static VELOCITY_ADD_PUSH = .1;
 	static VELOCITY_ADD_REMAIN = .01;
 	static VELOCITY_ADD_OPPOSE = .1;
+	static VELOCITY_ADD_DRAG = 1;
 	static VELOCITY_FRICTION_Q = .99;
 	static VELOCITY_FRICTION_R = 0.01;
 

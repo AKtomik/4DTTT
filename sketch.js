@@ -3,6 +3,7 @@
 
 const ACTION_PRESS= (event, game) => translation_key_3D_cube(event, game);
 const ACTION_CLICK= (event, game) => collision_by_front(event, game);
+const ACTION_DRAG= (event, game) => translation_drag_3D_cube(event, game);
 const PERSPECTIVE_INIT= (grid) => {
   translation_init_3D_cube(grid);
   perspective_init_3D_cube(grid);
@@ -15,9 +16,15 @@ const PERSPECTIVE_DRAW= (grid) => {
 
 //--- click ---
 function mousePressed(event) {
-  console.log("mousePressed event: ",event);
+  //console.log("mousePressed event: ",event);
   //boxs_clicked
   ACTION_CLICK(event, game);
+}
+
+function mouseDragged(event) {
+  //console.log("mouseDragged event: ",event);
+  //boxs_clicked
+  ACTION_DRAG(event, game);
 }
 
 //window.addEventListener("keydown", (event) => {})
