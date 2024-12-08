@@ -75,18 +75,23 @@ function draw() {
   {//texts
     fill(255);
     textSize(20);
-    textAlign(LEFT, CENTER);
-    strokeWeight(1);
-    text(`4D Tick Tac Toe`, 25, 25);
+    textAlign(LEFT,TOP);
+    strokeWeight(0);
+    textStyle(NORMAL);
+    text(`4D Tick Tac Toe`, Scale.x(20), Scale.y(20));
     
     textSize(40);
     textAlign(CENTER, CENTER);
+    textStyle(BOLD);
     text(`scores`, Scale.x(100), Scale.y(400));
     textSize(60);
     fill((player_1.score) ? player_1.color_won : player_1.color_fill);
     text(`${player_1.score}`, Scale.x(100), Scale.y(500));
     fill((player_2.score) ? player_2.color_won : player_2.color_fill);
     text(`${player_2.score}`, Scale.x(100), Scale.y(600));
+    fill(game.players[game.player_i].color_won);
+    textSize(40);
+    text(`à ton tour`, Scale.x(100), Scale.y(800));
   }
 
   PERSPECTIVE_DRAW(grid);

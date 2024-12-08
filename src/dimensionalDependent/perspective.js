@@ -177,6 +177,7 @@ function perspective_draw_3D_cube(grid)
 
     //draw outline
     stroke(255);
+    //stroke(h_box.color);
     strokeWeight(3);
     noFill();
 		for (let pairPointI of cube_edges)
@@ -195,23 +196,24 @@ function perspective_draw_3D_cube(grid)
     //display
     stroke(0);
     strokeWeight(1);
-    h_box.display();
+    //h_box.display();
 
 
     //fill faces
-    /*
-    noStroke();
-    fill(h_box.color);
-		for (let quadPointI of cube_faces)
-		{
-	    beginShape();
-	    for(let i of [0,1,2,3])
-      {
-	      vertex(projections[quadPointI[i]].x, projections[quadPointI[i]].y);
-	    }
-	    endShape(CLOSE);
-		}
-    */
+    //if (false)
+    {
+      noStroke();
+      fill(h_box.color);
+  		for (let quadPointI of cube_faces)
+  		{
+  	    beginShape();
+  	    for(let i of [0,1,2,3])
+        {
+  	      vertex(projections[quadPointI[i]].x, projections[quadPointI[i]].y);
+  	    }
+  	    endShape(CLOSE);
+  		}
+    }
   }
 }
 function perspective_draw_3D_cube_projection(pos3D, projectZ)
