@@ -123,7 +123,7 @@ function perspective_init_3D_cube(grid)
       2/8, 2/8, 2/8
     ]
 
-    //imaginary bin
+    //imaginary pos using binary
   	h_box.morph.clear();
     for (let i in cube_points)
     {
@@ -177,8 +177,8 @@ function perspective_draw_3D_cube(grid)
 
     //draw outline
     stroke(255);
-    noFill();
     strokeWeight(3);
+    noFill();
 		for (let pairPointI of cube_edges)
 		{
 	    beginShape();
@@ -193,10 +193,13 @@ function perspective_draw_3D_cube(grid)
     //hitbox
     h_box.shape.set_points(projections);
     //display
-    //h_box.display();
+    stroke(0);
+    strokeWeight(1);
+    h_box.display();
 
 
     //fill faces
+    /*
     noStroke();
     fill(h_box.color);
 		for (let quadPointI of cube_faces)
@@ -208,6 +211,7 @@ function perspective_draw_3D_cube(grid)
 	    }
 	    endShape(CLOSE);
 		}
+    */
   }
 }
 function perspective_draw_3D_cube_projection(pos3D, projectZ)
