@@ -15,13 +15,20 @@ const PERSPECTIVE_DRAW= (grid) => {
 
 
 //--- click ---
-function mousePressed(event) {
-  //console.log("mousePressed event: ",event);
+let draging = false;
+function mouseClicked(event) {//like released
+  if (draging)
+  {
+    draging=false;
+    return;
+  }
+  //console.log("mouseClicked event: ",event);
   //boxs_clicked
   ACTION_CLICK(event, game);
 }
 
 function mouseDragged(event) {
+  draging=true;
   //console.log("mouseDragged event: ",event);
   //boxs_clicked
   ACTION_DRAG(event, game);

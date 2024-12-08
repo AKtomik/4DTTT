@@ -176,20 +176,23 @@ function perspective_draw_3D_cube(grid)
 			});
 
     //draw outline
-    stroke(255);
-    //stroke(h_box.color);
-    strokeWeight(3);
-    noFill();
-		for (let pairPointI of cube_edges)
-		{
-	    beginShape();
-	    for(let i of [0,1])
-      {
-	      vertex(projections[pairPointI[i]].x, projections[pairPointI[i]].y);
-	      point(projections[pairPointI[i]]);
-	    }
-	    endShape(CLOSE);
-		}
+    //if (false)
+    {
+      stroke(255);
+      //stroke(h_box.color);
+      strokeWeight(3);
+      noFill();
+  		for (let pairPointI of cube_edges)
+  		{
+  	    beginShape();
+  	    for(let i of [0,1])
+        {
+  	      vertex(projections[pairPointI[i]].x, projections[pairPointI[i]].y);
+  	      point(projections[pairPointI[i]]);
+  	    }
+  	    endShape(CLOSE);
+  		}
+    }
 
     //hitbox
     h_box.shape.set_points(projections);
