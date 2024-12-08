@@ -142,10 +142,8 @@ function perspective_init_3D_cube(grid)
 	grid.center[2] += Settings.PERSPECTIVE_DISTANCE;
 
   //front method
-  grid.set_front_method((grid, posKey1, posKey2) => {//check the z-axis of center
-  		return (grid.map[posKey1].morph.points[8][2]<grid.map[posKey2].morph.points[8][2]);
-  		//throw new Error("no one in front between "+posKey1+posKey2);
-    }
+  grid.set_front_method((grid, posKey1, posKey2) => //check the z-axis of center
+  		grid.map[posKey1].morph.points[8][2]<grid.map[posKey2].morph.points[8][2]
   );
 }
 

@@ -37,13 +37,18 @@ const matrix_strength = .1*Settings.SPEED;
 const matrix_angle = Math.PI/32*Settings.SPEED;
 
 const matrix_3D_translations = {
+	//move
 	"x<->": new MatrixTranslation(matrix_identity.copy().set_column(3, [matrix_strength,0,0,1]), false, true),
 	"y<->": new MatrixTranslation(matrix_identity.copy().set_column(3, [0,matrix_strength,0,1]), false, true),
 	"z<->": new MatrixTranslation(matrix_identity.copy().set_column(3, [0,0,matrix_strength,1]), false, true),
-
+	//rotation
 	"x/": new MatrixTranslation(matrix_identity.copy(), true, false, (matrix, power) => matrix.set_at(1,1,Math.cos(matrix_angle*power)).set_at(2,2,Math.cos(matrix_angle*power)).set_at(1,2,Math.sin(matrix_angle*power)).set_at(2,1,-Math.sin(matrix_angle*power))),
 	"y/": new MatrixTranslation(matrix_identity.copy(), true, false, (matrix, power) => matrix.set_at(0,0,Math.cos(matrix_angle*power)).set_at(2,2,Math.cos(matrix_angle*power)).set_at(0,2,-Math.sin(matrix_angle*power)).set_at(2,0,Math.sin(matrix_angle*power))),
-	"z/": new MatrixTranslation(matrix_identity.copy(), true, false, (matrix, power) => matrix.set_at(0,0,Math.cos(matrix_angle*power)).set_at(1,1,Math.cos(matrix_angle*power)).set_at(0,1,Math.sin(matrix_angle*power)).set_at(1,0,-Math.sin(matrix_angle*power)))
+	"z/": new MatrixTranslation(matrix_identity.copy(), true, false, (matrix, power) => matrix.set_at(0,0,Math.cos(matrix_angle*power)).set_at(1,1,Math.cos(matrix_angle*power)).set_at(0,1,Math.sin(matrix_angle*power)).set_at(1,0,-Math.sin(matrix_angle*power))),
+	//bonus
+	"x/me": new MatrixTranslation(matrix_identity.copy(), false, false, (matrix, power) => matrix.set_at(1,1,Math.cos(matrix_angle*power/4)).set_at(2,2,Math.cos(matrix_angle*power/4)).set_at(1,2,Math.sin(matrix_angle*power/4)).set_at(2,1,-Math.sin(matrix_angle*power/4))),
+	"y/me": new MatrixTranslation(matrix_identity.copy(), false, false, (matrix, power) => matrix.set_at(0,0,Math.cos(matrix_angle*power/4)).set_at(2,2,Math.cos(matrix_angle*power/4)).set_at(0,2,-Math.sin(matrix_angle*power/4)).set_at(2,0,Math.sin(matrix_angle*power/4))),
+	"z/me": new MatrixTranslation(matrix_identity.copy(), false, false, (matrix, power) => matrix.set_at(0,0,Math.cos(matrix_angle*power/4)).set_at(1,1,Math.cos(matrix_angle*power/4)).set_at(0,1,Math.sin(matrix_angle*power/4)).set_at(1,0,-Math.sin(matrix_angle*power/4))),
 };
 
 const move_to_keycode = {
@@ -54,6 +59,10 @@ const move_to_keycode = {
 	"x/": {positive: 87},
 	"y/": {positive: 88},
 	"z/": {positive: 67},
+	
+	"x/me": {positive: 73},
+	"y/me": {positive: 79},
+	"z/me": {positive: 80},
 };
 
 let keycode_to_move = {};
