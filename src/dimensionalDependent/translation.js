@@ -1,5 +1,7 @@
 
 class MatrixTranslation {
+	static identity_around=new Matrix(4,4).build_identity();
+
 	constructor(matrix, if_aroundCenter=false, if_powerInPos=false, power_calibration= (matrix, power) => matrix)
 	{
 		this.matrix=matrix;
@@ -18,14 +20,14 @@ class MatrixTranslation {
 		
 		if (this.center_around)
 		{//move origin to center
-			posMatrix=matrix_identity.copy().set_column(3, [-center[0], -center[1], -center[2], 1]).multiply_with(posMatrix);
+			posMatrix=MatrixTranslation.identity_around.set_column(3, [-center[0], -center[1], -center[2], 1]).multiply_with(posMatrix);
 		}
 
 		posMatrix=this.matrix.multiply_with(posMatrix);
 		
 		if (this.center_around)
 		{//move back
-			posMatrix=matrix_identity.copy().set_column(3, [center[0], center[1], center[2], 1]).multiply_with(posMatrix);
+			posMatrix=MatrixTranslation.identity_around.set_column(3, [center[0], center[1], center[2], 1]).multiply_with(posMatrix);
 		}
 
 		return posMatrix.data.slice(0,3);//return as a point
