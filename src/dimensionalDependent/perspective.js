@@ -81,33 +81,39 @@ const cube_points = [//binnary to create points
   	[.5,.5,.5]//8
   ]
 
-const cube_edges = [//link points between each others
-  [0,1],
-  [0,2],
-  [0,4],
-  [3,1],
-  [3,2],
-  [3,7],
-  [5,1],
-  [5,4],
-  [5,7],
-  [6,2],
-  [6,4],
-  [6,7],
-];
+//const cube_edges = [//link points between each others
+//  [0,1],
+//  [0,2],
+//  [0,4],
+//  [3,1],
+//  [3,2],
+//  [3,7],
+//  [5,1],
+//  [5,4],
+//  [5,7],
+//  [6,2],
+//  [6,4],
+//  [6,7],
+//];
 
-const cube_faces = [//link points between each others
-  [0,2,3,1],
-  [0,1,5,4],
-  [0,4,6,2],
-  [7,6,4,5],
-  [7,3,2,6],
-  [7,5,1,3],
-];
+//const cube_faces = [//link points between each others
+//  [0,2,3,1],
+//  [0,1,5,4],
+//  [0,4,6,2],
+//  [7,6,4,5],
+//  [7,3,2,6],
+//  [7,5,1,3],
+//];
 
 function perspective_init_3D_cube(grid)
 {
 	//create cubes
+  const just_total = (Settings.RULE_BOX_WIDTH+((Settings.RULE_BOX_WIDTH-1)*Settings.PERSPECTIVE_GAP));
+  const just_size = 1/just_total;
+  const just_top = (at) => at*(1+Settings.PERSPECTIVE_GAP)/just_total;
+  const point_size = [//same for everyone
+    just_size, just_size, just_size
+  ]
   for (let posKey of grid.map_keys)
   {
     const i = posKey[0];
@@ -116,14 +122,8 @@ function perspective_init_3D_cube(grid)
     const h_box = grid.at(posKey);
 
     //imaginary point
-    const just_total = (Settings.RULE_BOX_WIDTH+((Settings.RULE_BOX_WIDTH-1)*Settings.PERSPECTIVE_GAP));
-    const just_size = 1/just_total;
-    const just_top = (at) => at*(1+Settings.PERSPECTIVE_GAP)/just_total;
     const point_top = [
       just_top(i), just_top(j), just_top(k)
-    ]
-    const point_size = [//same for everyone
-      just_size, just_size, just_size
     ]
 
     //imaginary pos using binary

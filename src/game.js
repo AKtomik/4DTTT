@@ -46,12 +46,12 @@ class Game {
 			do {
 				box=this.grid.at(posKeyMove);
 
-				if (box && (box.checker==checker) && (box.dir!==dir))//is inside && have the player as checker && is not already checked in this side
+				if (box && (box.checker==checker) && (box.dir!==dir || Settings.RULE_BOX_ROW_CHAIN))//is inside && have the player as checker && is not already checked in this side
 				{
 					//in a row
 					row+=1;
 					checked.push(box);
-					if (row>=Settings.RULE_BOX_ROW)
+					if (row>=Settings.RULE_BOX_ROW_LENGTH)
 					{
 						for (let boxChecking of checked)
 						{
