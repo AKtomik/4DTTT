@@ -14,23 +14,23 @@
 
   <body>
     <!-- general -->
-    <script src="src/resize.js"></script>
     <script src="src/settings.js"></script>
     <script src="src/enums.js"></script>
-    <script src="src/matrix.js"></script>
+    <script src="src/classes/resize.js"></script>
+    <script src="src/classes/matrix.js"></script>
 
-    <!-- theorical -->
-    <script src="src/game.js"></script>
-    <script src="src/dimensionalDependent/collision.js"></script> <!-- 2D projection detect hitbox -->
+    <!-- mechanics -->
+    <script src="src/play/game.js"></script>
+    <script src="src/play/grid.js"></script>
 
-    <!-- display -->
-    <script src="src/dimensionalDependent/perspective.js"></script> <!-- _D => 2D projection -->
-    <script src="src/dimensionalDependent/translation.js"></script> <!-- _D translation -->
-    <script src="src/geometry.js"></script> <!-- 2D geometry -->
-    <script src="src/polygon.js"></script> <!-- use projection -->
+    <!-- geometry -->
+    <script src="src/geometry/flat.js"></script> <!-- 2D geometry -->
+    <script src="src/geometry/polygon.js"></script> <!-- use projection -->
 
-    <!-- both -->
-    <script src="src/grid.js"></script>
+    <!-- dependant -->
+    <script src="src/dimension/collision.js"></script> <!-- 2D projection detect hitbox -->
+    <script src="src/dimension/perspective.js"></script> <!-- _D => 2D projection -->
+    <script src="src/dimension/translation.js"></script> <!-- _D translation -->
     
     <!-- skeleton -->
     <script src="sketch.js"></script>
