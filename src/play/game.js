@@ -5,6 +5,7 @@ class Game {
 		this.grid=grid;
 		this.players=ptrPlayers;
 		this.player_i=Math.floor(Math.random()*this.players.length);
+		this.winer_i=-1;
 
 		this.state=state;
 		this.remain=grid.map_keys.length;
@@ -34,7 +35,7 @@ class Game {
 	check_won_at(posKey) {
 
 		let checker=this.grid.at(posKey).checker;
-		let return_value=false;
+		let ifScoreChanged=false;
 
 		for (let dir of this.grid.vectors)
 		{
@@ -60,6 +61,7 @@ class Game {
 							boxChecking.won(dir);
 						}
 						checker.score_add();
+						ifScoreChanged=true;
 						box=false;
 						break;
 					}
@@ -89,7 +91,28 @@ class Game {
 				*/
 			} while (box)
 		}
-		return return_value;
+
+		if (ifScoreChanged)
+		{//calculate winer
+			let bestScore=0;
+			let bestPlayer=-1;
+			for (let i in this.players)
+			{
+				let playerScore=this.players[i].score;
+				if (playerScore>bestScore)
+				{
+					bestScore=playerScore;
+					bestPlayer=i;
+				}
+				else if (playerScore===bestScore)
+				{
+					bestPlayer=-1;
+				}
+			}
+			this.winer_i=bestPlayer;
+		}
+
+		return ifScoreChanged;
 	}
 };
 

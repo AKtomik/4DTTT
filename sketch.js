@@ -125,6 +125,16 @@ function draw() {
       textSize(20);
       text(`reste ${game.remain}`, Scale.x(50), Scale.y(750));
     } else {
+      if (game.winer_i===-1)
+      {
+        fill(...Settings.COLOR_TEXT_NETRAL);
+        textSize(70);
+        text(`égalitée`, Scale.x(40), Scale.y(700));
+      } else {
+        fill(game.players[game.winer_i].color_won);
+        textSize(70);
+        text(`a gagné`, Scale.x(40), Scale.y(700));
+      }
     }
   }
 
