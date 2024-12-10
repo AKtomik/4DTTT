@@ -11,7 +11,6 @@ function collision_by_front(mouseEvent, game)
     if (h_box.shape.isInside(pointer_at) && (!checkPosKey || grid.is_in_front(posKey, checkPosKey)))
     {
       checkPosKey = posKey;
-      console.log("HIT BOX ",i,j);
     }
   }
 

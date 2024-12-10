@@ -36,7 +36,7 @@ function mouseDragged(event) {
 
 //window.addEventListener("keydown", (event) => {})
 function keyPressed(event) {
-  console.log("keyDown event: ",event);
+  //console.log("keyDown event: ",event);
   //cube_translate
   ACTION_PRESS(event, game);
 };
@@ -64,16 +64,6 @@ function setup() {
   game = new Game(grid, [player_1, player_2]);
 
   PERSPECTIVE_INIT(grid);
-  //test
-  let translationMatrix = new Matrix(4,4).build_identity();
-  translationMatrix.set_column(3, [2,3,4,1]);
-  console.log(String(translationMatrix));
-  let posMatrix = new Matrix(4, 1);
-  posMatrix.set_column(0, [10,20,30,2]);
-  console.log(String(posMatrix));
-  let resultMatrix=translationMatrix.multiply_with(posMatrix);
-  console.log(String(resultMatrix));
-  console.log(resultMatrix.data.slice(0,3));
 }
 
 function draw() {
@@ -102,5 +92,4 @@ function draw() {
   }
 
   PERSPECTIVE_DRAW(grid);
-  //console.log(grid.velocity);
 }

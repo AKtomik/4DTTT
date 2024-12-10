@@ -51,7 +51,6 @@ class Game {
 					//in a row
 					row+=1;
 					checked.push(box);
-					//console.log(`YEP dir ${dir} row ${row} at ${posKeyMove}`);
 					if (row>=Settings.RULE_BOX_ROW)
 					{
 						for (let boxChecking of checked)
@@ -66,14 +65,12 @@ class Game {
 					//not checked
 					if (sens===1)
 					{//change sens
-						//console.log(`FLIP dir ${dir} row ${row} at ${posKeyMove}`);
 						box=true;
 						posKeyMove=[...posKey];
 						sens=-1;
 					}
 					else
 					{//no
-						//console.log(`BREAK dir ${dir} row ${row} at ${posKeyMove}`);
 						box=false;
 						break;
 					}

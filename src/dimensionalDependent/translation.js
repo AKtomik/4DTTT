@@ -54,13 +54,13 @@ const matrix_3D_translations = {
 };
 
 const move_to_keycode = {
-	"x<->": {negative: 81, positive: 68},
-	"y<->": {negative: 69, positive: 65},
-	"z<->": {negative: 83, positive: 90},
+	"x<->": {negative: 70, positive: 72},
+	"y<->": {negative: 84, positive: 71},
+	"z<->": {negative: 82, positive: 89},
 	
-	"x/": {positive: 87},
-	"y/": {positive: 88},
-	"z/": {positive: 67},
+	"x/": {positive: 90, negative: 83},
+	"y/": {positive: 68, negative: 81},
+	"z/": {positive: 65, negative: 69},
 	
 	"x/me": {positive: 73},
 	"y/me": {positive: 79},
