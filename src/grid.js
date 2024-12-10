@@ -67,7 +67,7 @@ class Grid {
 	//display
 	sort_keys()
 	{
-		this.map_keys=this.map_keys.sort((a,b) => this.is_in_front(this,a,b));
+		this.map_keys=this.map_keys.sort((a,b) => this.front_method(this,a,b));
 	}
 	is_in_front(posKey1, posKey2)
 	{
@@ -75,7 +75,7 @@ class Grid {
 	};
 	set_front_method(frontFunction)
 	{
-		this.is_in_front=frontFunction;
+		this.front_method=frontFunction;
 	};
 };
 

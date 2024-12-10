@@ -143,7 +143,8 @@ function perspective_init_3D_cube(grid)
 
   //front method
   grid.set_front_method((grid, posKey1, posKey2) => //check the z-axis of center
-  		grid.map[posKey1].morph.points[8][2]<grid.map[posKey2].morph.points[8][2]
+      //true
+      grid.map[posKey1].morph.points[grid.map[posKey1].morph.points.length-1][2]<grid.map[posKey2].morph.points[grid.map[posKey2].morph.points.length-1][2]
   );
 }
 
@@ -164,21 +165,26 @@ function perspective_draw_3D_cube(grid)
   for (let posKey of grid.map_keys)
   {
     const h_box = grid.at(posKey);
-    
+
     //project
 		let projections=h_box.morph.points.map(pos => {
 				let vector=perspective_draw_3D_cube_projection(pos,projectZ);
-				vector.x=square_top[0]+(vector.x+.5)*square_size[0];
-				vector.y=square_top[1]+(vector.y+.5)*square_size[1];
-				return vector;
+				return [
+          square_top[0]+(vector.x+.5)*square_size[0],
+          square_top[1]+(vector.y+.5)*square_size[1]
+          ];
 			});
 
-    //draw outline
-    //if (false)
+    //Chan
+    projections=convexHull(projections);
+    projections=projections.map(pos => createVector(pos[0], pos[1]));
+
+    //draw full outline
+    if (false)
     {
       stroke(255);
       //stroke(h_box.color);
-      strokeWeight(3);
+      strokeWeight(5);
       noFill();
   		for (let pairPointI of cube_edges)
   		{
@@ -191,30 +197,14 @@ function perspective_draw_3D_cube(grid)
   	    endShape(CLOSE);
   		}
     }
+    
 
     //hitbox
     h_box.shape.set_points(projections);
     //display
-    stroke(0);
+    stroke(255);
     strokeWeight(1);
-    //h_box.display();
-
-
-    //fill faces
-    //if (false)
-    {
-      noStroke();
-      fill(h_box.color);
-  		for (let quadPointI of cube_faces)
-  		{
-  	    beginShape();
-  	    for(let i of [0,1,2,3])
-        {
-  	      vertex(projections[quadPointI[i]].x, projections[quadPointI[i]].y);
-  	    }
-  	    endShape(CLOSE);
-  		}
-    }
+    h_box.display();
   }
 }
 function perspective_draw_3D_cube_projection(pos3D, projectZ)
