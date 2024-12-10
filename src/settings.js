@@ -1,5 +1,5 @@
 class Settings {	
-	static FPS = 24;
+	static FPS = 12;
 	static SPEED = 3;
 
 	static POS_BOX_FULL = 1000;
@@ -7,6 +7,7 @@ class Settings {
 
 	static PERSPECTIVE_FOV = Math.PI/6;
 	static PERSPECTIVE_DISTANCE = 5;
+	static PERSPECTIVE_GAP = 3/4;
 	
 	static VELOCITY_ADD_PUSH = .1;
 	static VELOCITY_ADD_REMAIN = .01;
@@ -15,8 +16,11 @@ class Settings {
 	static VELOCITY_FRICTION_Q = .99;
 	static VELOCITY_FRICTION_R = 0.01;
 
-	static RULE_BOX_WIDTH=3;//const
-	static RULE_BOX_D=3;//const
+	//how many box width
+	static RULE_BOX_WIDTH=4;//const
+	//how many dimensions
+	static RULE_BOX_D=3;//const//!dont used
+	//how many to check in order to score
 	static RULE_BOX_ROW=3;//const
 
 

@@ -90,7 +90,8 @@ class Box {
     this.state=BoxStateType.EMPTY;
     this.shape=new ConcretePolygon();//the projected shape
     this.morph=new AbstractPolygon();//the imaginary shape
-		this.checker=null;
+		this.check_player=null;
+		this.won_dir=null;
     return this;
   };
 
@@ -102,9 +103,9 @@ class Box {
 			case (BoxStateType.EMPTY):
     		return color(Settings.COLOR_BOX_EMPTY);
 			case (BoxStateType.FILL_BY):
-				return this.checker.color_fill;
+				return this.check_player.color_fill;
 			case (BoxStateType.WON_BY):
-				return this.checker.color_won;
+				return this.check_player.color_won;
 		}
   };
   display()
@@ -112,4 +113,24 @@ class Box {
     fill(this.color);
     this.shape.display();
   };
+	
+	//state
+	check(player)
+	{
+		this.state=BoxStateType.FILL_BY;
+		this.check_player=player;
+	};
+	get checker()
+	{
+		return this.check_player;
+	};
+	won(dir)
+	{
+		this.state=BoxStateType.WON_BY;
+		this.won_dir=dir;
+	};
+	get dir()
+	{
+		return this.won_dir;
+	};
 };

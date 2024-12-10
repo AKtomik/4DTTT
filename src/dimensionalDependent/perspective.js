@@ -116,11 +116,14 @@ function perspective_init_3D_cube(grid)
     const h_box = grid.at(posKey);
 
     //imaginary point
+    const just_total = (Settings.RULE_BOX_WIDTH+((Settings.RULE_BOX_WIDTH-1)*Settings.PERSPECTIVE_GAP));
+    const just_size = 1/just_total;
+    const just_top = (at) => at*(1+Settings.PERSPECTIVE_GAP)/just_total;
     const point_top = [
-      i*3/8, j*3/8, k*3/8
+      just_top(i), just_top(j), just_top(k)
     ]
     const point_size = [//same for everyone
-      2/8, 2/8, 2/8
+      just_size, just_size, just_size
     ]
 
     //imaginary pos using binary

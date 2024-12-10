@@ -20,7 +20,7 @@ class Game {
 		const box=this.grid.at(posKey);
     if (box.state!==BoxStateType.EMPTY) return false;
     box.state=BoxStateType.FILL_BY;
-    box.checker=placer;
+    box.check(placer);
 
 		//check won
 		this.check_won_at(posKey);
@@ -46,7 +46,7 @@ class Game {
 			do {
 				box=this.grid.at(posKeyMove);
 
-				if (box && (box.checker==checker))//is in && have the player as checker
+				if (box && (box.checker==checker) && (box.dir!==dir))//is inside && have the player as checker && is not already checked in this side
 				{
 					//in a row
 					row+=1;
@@ -56,7 +56,7 @@ class Game {
 					{
 						for (let boxChecking of checked)
 						{
-							boxChecking.state=BoxStateType.WON_BY;
+							boxChecking.won(dir);
 						}
 						checker.score_add();
 						box=false;
