@@ -7,6 +7,7 @@ class Game {
 		this.player_i=Math.floor(Math.random()*this.players.length);
 
 		this.state=state;
+		this.remain=grid.map_keys.length;
   }
 
   get playing() {
@@ -24,6 +25,7 @@ class Game {
 
 		//check won
 		this.check_won_at(posKey);
+		this.remain--;
 
 		//switch user
 		this.player_i=(this.player_i+1)%this.players.length;//skip
