@@ -6,7 +6,7 @@ const ACTION_CLICK= (event, game) => collision_by_front(event, game);
 const ACTION_DRAG= (event, game) => translation_drag_3D_cube(event, game);
 const PERSPECTIVE_INIT= (grid) => {
   translation_init_3D_cube(grid);
-  perspective_init_3D_cube(grid);
+  perspective_init_nD(grid);
 };
 const PERSPECTIVE_DRAW= (grid) => {
   translation_draw_3D_cube(grid);
@@ -47,7 +47,7 @@ var game;
 var grid;
 var player_1;
 var player_2;
-var player_3;
+//var player_3;
 function setup() {
   //init
   createCanvas(...Scale.resize());
@@ -60,8 +60,8 @@ function setup() {
   grid = new Grid(Settings.RULE_BOX_WIDTH, Settings.RULE_BOX_D);
   player_1 = new Player(false, color(Settings.COLOR_BOX_P1_FILL), color(Settings.COLOR_BOX_P1_WON));
   player_2 = new Player(true, color(Settings.COLOR_BOX_P2_FILL), color(Settings.COLOR_BOX_P2_WON));
-  player_3 = new Player(true, color(Settings.COLOR_BOX_P3_FILL), color(Settings.COLOR_BOX_P3_WON));
-  game = new Game(grid, [player_1, player_2, player_3]);
+  //player_3 = new Player(true, color(Settings.COLOR_BOX_P3_FILL), color(Settings.COLOR_BOX_P3_WON));
+  game = new Game(grid, [player_1, player_2]);
 
   PERSPECTIVE_INIT(grid);
 }

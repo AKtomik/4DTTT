@@ -158,6 +158,7 @@ function translation_draw_3D_cube(grid)
 			  {
 			    const h_box = grid.at(posKey);
 					h_box.morph.each(pos => translationObject.translate(pos, power, grid.center));
+					h_box.center=translationObject.translate(h_box.center, power, grid.center);
 				}
 				grid.center=translationObject.translate(grid.center, power, grid.center);
 			}

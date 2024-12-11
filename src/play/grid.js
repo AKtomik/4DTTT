@@ -88,10 +88,13 @@ class Box {
   constructor()
   {
     this.state=BoxStateType.EMPTY;
-    this.shape=new ConcretePolygon();//the projected shape
-    this.morph=new AbstractPolygon();//the imaginary shape
 		this.check_player=null;
 		this.won_dir=null;
+
+    this.shape=new ConcretePolygon();//the projected shape
+    this.morph=new AbstractPolygon();//the imaginary summits
+    this.center=[];//the imaginary center
+
     return this;
   };
 

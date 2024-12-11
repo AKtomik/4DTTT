@@ -69,17 +69,17 @@ function perspective_draw_3D_flat(grid)
 }
 
 
-const cube_points = [//binnary to create points
-  	[0,0,0],//0
-  	[1,0,0],//1
-  	[0,1,0],//2
-  	[1,1,0],//3
-  	[0,0,1],//4
-  	[1,0,1],//5
-  	[0,1,1],//6
-  	[1,1,1],//7
-  	[.5,.5,.5]//8
-  ]
+//const cube_points = [//binnary to create points
+//  	[0,0,0],//0
+//  	[1,0,0],//1
+//  	[0,1,0],//2
+//  	[1,1,0],//3
+//  	[0,0,1],//4
+//  	[1,0,1],//5
+//  	[0,1,1],//6
+//  	[1,1,1],//7
+//  	[.5,.5,.5]//8
+//  ]
 
 //const cube_edges = [//link points between each others
 //  [0,1],
@@ -105,49 +105,69 @@ const cube_points = [//binnary to create points
 //  [7,5,1,3],
 //];
 
-function perspective_init_3D_cube(grid)
+function pointsForHypercube(dim, current = [])
+{//give all binary list of length dim
+  return dim === 0
+    ? [current]
+    : [0, 1].flatMap(v => pointsForHypercube(dim - 1, [...current, v]));
+}
+
+function perspective_init_nD(grid)
 {
+  const D=Settings.RULE_BOX_D;
 	//create cubes
   const just_total = (Settings.RULE_BOX_WIDTH+((Settings.RULE_BOX_WIDTH-1)*Settings.PERSPECTIVE_GAP));
   const just_size = 1/just_total;
   const just_top = (at) => at*(1+Settings.PERSPECTIVE_GAP)/just_total;
-  const point_size = [//same for everyone
-    just_size, just_size, just_size
-  ]
+  
+  const point_size = new Array(D).fill(just_size);//same for everyone
+  //define points created for the shape
+  const shape_points = pointsForHypercube(D);//same for everyone
+
+
   for (let posKey of grid.map_keys)
   {
-    const i = posKey[0];
-    const j = posKey[1];
-    const k = posKey[2];
     const h_box = grid.at(posKey);
 
     //imaginary point
-    const point_top = [
-      just_top(i), just_top(j), just_top(k)
-    ]
+    const point_top = Array.from(new Array(D).keys()).map(dimIndex => just_top(posKey[dimIndex]));
 
     //imaginary pos using binary
   	h_box.morph.clear();
-    for (let i in cube_points)
-    {
-      let v=cube_points[i].slice();//copy
-      for (let i2 of [0,1,2])
-      {
-        v[i2]=point_top[i2]+point_size[i2]*v[i2];//use bin
-        v[i2]=v[i2]*2-1;//slide in order to origin be centered
+    for (let i in shape_points)
+    {//all summits
+      let v=shape_points[i].slice();//copy
+      for (let dimIndex of Array.from(new Array(D).keys()))
+      {//all summits
+        v[dimIndex]=point_top[dimIndex]+point_size[dimIndex]*v[dimIndex];//use bin
+        v[dimIndex]=v[dimIndex]*2-1;//slide in order to origin be centered
       }
+      //!add distance to cote (dim 3, index 2)
       v[2] += Settings.PERSPECTIVE_DISTANCE;//add distance
-  	  h_box.morph.add_point(v);
+  	  //add the point to summits
+      h_box.morph.add_point(v);
+    }
+    {//point at center of shape
+      let v=Array.from(new Array(D)).fill(.5);
+      for (let dimIndex of Array.from(new Array(D).keys()))
+      {
+        v[dimIndex]=point_top[dimIndex]+point_size[dimIndex]*v[dimIndex];//use bin
+        v[dimIndex]=v[dimIndex]*2-1;//slide in order to origin be centered
+      }
+      //!add distance to cote (dim 3, index 2)
+      v[2] += Settings.PERSPECTIVE_DISTANCE;//add distance
+  	  //add the point to summits
+      h_box.center=v;
     }
   }
 	//center
-  grid.center=[0,0,0];
+  grid.center=new Array(D).fill(0);
 	grid.center[2] += Settings.PERSPECTIVE_DISTANCE;
 
   //front method
   grid.set_front_method((grid, posKey1, posKey2) => //check the z-axis of center
       //true
-      grid.map[posKey1].morph.points[grid.map[posKey1].morph.points.length-1][2]<grid.map[posKey2].morph.points[grid.map[posKey2].morph.points.length-1][2]
+      grid.map[posKey1].center[D-1]<grid.map[posKey2].center[D-1]
   );
 }
 
@@ -160,7 +180,7 @@ function perspective_draw_3D_cube(grid)
 	
 	
   //projection
-	const projectZ = 1/Math.tan(Settings.PERSPECTIVE_FOV);
+	const fovDist = 1/Math.tan(Settings.PERSPECTIVE_FOV);
   
   //order
   grid.sort_keys();
@@ -171,17 +191,18 @@ function perspective_draw_3D_cube(grid)
 
     //project
 		let projections=h_box.morph.points.map(pos => {
-				let vector=perspective_draw_3D_cube_projection(pos,projectZ);
+				let flatPos=project3Dto2D(pos,fovDist);
 				return [
-          square_top[0]+(vector.x+.5)*square_size[0],
-          square_top[1]+(vector.y+.5)*square_size[1]
+          square_top[0]+(flatPos[0]+.5)*square_size[0],
+          square_top[1]+(flatPos[1]+.5)*square_size[1]
           ];
 			});
 
     //Chan
     projections=convexHull(projections);
+    
+    //P5
     projections=projections.map(pos => createVector(pos[0], pos[1]));
-
     //draw full outline
     if (false)
     {
@@ -210,9 +231,12 @@ function perspective_draw_3D_cube(grid)
     h_box.display();
   }
 }
-function perspective_draw_3D_cube_projection(pos3D, projectZ)
+
+function project3Dto2D(pos3D, fovDist)
 {
-	const projectX = (pos3D[0]) * projectZ / (pos3D[2]);
-	const projectY = (pos3D[1]) * projectZ / (pos3D[2]);
-	return createVector(projectX, projectY);
+	//const projectX = (pos3D[0]) * fovDist / (pos3D[2]);
+	//const projectY = (pos3D[1]) * fovDist / (pos3D[2]);
+	const projectX = (pos3D[0]) * fovDist / (fovDist+pos3D[2]);
+	const projectY = (pos3D[1]) * fovDist / (fovDist+pos3D[2]);
+	return [projectX, projectY];
 };
