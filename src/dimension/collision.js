@@ -1,19 +1,16 @@
 function collision_by_front(mouseEvent, game)
 {
   const pointer_at = createVector(mouseEvent.clientX, mouseEvent.clientY);
-  let checkPosKey = undefined;
-  for (let posKey of game.grid.map_keys)
+  
+  game.grid.sort_keys();
+  //reverse iteration
+  for (let i=game.grid.map_keys.length-1;i>=0;i--)
   {
-    const h_box = game.grid.at(posKey);
-    
-    if (h_box.shape.isInside(pointer_at) && (!checkPosKey || grid.is_in_front(posKey, checkPosKey)))
+    const h_box = game.grid.at(game.grid.map_keys[i]);
+    if (h_box.shape.isInside(pointer_at))
     {
-      checkPosKey = posKey;
+      game.player_check_at(game.grid.map_keys[i]);
+      return;
     }
-  }
-
-  if (checkPosKey)
-  {
-    game.player_check_at(checkPosKey);
   }
 }

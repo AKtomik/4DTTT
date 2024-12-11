@@ -168,7 +168,7 @@ function perspective_init_nD(grid)
   //front method
   grid.set_front_method((grid, posKey1, posKey2) => //check the z-axis of center
       //true
-      grid.map[posKey1].center[D-1]<grid.map[posKey2].center[D-1]
+      grid.map[posKey1].z[D-1]<grid.map[posKey2].center[D-1]
   );
 }
 
@@ -184,13 +184,27 @@ function perspective_draw_nD(grid)
 	const fovDist = 1/Math.tan(Settings.PERSPECTIVE_FOV);
   
   //order
+  for (let posKey of grid.map_keys)
+  {
+    const h_box = grid.at(posKey);
+    //project center for z index
+    {
+		  //let triPos=projectionNDtoXD(h_box.center,fovDist,3);
+      h_box.z=0;
+      for (dim in Array.from(new Array(h_box.center.length).keys()))
+      {
+        h_box.z+=1-Math.exp(-h_box.center[dim]*dim);//z index by deep projection
+      }
+      h_box.z=1/h_box.z;
+    }
+  }
   grid.sort_keys();
 
   for (let posKey of grid.map_keys)
   {
     const h_box = grid.at(posKey);
 
-    //project
+    //project points
 		let projections=h_box.morph.points.map(pos => {
 				let flatPos=projectionNDto2D(pos,fovDist);
 				return [
@@ -251,6 +265,16 @@ function projectionNDto2D(posND, fovDist)
 {
 	const dim=posND.length;
   if (dim===2)
+  {
+    return posND;
+  }
+	return projectionNDto2D(Array.from(new Array(dim-1).keys()).map(i => (posND[i]) * fovDist / (fovDist+posND[dim-1])),fovDist);
+};
+
+function projectionNDtoXD(posND, fovDist, maxDim)
+{
+	const dim=posND.length;
+  if (dim===maxDim)
   {
     return posND;
   }

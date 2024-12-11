@@ -30,7 +30,10 @@ class MatrixTranslation {
 			posMatrix=MatrixTranslation.identity_around.set_column(3, [center[0], center[1], center[2], 1]).multiply_with(posMatrix);
 		}
 
-		return posMatrix.data.slice(0,3);//return as a point
+		//return posMatrix.data.slice(0,3);//return as a point
+		for (let i in [0,1,2])
+			pos[i]=posMatrix.data[i];
+		return pos;
 	}
 };
 

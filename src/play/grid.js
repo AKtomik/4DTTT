@@ -67,14 +67,14 @@ class Grid {
 	//display
 	sort_keys()
 	{
-		this.map_keys=this.map_keys.sort((a,b) => this.front_method(this,a,b));
+		this.map_keys=this.map_keys.sort((a,b) => this.is_in_front(a,b));
 	}
 	is_in_front(posKey1, posKey2)
 	{
-		return this.front_method(this, posKey1, posKey2);
+		return this.map[posKey1].z>=this.map[posKey2].z;
 	};
 	set_front_method(frontFunction)
-	{
+	{//deperciated
 		this.front_method=frontFunction;
 	};
 };
@@ -94,6 +94,7 @@ class Box {
     this.shape=new ConcretePolygon();//the projected shape
     this.morph=new AbstractPolygon();//the imaginary summits
     this.center=[];//the imaginary center
+    this.z=0;//integer greater if more in front
 
     return this;
   };

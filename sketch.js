@@ -5,12 +5,12 @@ const ACTION_PRESS= (event, game) => translation_key_3D_cube(event, game);
 const ACTION_CLICK= (event, game) => collision_by_front(event, game);
 const ACTION_DRAG= (event, game) => translation_drag_3D_cube(event, game);
 const PERSPECTIVE_INIT= (grid) => {
-  translation_init_3D_cube(grid);
   perspective_init_nD(grid);
+  translation_init_3D_cube(grid);
 };
 const PERSPECTIVE_DRAW= (grid) => {
-  translation_draw_3D_cube(grid);
   perspective_draw_nD(grid);
+  translation_draw_3D_cube(grid);
 };
 
 
@@ -68,6 +68,7 @@ function setup() {
 
 function draw() {
   background(...Settings.COLOR_BACKGROUND);
+  PERSPECTIVE_DRAW(grid);
 
   {//texts
     //title
@@ -137,6 +138,4 @@ function draw() {
       }
     }
   }
-
-  PERSPECTIVE_DRAW(grid);
 }
