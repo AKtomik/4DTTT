@@ -113,7 +113,6 @@ class Box {
   };
   display()
   {
-    fill(this.color);
     this.shape.display();
   };
 	

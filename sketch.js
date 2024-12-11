@@ -10,7 +10,7 @@ const PERSPECTIVE_INIT= (grid) => {
 };
 const PERSPECTIVE_DRAW= (grid) => {
   translation_draw_3D_cube(grid);
-  perspective_draw_3D_cube(grid);
+  perspective_draw_nD(grid);
 };
 
 

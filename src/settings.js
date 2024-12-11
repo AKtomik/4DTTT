@@ -18,9 +18,9 @@ class Settings {
 	static VELOCITY_FRICTION_R = 0.01;
 
 	//how many box width
-	static RULE_BOX_WIDTH=4;//const
+	static RULE_BOX_WIDTH=2;//const
 	//how many dimensions
-	static RULE_BOX_D=3;//const//!dont used
+	static RULE_BOX_D=3;//const
 	//how many to check in order to score
 	static RULE_BOX_ROW_LENGTH=3;
 	//can we make rescore each time a row is bigger

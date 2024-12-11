@@ -123,6 +123,7 @@ function perspective_init_nD(grid)
   const point_size = new Array(D).fill(just_size);//same for everyone
   //define points created for the shape
   const shape_points = pointsForHypercube(D);//same for everyone
+  console.log(shape_points);
 
 
   for (let posKey of grid.map_keys)
@@ -171,7 +172,7 @@ function perspective_init_nD(grid)
   );
 }
 
-function perspective_draw_3D_cube(grid)
+function perspective_draw_nD(grid)
 {
 	//screen
   const margin = Scale.min(Settings.POS_BOX_MARGIN);
@@ -191,19 +192,14 @@ function perspective_draw_3D_cube(grid)
 
     //project
 		let projections=h_box.morph.points.map(pos => {
-				let flatPos=project3Dto2D(pos,fovDist);
+				let flatPos=projectionNDto2D(pos,fovDist);
 				return [
           square_top[0]+(flatPos[0]+.5)*square_size[0],
           square_top[1]+(flatPos[1]+.5)*square_size[1]
           ];
 			});
 
-    //Chan
-    projections=convexHull(projections);
-    
-    //P5
-    projections=projections.map(pos => createVector(pos[0], pos[1]));
-    //draw full outline
+    //draw outline
     if (false)
     {
       stroke(255);
@@ -215,28 +211,48 @@ function perspective_draw_3D_cube(grid)
   	    beginShape();
   	    for(let i of [0,1])
         {
-  	      vertex(projections[pairPointI[i]].x, projections[pairPointI[i]].y);
+  	      line(projections[pairPointI[i]][0], projections[pairPointI[i]][1]);
   	      point(projections[pairPointI[i]]);
   	    }
-  	    endShape(CLOSE);
+  	    endShape();
   		}
     }
+
+    //Chan
+    projections=convexHull(projections);
     
+    //P5
+    projections=projections.map(pos => createVector(pos[0], pos[1]));
 
     //hitbox
     h_box.shape.set_points(projections);
-    //display
+    //draw shape
     stroke(255);
+    fill(h_box.color);
     strokeWeight(1);
     h_box.display();
   }
 }
 
-function project3Dto2D(pos3D, fovDist)
+function projection3Dto2D(pos3D, fovDist)
 {
-	//const projectX = (pos3D[0]) * fovDist / (pos3D[2]);
-	//const projectY = (pos3D[1]) * fovDist / (pos3D[2]);
 	const projectX = (pos3D[0]) * fovDist / (fovDist+pos3D[2]);
 	const projectY = (pos3D[1]) * fovDist / (fovDist+pos3D[2]);
 	return [projectX, projectY];
+};
+
+function projectionNDtoLessD(posND, fovDist)
+{
+	const dim=posND.length;
+	return Array.from(new Array(dim-1).keys()).map(i => (posND[i]) * fovDist / (fovDist+posND[dim-1]));
+};
+
+function projectionNDto2D(posND, fovDist)
+{
+	const dim=posND.length;
+  if (dim===2)
+  {
+    return posND;
+  }
+	return projectionNDto2D(Array.from(new Array(dim-1).keys()).map(i => (posND[i]) * fovDist / (fovDist+posND[dim-1])),fovDist);
 };
