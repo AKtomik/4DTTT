@@ -68,43 +68,7 @@ function perspective_draw_3D_flat(grid)
   }
 }
 
-
-//const cube_points = [//binnary to create points
-//  	[0,0,0],//0
-//  	[1,0,0],//1
-//  	[0,1,0],//2
-//  	[1,1,0],//3
-//  	[0,0,1],//4
-//  	[1,0,1],//5
-//  	[0,1,1],//6
-//  	[1,1,1],//7
-//  	[.5,.5,.5]//8
-//  ]
-
-var shape_edges = null;
-//const cube_edges = [//link points between each others
-//  [0,1],
-//  [0,2],
-//  [0,4],
-//  [3,1],
-//  [3,2],
-//  [3,7],
-//  [5,1],
-//  [5,4],
-//  [5,7],
-//  [6,2],
-//  [6,4],
-//  [6,7],
-//];
-
-//const cube_faces = [//link points between each others
-//  [0,2,3,1],
-//  [0,1,5,4],
-//  [0,4,6,2],
-//  [7,6,4,5],
-//  [7,3,2,6],
-//  [7,5,1,3],
-//];
+var hypercube_edges = null;
 
 function pointsForHypercube(dim, current = [])
 {//give all binary list of length dim
@@ -135,27 +99,24 @@ function perspective_init_nD(grid)
   
   const point_size = new Array(D).fill(just_size);//same for everyone
   //define points created for the shape
-  const shape_points = pointsForHypercube(D);//same for everyone
-  console.log("shape_points:",shape_points);
+  const hypercube_points = pointsForHypercube(D);//same for everyone
+  console.log("hypercube_points:",hypercube_points);
   //define sides created for the shape
   {
-    shape_edges=[];
-    for (let pointI=0;pointI<shape_points.length;pointI+=1)
+    hypercube_edges=[];
+    for (let pointI=0;pointI<hypercube_points.length;pointI+=1)
     {
       for (let dim in Array.from(new Array(D).keys()))
       {
-        let opposePoint = shape_points[pointI].slice();
+        let opposePoint = hypercube_points[pointI].slice();
         opposePoint[dim] = Math.abs(opposePoint[dim]-1);
         let opposePointI = binToInt(opposePoint);
         if (pointI<opposePointI)
-        {
-        //console.log("shape_edges.push(",shape_points[pointI], pointI, opposePoint, opposePointI);
-        shape_edges.push([pointI, opposePointI]);
-        }
+          hypercube_edges.push([pointI, opposePointI]);
       }
     }
   }
-  console.log("shape_edges:",shape_edges);
+  console.log("hypercube_edges:",hypercube_edges);
 
 
   for (let posKey of grid.map_keys)
@@ -167,9 +128,9 @@ function perspective_init_nD(grid)
 
     //imaginary pos using binary
   	h_box.morph.clear();
-    for (let i in shape_points)
+    for (let i in hypercube_points)
     {//all summits
-      let v=shape_points[i].slice();//copy
+      let v=hypercube_points[i].slice();//copy
       for (let dimIndex of Array.from(new Array(D).keys()))
       {//all summits
         v[dimIndex]=point_top[dimIndex]+point_size[dimIndex]*v[dimIndex];//use bin
@@ -221,7 +182,6 @@ function perspective_draw_nD(grid)
     const h_box = grid.at(posKey);
     //project center for z index
     {
-		  //let triPos=projectionNDtoXD(h_box.center,fovDist,3);
       h_box.z=0;
       for (dim in Array.from(new Array(h_box.center.length).keys()))
       {
@@ -265,18 +225,11 @@ function perspective_draw_nD(grid)
       stroke(255);
       //stroke(h_box.color);
       strokeWeight(3);
-      //noFill();
       fill(255);
-  		for (let edge of shape_edges)
+  		for (let edge of hypercube_edges)
   		{
   	    line(...projections[edge[0]], ...projections[edge[1]]);
   	    //point(...summit);
-  	    //beginShape();
-  	    //for(let i of [0,1])
-        //{
-  	    //  line(...projections[pairPointI[i]][0], projections[pairPointI[i]][1]);
-  	    //}
-  	    //endShape();
   		}
     }
   }
