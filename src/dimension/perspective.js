@@ -81,6 +81,7 @@ function perspective_draw_3D_flat(grid)
 //  	[.5,.5,.5]//8
 //  ]
 
+var shape_edges = null;
 //const cube_edges = [//link points between each others
 //  [0,1],
 //  [0,2],
@@ -112,6 +113,18 @@ function pointsForHypercube(dim, current = [])
     : [0, 1].flatMap(v => pointsForHypercube(dim - 1, [...current, v]));
 }
 
+//function intToBin(int)
+function binToInt(binArray)
+{
+  let integer=0;
+  for (let i in binArray)
+  {
+    //if (binArray[i] && binArray.length-i-1)
+    integer+=binArray[i]*Math.pow(2, binArray.length-i-1);
+  }
+  return integer;
+}
+
 function perspective_init_nD(grid)
 {
   const D=Settings.RULE_BOX_D;
@@ -123,7 +136,26 @@ function perspective_init_nD(grid)
   const point_size = new Array(D).fill(just_size);//same for everyone
   //define points created for the shape
   const shape_points = pointsForHypercube(D);//same for everyone
-  console.log(shape_points);
+  console.log("shape_points:",shape_points);
+  //define sides created for the shape
+  {
+    shape_edges=[];
+    for (let pointI=0;pointI<shape_points.length;pointI+=1)
+    {
+      for (let dim in Array.from(new Array(D).keys()))
+      {
+        let opposePoint = shape_points[pointI].slice();
+        opposePoint[dim] = Math.abs(opposePoint[dim]-1);
+        let opposePointI = binToInt(opposePoint);
+        if (pointI<opposePointI)
+        {
+        //console.log("shape_edges.push(",shape_points[pointI], pointI, opposePoint, opposePointI);
+        shape_edges.push([pointI, opposePointI]);
+        }
+      }
+    }
+  }
+  console.log("shape_edges:",shape_edges);
 
 
   for (let posKey of grid.map_keys)
@@ -193,7 +225,7 @@ function perspective_draw_nD(grid)
       h_box.z=0;
       for (dim in Array.from(new Array(h_box.center.length).keys()))
       {
-        h_box.z+=1-Math.exp(-h_box.center[dim]*dim);//z index by deep projection
+        h_box.z+=h_box.center[dim]*Math.exp(dim*10);//greater dim overlaps
       }
       h_box.z=1/h_box.z;
     }
@@ -214,21 +246,23 @@ function perspective_draw_nD(grid)
 			});
 
     //draw outline
-    if (false)
+    //if (false)
     {
       stroke(255);
       //stroke(h_box.color);
       strokeWeight(5);
-      noFill();
-  		for (let pairPointI of cube_edges)
+      //noFill();
+      fill(255);
+  		for (let edge of shape_edges)
   		{
-  	    beginShape();
-  	    for(let i of [0,1])
-        {
-  	      line(projections[pairPointI[i]][0], projections[pairPointI[i]][1]);
-  	      point(projections[pairPointI[i]]);
-  	    }
-  	    endShape();
+  	    line(...projections[edge[0]], ...projections[edge[1]]);
+  	    //point(...summit);
+  	    //beginShape();
+  	    //for(let i of [0,1])
+        //{
+  	    //  line(...projections[pairPointI[i]][0], projections[pairPointI[i]][1]);
+  	    //}
+  	    //endShape();
   		}
     }
 
