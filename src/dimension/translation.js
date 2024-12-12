@@ -1,13 +1,15 @@
 
 class MatrixTranslation {
-	static identity_around=new Matrix(4,4).build_identity();
+	static identity_around={};
 
-	constructor(matrix, if_aroundCenter=false, if_powerInPos=false, power_calibration= (matrix, power) => matrix)
+	constructor(dim, matrix, if_aroundCenter=false, if_powerInPos=false, power_calibration= (matrix, power) => matrix)
 	{
+		this.dim=dim;
 		this.matrix=matrix;
 		this.center_around=if_aroundCenter;
 		this.power_isLastPos=if_powerInPos;
 		this.calibration=power_calibration;
+		MatrixTranslation.identity_around[dim]=new Matrix(dim+1,dim+1).build_identity()
 	}
 	calibrate(power)
 	{
@@ -16,44 +18,49 @@ class MatrixTranslation {
 	}
 	translate(pos, power, center)
 	{
-		let posMatrix=new Matrix(4, 1).set_column(0, [pos[0], pos[1], pos[2], (this.power_isLastPos) ? power : 1]);
+		let posMatrix=new Matrix(this.dim+1, 1).set_column(0, [...pos.slice(0, this.dim), (this.power_isLastPos) ? power : 1]);
 		
 		if (this.center_around)
 		{//move origin to center
-			posMatrix=MatrixTranslation.identity_around.set_column(3, [-center[0], -center[1], -center[2], 1]).multiply_with(posMatrix);
+			posMatrix=MatrixTranslation.identity_around[this.dim].set_column(this.dim, [...center.slice(0, this.dim).map((v) => -v), 1]).multiply_with(posMatrix);
 		}
 
 		posMatrix=this.matrix.multiply_with(posMatrix);
 		
 		if (this.center_around)
 		{//move back
-			posMatrix=MatrixTranslation.identity_around.set_column(3, [center[0], center[1], center[2], 1]).multiply_with(posMatrix);
+			posMatrix=MatrixTranslation.identity_around[this.dim].set_column(this.dim, [...center.slice(0, this.dim), 1]).multiply_with(posMatrix);
 		}
 
 		//return posMatrix.data.slice(0,3);//return as a point
-		for (let i in [0,1,2])
+		for (let i in Array.from(new Array(this.dim).keys()))
 			pos[i]=posMatrix.data[i];
 		return pos;
 	}
 };
 
-const matrix_3D_identity = new Matrix(4,4).build_identity();
-const matrix_3D_strength = .1*Settings.SPEED;
-const matrix_3D_angle = Math.PI/32*Settings.SPEED;
+const matrix_ND_strength = .1*Settings.SPEED;
+const matrix_ND_angle = Math.PI/32*Settings.SPEED;
 
 const matrix_3D_translations = {
 	//move
-	"x<->": new MatrixTranslation(matrix_3D_identity.copy().set_column(3, [matrix_3D_strength,0,0,1]), false, true),
-	"y<->": new MatrixTranslation(matrix_3D_identity.copy().set_column(3, [0,matrix_3D_strength,0,1]), false, true),
-	"z<->": new MatrixTranslation(matrix_3D_identity.copy().set_column(3, [0,0,matrix_3D_strength,1]), false, true),
+	"x<->": new MatrixTranslation(3, new Matrix(4,4).build_identity().set_column(3, [matrix_ND_strength,0,0,1]), false, true),
+	"y<->": new MatrixTranslation(3, new Matrix(4,4).build_identity().set_column(3, [0,matrix_ND_strength,0,1]), false, true),
+	"z<->": new MatrixTranslation(3, new Matrix(4,4).build_identity().set_column(3, [0,0,matrix_ND_strength,1]), false, true),
+	"w<->": new MatrixTranslation(4, new Matrix(5,5).build_identity().set_column(4, [0,0,0,matrix_ND_strength,1]), false, true),
 	//rotation
-	"x/": new MatrixTranslation(matrix_3D_identity.copy(), true, false, (matrix, power) => matrix.set_at(1,1,Math.cos(matrix_3D_angle*power)).set_at(2,2,Math.cos(matrix_3D_angle*power)).set_at(1,2,Math.sin(matrix_3D_angle*power)).set_at(2,1,-Math.sin(matrix_3D_angle*power))),
-	"y/": new MatrixTranslation(matrix_3D_identity.copy(), true, false, (matrix, power) => matrix.set_at(0,0,Math.cos(matrix_3D_angle*power)).set_at(2,2,Math.cos(matrix_3D_angle*power)).set_at(0,2,-Math.sin(matrix_3D_angle*power)).set_at(2,0,Math.sin(matrix_3D_angle*power))),
-	"z/": new MatrixTranslation(matrix_3D_identity.copy(), true, false, (matrix, power) => matrix.set_at(0,0,Math.cos(matrix_3D_angle*power)).set_at(1,1,Math.cos(matrix_3D_angle*power)).set_at(0,1,Math.sin(matrix_3D_angle*power)).set_at(1,0,-Math.sin(matrix_3D_angle*power))),
-	//bonus
-	"x/me": new MatrixTranslation(matrix_3D_identity.copy(), false, false, (matrix, power) => matrix.set_at(1,1,Math.cos(matrix_3D_angle*power/4)).set_at(2,2,Math.cos(matrix_3D_angle*power/4)).set_at(1,2,Math.sin(matrix_3D_angle*power/4)).set_at(2,1,-Math.sin(matrix_3D_angle*power/4))),
-	"y/me": new MatrixTranslation(matrix_3D_identity.copy(), false, false, (matrix, power) => matrix.set_at(0,0,Math.cos(matrix_3D_angle*power/4)).set_at(2,2,Math.cos(matrix_3D_angle*power/4)).set_at(0,2,-Math.sin(matrix_3D_angle*power/4)).set_at(2,0,Math.sin(matrix_3D_angle*power/4))),
-	"z/me": new MatrixTranslation(matrix_3D_identity.copy(), false, false, (matrix, power) => matrix.set_at(0,0,Math.cos(matrix_3D_angle*power/4)).set_at(1,1,Math.cos(matrix_3D_angle*power/4)).set_at(0,1,Math.sin(matrix_3D_angle*power/4)).set_at(1,0,-Math.sin(matrix_3D_angle*power/4))),
+	//3D
+	"x/": new MatrixTranslation(3, new Matrix(4,4).build_identity(), true, false, (matrix, power) => matrix.set_at(1,1,Math.cos(matrix_ND_angle*power)).set_at(2,2,Math.cos(matrix_ND_angle*power)).set_at(1,2,Math.sin(matrix_ND_angle*power)).set_at(2,1,-Math.sin(matrix_ND_angle*power))),
+	"y/": new MatrixTranslation(3, new Matrix(4,4).build_identity(), true, false, (matrix, power) => matrix.set_at(0,0,Math.cos(matrix_ND_angle*power)).set_at(2,2,Math.cos(matrix_ND_angle*power)).set_at(0,2,-Math.sin(matrix_ND_angle*power)).set_at(2,0,Math.sin(matrix_ND_angle*power))),
+	"z/": new MatrixTranslation(3, new Matrix(4,4).build_identity(), true, false, (matrix, power) => matrix.set_at(0,0,Math.cos(matrix_ND_angle*power)).set_at(1,1,Math.cos(matrix_ND_angle*power)).set_at(0,1,Math.sin(matrix_ND_angle*power)).set_at(1,0,-Math.sin(matrix_ND_angle*power))),
+	//4D
+	"wx/": new MatrixTranslation(4, new Matrix(5,5).build_identity(), true, false, (matrix, power) => matrix.set_at(0,0,Math.cos(matrix_ND_angle*power)).set_at(0,3,Math.sin(matrix_ND_angle*power)).set_at(3,0,-Math.sin(matrix_ND_angle*power)).set_at(3,3,Math.cos(matrix_ND_angle*power))),
+	"wy/": new MatrixTranslation(4, new Matrix(5,5).build_identity(), true, false, (matrix, power) => matrix.set_at(1,1,Math.cos(matrix_ND_angle*power)).set_at(1,3,Math.sin(matrix_ND_angle*power)).set_at(3,1,-Math.sin(matrix_ND_angle*power)).set_at(3,3,Math.cos(matrix_ND_angle*power))),
+	"wz/": new MatrixTranslation(4, new Matrix(5,5).build_identity(), true, false, (matrix, power) => matrix.set_at(2,2,Math.cos(matrix_ND_angle*power)).set_at(2,3,Math.sin(matrix_ND_angle*power)).set_at(3,2,-Math.sin(matrix_ND_angle*power)).set_at(3,3,Math.cos(matrix_ND_angle*power))),
+	//sphere
+	//"x/me": new MatrixTranslation(3, new Matrix(4,4).build_identity(), false, false, (matrix, power) => matrix.set_at(1,1,Math.cos(matrix_ND_angle*power/4)).set_at(2,2,Math.cos(matrix_ND_angle*power/4)).set_at(1,2,Math.sin(matrix_ND_angle*power/4)).set_at(2,1,-Math.sin(matrix_ND_angle*power/4))),
+	//"y/me": new MatrixTranslation(3, new Matrix(4,4).build_identity(), false, false, (matrix, power) => matrix.set_at(0,0,Math.cos(matrix_ND_angle*power/4)).set_at(2,2,Math.cos(matrix_ND_angle*power/4)).set_at(0,2,-Math.sin(matrix_ND_angle*power/4)).set_at(2,0,Math.sin(matrix_ND_angle*power/4))),
+	//"z/me": new MatrixTranslation(3, new Matrix(4,4).build_identity(), false, false, (matrix, power) => matrix.set_at(0,0,Math.cos(matrix_ND_angle*power/4)).set_at(1,1,Math.cos(matrix_ND_angle*power/4)).set_at(0,1,Math.sin(matrix_ND_angle*power/4)).set_at(1,0,-Math.sin(matrix_ND_angle*power/4))),
 };
 
 
@@ -61,10 +68,15 @@ const move_to_keycode = {
 	"x<->": {negative: 70, positive: 72},
 	"y<->": {negative: 84, positive: 71},
 	"z<->": {negative: 82, positive: 89},
+	"w<->": {negative: 86, positive: 78},
 	
 	"x/": {positive: 90, negative: 83},
 	"y/": {positive: 68, negative: 81},
 	"z/": {positive: 65, negative: 69},
+	
+	"wx/": {positive: 87},
+	"wy/": {positive: 67},
+	"wz/": {positive: 88},
 	
 	"x/me": {positive: 73},
 	"y/me": {positive: 79},

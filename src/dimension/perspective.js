@@ -245,12 +245,26 @@ function perspective_draw_nD(grid)
           ];
 			});
 
+    //Chan
+    let projectionsOut=convexHull(projections.slice());
+    
+    //P5
+    projectionsOut=projectionsOut.map(pos => createVector(pos[0], pos[1]));
+
+    //hitbox
+    h_box.shape.set_points(projectionsOut);
+    //draw shape
+    stroke(255);
+    fill(h_box.color);
+    strokeWeight(1);
+    h_box.display();
+
     //draw outline
     //if (false)
     {
       stroke(255);
       //stroke(h_box.color);
-      strokeWeight(5);
+      strokeWeight(3);
       //noFill();
       fill(255);
   		for (let edge of shape_edges)
@@ -265,20 +279,6 @@ function perspective_draw_nD(grid)
   	    //endShape();
   		}
     }
-
-    //Chan
-    projections=convexHull(projections);
-    
-    //P5
-    projections=projections.map(pos => createVector(pos[0], pos[1]));
-
-    //hitbox
-    h_box.shape.set_points(projections);
-    //draw shape
-    stroke(255);
-    fill(h_box.color);
-    strokeWeight(1);
-    h_box.display();
   }
 }
 
