@@ -42,7 +42,7 @@ class MatrixTranslation {
 const matrix_ND_strength = .1*Settings.SPEED;
 const matrix_ND_angle = Math.PI/32*Settings.SPEED;
 
-const matrix_3D_translations = {
+const matrix_translations = {
 	//move
 	"x<->": new MatrixTranslation(3, new Matrix(4,4).build_identity().set_column(3, [matrix_ND_strength,0,0,1]), false, true),
 	"y<->": new MatrixTranslation(3, new Matrix(4,4).build_identity().set_column(3, [0,matrix_ND_strength,0,1]), false, true),
@@ -58,9 +58,9 @@ const matrix_3D_translations = {
 	"wy/": new MatrixTranslation(4, new Matrix(5,5).build_identity(), true, false, (matrix, power) => matrix.set_at(1,1,Math.cos(matrix_ND_angle*power)).set_at(1,3,Math.sin(matrix_ND_angle*power)).set_at(3,1,-Math.sin(matrix_ND_angle*power)).set_at(3,3,Math.cos(matrix_ND_angle*power))),
 	"wz/": new MatrixTranslation(4, new Matrix(5,5).build_identity(), true, false, (matrix, power) => matrix.set_at(2,2,Math.cos(matrix_ND_angle*power)).set_at(2,3,Math.sin(matrix_ND_angle*power)).set_at(3,2,-Math.sin(matrix_ND_angle*power)).set_at(3,3,Math.cos(matrix_ND_angle*power))),
 	//sphere
-	//"x/me": new MatrixTranslation(3, new Matrix(4,4).build_identity(), false, false, (matrix, power) => matrix.set_at(1,1,Math.cos(matrix_ND_angle*power/4)).set_at(2,2,Math.cos(matrix_ND_angle*power/4)).set_at(1,2,Math.sin(matrix_ND_angle*power/4)).set_at(2,1,-Math.sin(matrix_ND_angle*power/4))),
-	//"y/me": new MatrixTranslation(3, new Matrix(4,4).build_identity(), false, false, (matrix, power) => matrix.set_at(0,0,Math.cos(matrix_ND_angle*power/4)).set_at(2,2,Math.cos(matrix_ND_angle*power/4)).set_at(0,2,-Math.sin(matrix_ND_angle*power/4)).set_at(2,0,Math.sin(matrix_ND_angle*power/4))),
-	//"z/me": new MatrixTranslation(3, new Matrix(4,4).build_identity(), false, false, (matrix, power) => matrix.set_at(0,0,Math.cos(matrix_ND_angle*power/4)).set_at(1,1,Math.cos(matrix_ND_angle*power/4)).set_at(0,1,Math.sin(matrix_ND_angle*power/4)).set_at(1,0,-Math.sin(matrix_ND_angle*power/4))),
+	"x/me": new MatrixTranslation(3, new Matrix(4,4).build_identity(), false, false, (matrix, power) => matrix.set_at(1,1,Math.cos(matrix_ND_angle*power/4)).set_at(2,2,Math.cos(matrix_ND_angle*power/4)).set_at(1,2,Math.sin(matrix_ND_angle*power/4)).set_at(2,1,-Math.sin(matrix_ND_angle*power/4))),
+	"y/me": new MatrixTranslation(3, new Matrix(4,4).build_identity(), false, false, (matrix, power) => matrix.set_at(0,0,Math.cos(matrix_ND_angle*power/4)).set_at(2,2,Math.cos(matrix_ND_angle*power/4)).set_at(0,2,-Math.sin(matrix_ND_angle*power/4)).set_at(2,0,Math.sin(matrix_ND_angle*power/4))),
+	"z/me": new MatrixTranslation(3, new Matrix(4,4).build_identity(), false, false, (matrix, power) => matrix.set_at(0,0,Math.cos(matrix_ND_angle*power/4)).set_at(1,1,Math.cos(matrix_ND_angle*power/4)).set_at(0,1,Math.sin(matrix_ND_angle*power/4)).set_at(1,0,-Math.sin(matrix_ND_angle*power/4))),
 };
 
 
@@ -83,26 +83,21 @@ const move_to_keycode = {
 	"z/me": {positive: 80},
 };
 
+const move_aviable = {};//will contains only aviables mooves
+
 let keycode_to_move = {};
 
-function translation_key_3D_cube(keyEvent, game)
+function translation_key_nD(keyEvent, game)
 {
 	const translationKey=keycode_to_move[keyEvent.keyCode]?.translationKey;
+	if (!translationKey || !(move_aviable[translationKey]) || keyEvent.repeat)
+		return;
 	//console.log("keypress to move perspective:",keycode_to_move[keyEvent.keyCode]);
-	if (!translationKey)
-		return;
-	if (keyEvent.repeat)
-		return;
 	const sign=(keycode_to_move[keyEvent.keyCode].oppose) ? -1 : 1;
-	const power=Settings.VELOCITY_ADD_PUSH*(sign)*Settings.SPEED;
-	if (game.grid.velocity[translationKey]*sign<0)
-	{
-		game.grid.velocity[translationKey]=0;
-	}
-	game.grid.velocity[translationKey]+=power;
+	translation_add_strength(game.grid.velocity, translationKey, Settings.VELOCITY_ADD_PUSH*Settings.SPEED*sign);
 }
 
-function translation_drag_3D_cube(dragEvent, game)
+function translation_drag_nD(dragEvent, game)
 {
 	//console.log("drag to move perspective:",dragEvent);
 	const mouseVector=[winMouseX-pwinMouseX, winMouseY-pwinMouseY];
@@ -112,34 +107,45 @@ function translation_drag_3D_cube(dragEvent, game)
 	};
 	for (let translationKey in translations)
 	{
-		const power=Settings.VELOCITY_ADD_DRAG*(translations[translationKey])*Settings.SPEED;
-		if (game.grid.velocity[translationKey]*(Math.abs(power)/power)<=0)
-		{
-			game.grid.velocity[translationKey]=0;
-		}
-		game.grid.velocity[translationKey]+=power;
+		translation_add_strength(game.grid.velocity, translationKey, Settings.VELOCITY_ADD_DRAG*(translations[translationKey])*Settings.SPEED);
 	}
 }
 
-function translation_init_3D_cube(grid)
+function translation_add_strength(gridVelocity, translationKey, power, resetOppose=true)
+{
+	const sign=(power<0) ? -1 : 1;
+	if (resetOppose && gridVelocity[translationKey]*sign<0)
+	{
+		gridVelocity[translationKey]=0;
+	}
+	gridVelocity[translationKey]+=power;
+}
+
+
+function translation_init_nD(grid)
 {
 	for (let moveKey of Object.keys(move_to_keycode))
 	{
-		grid.velocity[moveKey]=0;
-		if (move_to_keycode[moveKey].positive)
-			keycode_to_move[move_to_keycode[moveKey].positive]={translationKey: moveKey, oppose: false};
-		if (move_to_keycode[moveKey].negative)
-			keycode_to_move[move_to_keycode[moveKey].negative]={translationKey: moveKey, oppose: true};
+		if (!(matrix_translations[moveKey].dim>Settings.RULE_BOX_D))
+		{
+			move_aviable[moveKey]=true;
+			grid.velocity[moveKey]=0;
+			if (move_to_keycode[moveKey].positive)
+				keycode_to_move[move_to_keycode[moveKey].positive]={translationKey: moveKey, oppose: false};
+			if (move_to_keycode[moveKey].negative)
+				keycode_to_move[move_to_keycode[moveKey].negative]={translationKey: moveKey, oppose: true};
+		}
 	}
 }
 
 
-function translation_draw_3D_cube(grid)
+function translation_draw_nD(grid)
 {
-	for (let moveKey of Object.keys(move_to_keycode))
+	for (let moveKey of Object.keys(move_aviable))
 	{
 		const down_postivie=keyIsDown(move_to_keycode[moveKey].positive);
 		const down_negative=keyIsDown(move_to_keycode[moveKey].negative);
+		//accelerate
 		if (down_postivie)
 		{
 			grid.velocity[moveKey]+=Settings.VELOCITY_ADD_REMAIN*Settings.SPEED;
@@ -151,6 +157,7 @@ function translation_draw_3D_cube(grid)
 
 		if (grid.velocity[moveKey]!==0)
 		{
+			//decelerate
 			if (!down_negative && !down_postivie)
 			{
 				const sign=(grid.velocity[moveKey]>0) ? 1 : -1;
@@ -160,11 +167,14 @@ function translation_draw_3D_cube(grid)
 					grid.velocity[moveKey]=0;
 				}
 			}
+			//translate
 			const power=grid.velocity[moveKey];
 			if (power)
 			{
 				//find matrix
-				const translationObject=matrix_3D_translations[moveKey];
+				const translationObject=matrix_translations[moveKey];
+
+				//if (translationObject.dim>)
 				//console.log(`move with matrix: ${translationObject.matrix}`);
 
 				//do the translation
