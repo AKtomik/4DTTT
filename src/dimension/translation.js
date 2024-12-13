@@ -68,15 +68,15 @@ const move_to_keycode = {
 	"x<->": {negative: 70, positive: 72},
 	"y<->": {negative: 84, positive: 71},
 	"z<->": {negative: 82, positive: 89},
-	"w<->": {negative: 86, positive: 78},
+	"w<->": {negative: 78, positive: 66},
 	
 	"x/": {positive: 90, negative: 83},
 	"y/": {positive: 68, negative: 81},
 	"z/": {positive: 65, negative: 69},
 	
-	"wx/": {positive: 87},
+	"wx/": {positive: 86},
 	"wy/": {positive: 67},
-	"wz/": {positive: 88},
+	"wz/": {positive: 87, negative: 88},
 	
 	"x/me": {positive: 73},
 	"y/me": {positive: 79},
@@ -92,14 +92,12 @@ function translation_key_nD(keyEvent, game)
 	const translationKey=keycode_to_move[keyEvent.keyCode]?.translationKey;
 	if (!translationKey || !(move_aviable[translationKey]) || keyEvent.repeat)
 		return;
-	//console.log("keypress to move perspective:",keycode_to_move[keyEvent.keyCode]);
 	const sign=(keycode_to_move[keyEvent.keyCode].oppose) ? -1 : 1;
 	translation_add_strength(game.grid.velocity, translationKey, Settings.VELOCITY_ADD_PUSH*Settings.SPEED*sign);
 }
 
 function translation_drag_nD(dragEvent, game)
 {
-	//console.log("drag to move perspective:",dragEvent);
 	const mouseVector=[winMouseX-pwinMouseX, winMouseY-pwinMouseY];
 	const translations={
 		"x/":-mouseVector[1]/Scale.y(1000),
@@ -108,6 +106,14 @@ function translation_drag_nD(dragEvent, game)
 	for (let translationKey in translations)
 	{
 		translation_add_strength(game.grid.velocity, translationKey, Settings.VELOCITY_ADD_DRAG*(translations[translationKey])*Settings.SPEED);
+	}
+}
+
+function translation_wheel_nD(wheelEvent, game)
+{
+	let translationKey="wz/";
+	{
+		translation_add_strength(game.grid.velocity, translationKey, Settings.VELOCITY_ADD_WHEEL*wheelEvent.delta*Settings.SPEED);
 	}
 }
 

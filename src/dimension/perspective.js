@@ -224,7 +224,7 @@ function perspective_draw_nD(grid)
     {
       stroke(255);
       //stroke(h_box.color);
-      strokeWeight(3);
+      strokeWeight(1);
       fill(255);
   		for (let edge of hypercube_edges)
   		{

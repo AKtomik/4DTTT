@@ -4,6 +4,7 @@
 const ACTION_PRESS= (event, game) => translation_key_nD(event, game);
 const ACTION_CLICK= (event, game) => collision_by_front(event, game);
 const ACTION_DRAG= (event, game) => translation_drag_nD(event, game);
+const ACTION_WHEEL= (event, game) => translation_wheel_nD(event, game);
 const PERSPECTIVE_INIT= (grid) => {
   perspective_init_nD(grid);
   translation_init_nD(grid);
@@ -30,14 +31,16 @@ function mouseClicked(event) {//like released
 function mouseDragged(event) {
   draging=true;
   //console.log("mouseDragged event: ",event);
-  //boxs_clicked
   ACTION_DRAG(event, game);
 }
 
-//window.addEventListener("keydown", (event) => {})
+function mouseWheel(event) {
+  console.log("mouseWheel event: ",event);
+  ACTION_WHEEL(event, game);
+}
+
 function keyPressed(event) {
   //console.log("keyDown event: ",event);
-  //cube_translate
   ACTION_PRESS(event, game);
 };
 
