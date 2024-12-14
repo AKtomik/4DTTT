@@ -96,22 +96,21 @@ function draw() {
       textAlign(RIGHT,TOP);
       strokeWeight(0);
       textStyle(BOLD);
+
+      
+      let speeds="";
+      for (let moveKey of Object.keys(move_aviable))
+      {
+        if (grid.velocity[moveKey])
+        speeds+=`${Math.round(grid.velocity[moveKey]*100)} ${matrix[moveKey].lore}\n`;
+      }
+      if (speeds)
+        speeds="\nspeed :\n"+speeds;
       text(`
       perfs :
       ${Math.round(1000/(deltaTime))} fps
 
-
-      speed :
-      ${Math.round(grid.velocity["x/"]*100)} roll X
-      ${Math.round(grid.velocity["y/"]*100)} roll Y
-      ${Math.round(grid.velocity["z/"]*100)} roll Z
-      ${Math.round(grid.velocity["wx/"]*100)} roll Wx
-      ${Math.round(grid.velocity["wy/"]*100)} roll Wy
-      ${Math.round(grid.velocity["wz/"]*100)} roll Wz
-      ${Math.round(grid.velocity["x<->"]*100)} to X
-      ${Math.round(grid.velocity["y<->"]*100)} to Y
-      ${Math.round(grid.velocity["z<->"]*100)} to Z
-      ${Math.round(grid.velocity["w<->"]*100)} to W
+      ${speeds}
 
       that it.`, Scale.x(980), Scale.y(20));
     }

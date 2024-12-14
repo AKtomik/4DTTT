@@ -39,49 +39,116 @@ class MatrixTranslation {
 	}
 };
 
-const matrix_ND_strength = .1*Settings.SPEED;
-const matrix_ND_angle = Math.PI/32*Settings.SPEED;
+const matrix_strength = .1*Settings.SPEED;
+const matrix_angle = Math.PI/32*Settings.SPEED;
 
-const matrix_translations = {
+const matrix = {
 	//move
-	"x<->": new MatrixTranslation(3, new Matrix(4,4).build_identity().set_column(3, [matrix_ND_strength,0,0,1]), false, true),
-	"y<->": new MatrixTranslation(3, new Matrix(4,4).build_identity().set_column(3, [0,matrix_ND_strength,0,1]), false, true),
-	"z<->": new MatrixTranslation(3, new Matrix(4,4).build_identity().set_column(3, [0,0,matrix_ND_strength,1]), false, true),
-	"w<->": new MatrixTranslation(4, new Matrix(5,5).build_identity().set_column(4, [0,0,0,matrix_ND_strength,1]), false, true),
-	//rotation
-	//3D
-	"x/": new MatrixTranslation(3, new Matrix(4,4).build_identity(), true, false, (matrix, power) => matrix.set_at(1,1,Math.cos(matrix_ND_angle*power)).set_at(2,2,Math.cos(matrix_ND_angle*power)).set_at(1,2,Math.sin(matrix_ND_angle*power)).set_at(2,1,-Math.sin(matrix_ND_angle*power))),
-	"y/": new MatrixTranslation(3, new Matrix(4,4).build_identity(), true, false, (matrix, power) => matrix.set_at(0,0,Math.cos(matrix_ND_angle*power)).set_at(2,2,Math.cos(matrix_ND_angle*power)).set_at(0,2,-Math.sin(matrix_ND_angle*power)).set_at(2,0,Math.sin(matrix_ND_angle*power))),
-	"z/": new MatrixTranslation(3, new Matrix(4,4).build_identity(), true, false, (matrix, power) => matrix.set_at(0,0,Math.cos(matrix_ND_angle*power)).set_at(1,1,Math.cos(matrix_ND_angle*power)).set_at(0,1,Math.sin(matrix_ND_angle*power)).set_at(1,0,-Math.sin(matrix_ND_angle*power))),
-	//4D
-	"wx/": new MatrixTranslation(4, new Matrix(5,5).build_identity(), true, false, (matrix, power) => matrix.set_at(0,0,Math.cos(matrix_ND_angle*power)).set_at(0,3,Math.sin(matrix_ND_angle*power)).set_at(3,0,-Math.sin(matrix_ND_angle*power)).set_at(3,3,Math.cos(matrix_ND_angle*power))),
-	"wy/": new MatrixTranslation(4, new Matrix(5,5).build_identity(), true, false, (matrix, power) => matrix.set_at(1,1,Math.cos(matrix_ND_angle*power)).set_at(1,3,Math.sin(matrix_ND_angle*power)).set_at(3,1,-Math.sin(matrix_ND_angle*power)).set_at(3,3,Math.cos(matrix_ND_angle*power))),
-	"wz/": new MatrixTranslation(4, new Matrix(5,5).build_identity(), true, false, (matrix, power) => matrix.set_at(2,2,Math.cos(matrix_ND_angle*power)).set_at(2,3,Math.sin(matrix_ND_angle*power)).set_at(3,2,-Math.sin(matrix_ND_angle*power)).set_at(3,3,Math.cos(matrix_ND_angle*power))),
+	"x<->": {
+		lore: "to X",
+		translation: new MatrixTranslation(3, new Matrix(4,4).build_identity().set_column(3, [matrix_strength,0,0,1]), false, true),
+		keycode: {
+			negative: 70,
+			positive: 72
+		}
+	},
+	"y<->": {
+		lore: "to Y",
+		translation: new MatrixTranslation(3, new Matrix(4,4).build_identity().set_column(3, [0,matrix_strength,0,1]), false, true),
+		keycode: {
+			negative: 84,
+			positive: 71
+		}
+	},
+	"z<->": {
+		lore: "to Z",
+		translation: new MatrixTranslation(3, new Matrix(4,4).build_identity().set_column(3, [0,0,matrix_strength,1]), false, true),
+		keycode: {
+			negative: 82,
+			positive: 89
+		}
+	},
+	"w<->": {
+		lore: "to W",
+		translation: new MatrixTranslation(4, new Matrix(5,5).build_identity().set_column(4, [0,0,0,matrix_strength,1]), false, true),
+		keycode: {
+			negative: 78,
+			positive: 66
+		}
+	},
+	//rotation/3D
+	"x/": {
+		lore: "roll X",
+		translation: new MatrixTranslation(3, new Matrix(4,4).build_identity(), true, false, (matrix, power) => matrix.set_at(1,1,Math.cos(matrix_angle*power)).set_at(2,2,Math.cos(matrix_angle*power)).set_at(1,2,Math.sin(matrix_angle*power)).set_at(2,1,-Math.sin(matrix_angle*power))),
+		keycode: {
+			positive: 90,
+			negative: 83
+		}
+	},
+	"y/": {
+		lore: "roll Y",
+		translation: new MatrixTranslation(3, new Matrix(4,4).build_identity(), true, false, (matrix, power) => matrix.set_at(0,0,Math.cos(matrix_angle*power)).set_at(2,2,Math.cos(matrix_angle*power)).set_at(0,2,-Math.sin(matrix_angle*power)).set_at(2,0,Math.sin(matrix_angle*power))),
+		keycode: {
+			positive: 68,
+			negative: 81
+		}
+	},
+	"z/": {
+		lore: "roll Z",
+		translation: new MatrixTranslation(3, new Matrix(4,4).build_identity(), true, false, (matrix, power) => matrix.set_at(0,0,Math.cos(matrix_angle*power)).set_at(1,1,Math.cos(matrix_angle*power)).set_at(0,1,Math.sin(matrix_angle*power)).set_at(1,0,-Math.sin(matrix_angle*power))),
+		keycode: {
+			positive: 65,
+			negative: 69
+		}
+	},
+	//rotation/4D
+	"wx/": {
+		lore: "roll Wx",
+		translation: new MatrixTranslation(4, new Matrix(5,5).build_identity(), true, false, (matrix, power) => matrix.set_at(0,0,Math.cos(matrix_angle*power)).set_at(0,3,Math.sin(matrix_angle*power)).set_at(3,0,-Math.sin(matrix_angle*power)).set_at(3,3,Math.cos(matrix_angle*power))),
+		keycode: {
+			positive: 86
+		}
+	},
+	"wy/": {
+		lore: "roll Wy",
+		translation: new MatrixTranslation(4, new Matrix(5,5).build_identity(), true, false, (matrix, power) => matrix.set_at(1,1,Math.cos(matrix_angle*power)).set_at(1,3,Math.sin(matrix_angle*power)).set_at(3,1,-Math.sin(matrix_angle*power)).set_at(3,3,Math.cos(matrix_angle*power))),
+		keycode: {
+			positive: 67
+		}
+	},
+	"wz/": {
+		lore: "roll Wz",
+		translation: new MatrixTranslation(4, new Matrix(5,5).build_identity(), true, false, (matrix, power) => matrix.set_at(2,2,Math.cos(matrix_angle*power)).set_at(2,3,Math.sin(matrix_angle*power)).set_at(3,2,-Math.sin(matrix_angle*power)).set_at(3,3,Math.cos(matrix_angle*power))),
+		keycode: {
+			positive: 87,
+			negative: 88
+		}
+	},
 	//sphere
-	"x/me": new MatrixTranslation(3, new Matrix(4,4).build_identity(), false, false, (matrix, power) => matrix.set_at(1,1,Math.cos(matrix_ND_angle*power/4)).set_at(2,2,Math.cos(matrix_ND_angle*power/4)).set_at(1,2,Math.sin(matrix_ND_angle*power/4)).set_at(2,1,-Math.sin(matrix_ND_angle*power/4))),
-	"y/me": new MatrixTranslation(3, new Matrix(4,4).build_identity(), false, false, (matrix, power) => matrix.set_at(0,0,Math.cos(matrix_ND_angle*power/4)).set_at(2,2,Math.cos(matrix_ND_angle*power/4)).set_at(0,2,-Math.sin(matrix_ND_angle*power/4)).set_at(2,0,Math.sin(matrix_ND_angle*power/4))),
-	"z/me": new MatrixTranslation(3, new Matrix(4,4).build_identity(), false, false, (matrix, power) => matrix.set_at(0,0,Math.cos(matrix_ND_angle*power/4)).set_at(1,1,Math.cos(matrix_ND_angle*power/4)).set_at(0,1,Math.sin(matrix_ND_angle*power/4)).set_at(1,0,-Math.sin(matrix_ND_angle*power/4))),
+	"x/me": {
+		lore: "shpere X",
+		translation: new MatrixTranslation(3, new Matrix(4,4).build_identity(), false, false, (matrix, power) => matrix.set_at(1,1,Math.cos(matrix_angle*power/4)).set_at(2,2,Math.cos(matrix_angle*power/4)).set_at(1,2,Math.sin(matrix_angle*power/4)).set_at(2,1,-Math.sin(matrix_angle*power/4))),
+		keycode: {
+			positive: 73
+		}
+	},
+	"y/me": {
+		lore: "shpere Y",
+		translation: new MatrixTranslation(3, new Matrix(4,4).build_identity(), false, false, (matrix, power) => matrix.set_at(0,0,Math.cos(matrix_angle*power/4)).set_at(2,2,Math.cos(matrix_angle*power/4)).set_at(0,2,-Math.sin(matrix_angle*power/4)).set_at(2,0,Math.sin(matrix_angle*power/4))),
+		keycode: {
+			positive: 79
+		}
+	},
+	"z/me": {
+		lore: "shpere Z",
+		translation: new MatrixTranslation(3, new Matrix(4,4).build_identity(), false, false, (matrix, power) => matrix.set_at(0,0,Math.cos(matrix_angle*power/4)).set_at(1,1,Math.cos(matrix_angle*power/4)).set_at(0,1,Math.sin(matrix_angle*power/4)).set_at(1,0,-Math.sin(matrix_angle*power/4))),
+		keycode: {
+			positive: 80
+		}
+	},
 };
 
 
-const move_to_keycode = {
-	"x<->": {negative: 70, positive: 72},
-	"y<->": {negative: 84, positive: 71},
-	"z<->": {negative: 82, positive: 89},
-	"w<->": {negative: 78, positive: 66},
-	
-	"x/": {positive: 90, negative: 83},
-	"y/": {positive: 68, negative: 81},
-	"z/": {positive: 65, negative: 69},
-	
-	"wx/": {positive: 86},
-	"wy/": {positive: 67},
-	"wz/": {positive: 87, negative: 88},
-	
-	"x/me": {positive: 73},
-	"y/me": {positive: 79},
-	"z/me": {positive: 80},
-};
 
 const move_aviable = {};//will contains only aviables mooves
 
@@ -131,16 +198,16 @@ function translation_add_strength(gridVelocity, translationKey, power, resetOppo
 
 function translation_init_nD(grid)
 {
-	for (let moveKey of Object.keys(move_to_keycode))
+	for (let moveKey of Object.keys(matrix))
 	{
-		if (!(matrix_translations[moveKey].dim>Settings.RULE_BOX_D))
+		if (!(matrix[moveKey].translation.dim>Settings.RULE_BOX_D))
 		{
 			move_aviable[moveKey]=true;
 			grid.velocity[moveKey]=0;
-			if (move_to_keycode[moveKey].positive)
-				keycode_to_move[move_to_keycode[moveKey].positive]={translationKey: moveKey, oppose: false};
-			if (move_to_keycode[moveKey].negative)
-				keycode_to_move[move_to_keycode[moveKey].negative]={translationKey: moveKey, oppose: true};
+			if (matrix[moveKey].keycode.positive)
+				keycode_to_move[matrix[moveKey].keycode.positive]={translationKey: moveKey, oppose: false};
+			if (matrix[moveKey].keycode.negative)
+				keycode_to_move[matrix[moveKey].keycode.negative]={translationKey: moveKey, oppose: true};
 		}
 	}
 }
@@ -150,8 +217,8 @@ function translation_draw_nD(grid)
 {
 	for (let moveKey of Object.keys(move_aviable))
 	{
-		const down_postivie=keyIsDown(move_to_keycode[moveKey].positive);
-		const down_negative=keyIsDown(move_to_keycode[moveKey].negative);
+		const down_postivie=keyIsDown(matrix[moveKey].keycode.positive);
+		const down_negative=keyIsDown(matrix[moveKey].keycode.negative);
 		//accelerate
 		if (down_postivie)
 		{
@@ -179,7 +246,7 @@ function translation_draw_nD(grid)
 			if (power)
 			{
 				//find matrix
-				const translationObject=matrix_translations[moveKey];
+				const translationObject=matrix[moveKey].translation;
 
 				//if (translationObject.dim>)
 				//console.log(`move with matrix: ${translationObject.matrix}`);
