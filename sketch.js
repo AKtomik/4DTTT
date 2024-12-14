@@ -1,20 +1,3 @@
-
-//--- actions ---
-
-const ACTION_PRESS= (event, game) => translation_key_nD(event, game);
-const ACTION_CLICK= (event, game) => collision_by_front(event, game);
-const ACTION_DRAG= (event, game) => translation_drag_nD(event, game);
-const ACTION_WHEEL= (event, game) => translation_wheel_nD(event, game);
-const PERSPECTIVE_INIT= (grid) => {
-  perspective_init_nD(grid);
-  translation_init_nD(grid);
-};
-const PERSPECTIVE_DRAW= (grid) => {
-  perspective_draw_nD(grid);
-  translation_draw_nD(grid);
-};
-
-
 //--- click ---
 let draging = false;
 function mouseClicked(event) {//like released
@@ -23,25 +6,20 @@ function mouseClicked(event) {//like released
     draging=false;
     return;
   }
-  //console.log("mouseClicked event: ",event);
-  //boxs_clicked
-  ACTION_CLICK(event, game);
+  Mechanic.eventWithObject(SketchEvents.CLICK, event);
 }
 
 function mouseDragged(event) {
   draging=true;
-  //console.log("mouseDragged event: ",event);
-  ACTION_DRAG(event, game);
+  Mechanic.eventWithObject(SketchEvents.DRAG, event);
 }
 
 function mouseWheel(event) {
-  console.log("mouseWheel event: ",event);
-  ACTION_WHEEL(event, game);
+  Mechanic.eventWithObject(SketchEvents.WHEEL, event);
 }
 
 function keyPressed(event) {
-  //console.log("keyDown event: ",event);
-  ACTION_PRESS(event, game);
+  Mechanic.eventWithObject(SketchEvents.PRESS, event);
 };
 
 
@@ -49,6 +27,9 @@ function keyPressed(event) {
 var game;
 var grid;
 function setup() {
+  Mechanic.prepare();
+
+  //--
   //theme
   ColorPalet.switch("default");
   ColorPalet.switch("dark_mode");
@@ -68,12 +49,34 @@ function setup() {
   {
     players.push(new Player(false, playerIndex));
   }
-  game = new Game(grid, players);
 
-  PERSPECTIVE_INIT(grid);
+  //let gridMechanic=
+  new Mechanic(grid, 
+  (grid) => {
+    translation_init_nD(grid);
+    perspective_init_nD(grid);
+  },
+  (grid) => {
+    perspective_draw_nD(grid);
+    translation_draw_nD(grid);
+  });
+
+  game = new Game(grid, players);
+  let gameMechanic=new Mechanic(game);
+  gameMechanic.addAction(SketchEvents.PRESS, translation_key_nD);
+  gameMechanic.addAction(SketchEvents.CLICK, collision_by_front);
+  gameMechanic.addAction(SketchEvents.DRAG, translation_drag_nD);
+  gameMechanic.addAction(SketchEvents.WHEEL, translation_wheel_nD);
+  //--
+
+
+  Mechanic.event(SketchEvents.INIT);
+  Mechanic.init();
 }
 
 function draw() {
+
+  //--
   background(ColorPalet.get("theme_background"));
 
   {//texts
@@ -149,5 +152,7 @@ function draw() {
       }
     }
   }
-  PERSPECTIVE_DRAW(grid);
+
+  //--
+  Mechanic.event(SketchEvents.DISPLAY);
 }
