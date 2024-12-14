@@ -2,7 +2,7 @@ class Settings {
 	static FPS = 24;
 	static SPEED = 3;
 	static DEBUG = true;
-	static PLAYERS = 2;
+	static PLAYERS = 3;
 
 	static POS_BOX_FULL = 1000;
 	static POS_BOX_MARGIN = 200;

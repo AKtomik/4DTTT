@@ -79,7 +79,7 @@ function draw() {
   {//texts
     //title
     fill(255);
-    textSize(20);
+    textSize(Scale.min(50));
     textAlign(LEFT,TOP);
     strokeWeight(0);
     textStyle(NORMAL);
@@ -89,7 +89,7 @@ function draw() {
     if (Settings.DEBUG)
     {
       fill(255,0,255);
-      textSize(20);
+      textSize(Scale.min(20));
       textAlign(RIGHT,TOP);
       strokeWeight(0);
       textStyle(BOLD);
@@ -115,11 +115,11 @@ function draw() {
     
     //scores
     fill(ColorPalet.get("theme_text"));
-    textSize(40);
+    textSize(Scale.min(50));
     textAlign(LEFT, CENTER);
     textStyle(BOLD);
     text(`scores`, Scale.x(50), Scale.y(400));
-    textSize(60);
+    textSize(Scale.min(100));
     for (let playerIndex=0;playerIndex<game.players.length;playerIndex++)
     {
       fill(ColorPalet.get(`player_${playerIndex+1}_${(game.players[playerIndex].score) ? "ligth" : "dark"}`));
@@ -131,20 +131,20 @@ function draw() {
     {
       
       fill(ColorPalet.get(`player_${game.player_i+1}_text`));
-      textSize(40);
+      textSize(Scale.min(50));
       text(`à ton tour`, Scale.x(40), Scale.y(700));
       fill(ColorPalet.get("theme_text"));
-      textSize(20);
+      textSize(Scale.min(25));
       text(`reste ${game.remain}`, Scale.x(50), Scale.y(750));
     } else {
       if (game.winer_i===-1)
       {
         fill(ColorPalet.get("theme_text"));
-        textSize(70);
+        textSize(Scale.min(100));
         text(`égalitée`, Scale.x(40), Scale.y(700));
       } else {
         fill(ColorPalet.get(`player_${game.winer_i+1}_text`));
-        textSize(70);
+        textSize(Scale.min(100));
         text(`a gagné`, Scale.x(40), Scale.y(700));
       }
     }

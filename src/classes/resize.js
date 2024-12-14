@@ -26,25 +26,25 @@ class Scale {
   }
 
   //resize
-  static x(number)
+  static x(numberBy1000)
   {
-    return number*Scale.SCALER[0];
+    return numberBy1000*Scale.SCALER[0];
   }
-  static y(number)
+  static y(numberBy1000)
   {
-    return number*Scale.SCALER[1];
+    return numberBy1000*Scale.SCALER[1];
   }
-  static diag(number)
+  static diag(numberBy1000)
   {
-    return number*Scale.DIAG;
+    return numberBy1000*Scale.DIAG;
   }
-  static min(number)
+  static min(numberBy1000)
   {
-    return number*Scale.SCALER[Scale.MIN_I];
+    return numberBy1000*Scale.SCALER[Scale.MIN_I];
   }
-  static max(number)
+  static max(numberBy1000)
   {
-    return number*Scale.SCALER[Scale.MAX_I];
+    return numberBy1000*Scale.SCALER[Scale.MAX_I];
   }
 }
 

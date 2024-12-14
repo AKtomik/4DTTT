@@ -123,6 +123,7 @@ function translation_add_strength(gridVelocity, translationKey, power, resetOppo
 	if (resetOppose && gridVelocity[translationKey]*sign<0)
 	{
 		gridVelocity[translationKey]=0;
+		return;
 	}
 	gridVelocity[translationKey]+=power;
 }
