@@ -2,7 +2,7 @@ class Settings {
 	static FPS = 24;
 	static SPEED = 3;
 	static DEBUG = true;
-	static PLAYERS = 3;
+	static PLAYERS = 2;
 
 	static POS_BOX_FULL = 1000;
 	static POS_BOX_MARGIN = 200;
@@ -22,7 +22,7 @@ class Settings {
 	//how many box width
 	static RULE_BOX_WIDTH=3;//const
 	//how many dimensions
-	static RULE_BOX_D=4;//const
+	static RULE_BOX_D=3;//const
 	//how many to check in order to score
 	static RULE_BOX_ROW_LENGTH=3;
 	//can we make rescore each time a row is bigger

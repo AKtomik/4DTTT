@@ -47,7 +47,7 @@ function setup() {
   let players=[];
   for (let playerIndex=0;playerIndex<Settings.PLAYERS;playerIndex++)
   {
-    players.push(new Player(false, playerIndex));
+    players.push(new Player(false, playerIndex, `player ${playerIndex+1}`));
   }
 
   //let gridMechanic=
@@ -80,6 +80,8 @@ function draw() {
   background(ColorPalet.get("theme_background"));
 
   {//texts
+
+
     //title
     fill(255);
     textSize(Scale.min(50));
@@ -87,6 +89,8 @@ function draw() {
     strokeWeight(0);
     textStyle(NORMAL);
     text(`4D Tick Tac Toe`, Scale.x(20), Scale.y(20));
+
+    //test
 
     //perfs
     if (Settings.DEBUG)
@@ -110,31 +114,78 @@ function draw() {
       perfs :
       ${Math.round(1000/(deltaTime))} fps
 
-      ${speeds}
-
-      that it.`, Scale.x(980), Scale.y(20));
+      ${speeds}`, Scale.x(980), Scale.y(20));
     }
     
-    //scores
+    //players
     fill(ColorPalet.get("theme_text"));
-    textSize(Scale.min(50));
-    textAlign(LEFT, CENTER);
-    textStyle(BOLD);
-    text(`scores`, Scale.x(50), Scale.y(400));
     textSize(Scale.min(100));
+    textAlign(LEFT, CENTER);
+    text(`scores`, Scale.x(25), Scale.y(300));
+    const here_text_size_score=120;
+    const here_text_size_name=60;
+    const here_at_begin_y=400;
+    const here_at_slide_y=100;
+    const here_forward_more_x=50;
+    const here_forward_more_size=5;
+    const here_size_y=50;
+    
+    const playerForwardIndex=(game.remain>0) ? game.player_i : game.winer_i;
+    let maxWidth=0;
     for (let playerIndex=0;playerIndex<game.players.length;playerIndex++)
-    {
-      fill(ColorPalet.get(`player_${playerIndex+1}_${(game.players[playerIndex].score) ? "ligth" : "dark"}`));
-      text(`${game.players[playerIndex].score}`, Scale.x(50+50*playerIndex), Scale.y(500));
+    {//calculate max width
+      let width=0;
+      if (game.players[playerIndex].score)
+      {
+        textSize(Scale.min(here_text_size_score));
+        textStyle(NORMAL);
+        width+=textWidth(String(game.players[playerIndex].score));
+      }
+      textSize(Scale.min(here_text_size_name));
+      textStyle(NORMAL);
+      width+=textWidth(String(game.players[playerIndex].name));
+      if (width>maxWidth)
+      {
+        maxWidth=width;
+      }
+    }
+    for (let playerIndex=0;playerIndex<game.players.length;playerIndex++)
+    {//draw each player
+      let at=createVector(0,here_at_begin_y+here_at_slide_y*playerIndex);
+      let sizing=createVector(maxWidth+((playerIndex===playerForwardIndex) ? here_forward_more_x : 0), here_size_y);
+      
+      fill(ColorPalet.get(`player_${playerIndex+1}_dark`));
+      //fill(ColorPalet.get(`theme_sign`));
+      let backmiddle=25;
+      beginShape()
+      vertex(Scale.x(at.x), Scale.y(at.y))
+      vertex(Scale.x(at.x+sizing.x), Scale.y(at.y))
+      vertex(Scale.x(at.x+sizing.x-backmiddle), Scale.y(at.y+(sizing.y/2)))
+      vertex(Scale.x(at.x+sizing.x), Scale.y(at.y+sizing.y))
+      vertex(Scale.x(at.x), Scale.y(at.y+sizing.y))
+      endShape()
+
+      let scoreWidth=0;
+      if (game.players[playerIndex].score)
+      {
+        textSize(Scale.min(here_text_size_score));
+        textStyle(NORMAL);
+        fill(ColorPalet.get("theme_text"));
+        fill(ColorPalet.get(`player_${playerIndex+1}_ligth`));
+        text(String(game.players[playerIndex].score), Scale.x(at.x+5), Scale.y(at.y+sizing.y/2-10));
+        scoreWidth=textWidth(String(game.players[playerIndex].score));
+      }
+      
+      textSize(Scale.min(here_text_size_name+ ((playerIndex===playerForwardIndex) ? ((1+Math.sin(frameCount/5))/2)*here_forward_more_size : 0 )));
+      textStyle(NORMAL);
+      fill(ColorPalet.get("theme_text"));
+      text(String(game.players[playerIndex].name), Scale.x(at.x+scoreWidth+10), Scale.y(at.y+sizing.y/2));
     }
 
     //turn
+    textStyle(BOLD);
     if (game.remain>0)
     {
-      
-      fill(ColorPalet.get(`player_${game.player_i+1}_text`));
-      textSize(Scale.min(50));
-      text(`à ton tour`, Scale.x(40), Scale.y(700));
       fill(ColorPalet.get("theme_text"));
       textSize(Scale.min(25));
       text(`reste ${game.remain}`, Scale.x(50), Scale.y(750));
@@ -142,12 +193,12 @@ function draw() {
       if (game.winer_i===-1)
       {
         fill(ColorPalet.get("theme_text"));
-        textSize(Scale.min(100));
+        textSize(Scale.min(80));
         text(`égalitée`, Scale.x(40), Scale.y(700));
       } else {
         fill(ColorPalet.get(`player_${game.winer_i+1}_text`));
-        textSize(Scale.min(100));
-        text(`a gagné`, Scale.x(40), Scale.y(700));
+        textSize(Scale.min(80));
+        text(`${game.players[game.winer_i].name} won`, Scale.x(40), Scale.y(700));
       }
     }
   }

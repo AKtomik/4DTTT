@@ -96,13 +96,13 @@ class Game {
 		{//calculate winer
 			let bestScore=0;
 			let bestPlayer=-1;
-			for (let i in this.players)
+			for (let playerIndex=0;playerIndex<this.players.length;playerIndex++)
 			{
-				let playerScore=this.players[i].score;
+				let playerScore=this.players[playerIndex].score;
 				if (playerScore>bestScore)
 				{
 					bestScore=playerScore;
-					bestPlayer=i;
+					bestPlayer=playerIndex;
 				}
 				else if (playerScore===bestScore)
 				{
@@ -117,8 +117,9 @@ class Game {
 };
 
 class Player {
-	constructor(is_bot, igIndex) {
+	constructor(is_bot, igIndex, playerName) {
 		this.is_bot=is_bot;
+		this.name=playerName;
 		this.score=0;
 		this.igIndex=igIndex;
 	}

@@ -46,7 +46,7 @@ const matrix = {
 	//move
 	"x<->": {
 		lore: "to X",
-		translation: new MatrixTranslation(3, new Matrix(4,4).build_identity().set_column(3, [matrix_strength,0,0,1]), false, true),
+		translation: new MatrixTranslation(2, new Matrix(3,3).build_identity().set_column(2, [matrix_strength,0,1]), false, true),
 		keycode: {
 			negative: 70,
 			positive: 72
@@ -54,7 +54,7 @@ const matrix = {
 	},
 	"y<->": {
 		lore: "to Y",
-		translation: new MatrixTranslation(3, new Matrix(4,4).build_identity().set_column(3, [0,matrix_strength,0,1]), false, true),
+		translation: new MatrixTranslation(2, new Matrix(3,3).build_identity().set_column(2, [0,matrix_strength,1]), false, true),
 		keycode: {
 			negative: 84,
 			positive: 71
@@ -95,7 +95,7 @@ const matrix = {
 	},
 	"z/": {
 		lore: "roll Z",
-		translation: new MatrixTranslation(3, new Matrix(4,4).build_identity(), true, false, (matrix, power) => matrix.set_at(0,0,Math.cos(matrix_angle*power)).set_at(1,1,Math.cos(matrix_angle*power)).set_at(0,1,Math.sin(matrix_angle*power)).set_at(1,0,-Math.sin(matrix_angle*power))),
+		translation: new MatrixTranslation(2, new Matrix(3,3).build_identity(), true, false, (matrix, power) => matrix.set_at(0,0,Math.cos(matrix_angle*power)).set_at(1,1,Math.cos(matrix_angle*power)).set_at(0,1,Math.sin(matrix_angle*power)).set_at(1,0,-Math.sin(matrix_angle*power))),
 		keycode: {
 			positive: 65,
 			negative: 69

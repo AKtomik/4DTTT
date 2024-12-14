@@ -1,5 +1,6 @@
 //all colors :
 //theme_background - the background
+//theme_sign - like a second background
 //theme_text - netral texts
 //box_empty_in - when the box not checked
 //box_empty_out - when the box not checked
@@ -30,6 +31,7 @@ class ColorPalet {
 const colorSet = {
 	default: {
 		theme_background:[0,100,200],
+		theme_sign:[0,127,255],
 		theme_text:[0],
 		box_empty_in:[0,128],
 		box_empty_out:[255],
@@ -46,6 +48,7 @@ const colorSet = {
 
 	dark_mode: {
 		theme_background:[0,32,64],
+		theme_sign:[0,64,128],
 		theme_text:[255],
 		box_empty_in:[255,128],
 		box_empty_out:[0],
@@ -53,6 +56,7 @@ const colorSet = {
 
 	nigth: {
 		theme_background:[0],
+		theme_sign:[64],
 		theme_text:[255],
 		box_empty_in:[255],
 		box_empty_out:[0],
