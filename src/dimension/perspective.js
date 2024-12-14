@@ -222,10 +222,9 @@ function perspective_draw_nD(grid)
     //draw outline
     //if (false)
     {
-      stroke(255);
       //stroke(h_box.color);
+      stroke(ColorPalet.get("box_empty_out"));
       strokeWeight(1);
-      fill(255);
   		for (let edge of hypercube_edges)
   		{
   	    line(...projections[edge[0]], ...projections[edge[1]]);

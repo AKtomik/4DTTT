@@ -48,29 +48,33 @@ function keyPressed(event) {
 //--- draw ---
 var game;
 var grid;
-var player_1;
-var player_2;
-//var player_3;
 function setup() {
+  //theme
+  ColorPalet.switch("default");
+  ColorPalet.switch("dark_mode");
+
   //init
   createCanvas(...Scale.resize());
-  background(color(Settings.COLOR_BACKGROUND));
+  background(ColorPalet.get("theme_background"));
   textFont('Courier New'); // Good font
   frameRate(Settings.FPS);
   describe('ttt');
 
+
   //objects
   grid = new Grid(Settings.RULE_BOX_WIDTH, Settings.RULE_BOX_D);
-  player_1 = new Player(false, color(Settings.COLOR_BOX_P1_FILL), color(Settings.COLOR_BOX_P1_WON));
-  player_2 = new Player(true, color(Settings.COLOR_BOX_P2_FILL), color(Settings.COLOR_BOX_P2_WON));
-  //player_3 = new Player(true, color(Settings.COLOR_BOX_P3_FILL), color(Settings.COLOR_BOX_P3_WON));
-  game = new Game(grid, [player_1, player_2]);
+  let players=[];
+  for (let playerIndex=0;playerIndex<Settings.PLAYERS;playerIndex++)
+  {
+    players.push(new Player(false, playerIndex));
+  }
+  game = new Game(grid, players);
 
   PERSPECTIVE_INIT(grid);
 }
 
 function draw() {
-  background(...Settings.COLOR_BACKGROUND);
+  background(ColorPalet.get("theme_background"));
 
   {//texts
     //title
@@ -110,35 +114,36 @@ function draw() {
     }
     
     //scores
-    fill(Settings.COLOR_TEXT_NETRAL);
+    fill(ColorPalet.get("theme_text"));
     textSize(40);
     textAlign(LEFT, CENTER);
     textStyle(BOLD);
     text(`scores`, Scale.x(50), Scale.y(400));
     textSize(60);
-    for (let i in game.players)
+    for (let playerIndex=0;playerIndex<game.players.length;playerIndex++)
     {
-      fill((game.players[i].score) ? game.players[i].color_won : game.players[i].color_fill);
-      text(`${game.players[i].score}`, Scale.x(50+50*i), Scale.y(500));
+      fill(ColorPalet.get(`player_${playerIndex+1}_${(game.players[playerIndex].score) ? "ligth" : "dark"}`));
+      text(`${game.players[playerIndex].score}`, Scale.x(50+50*playerIndex), Scale.y(500));
     }
 
     //turn
     if (game.remain>0)
     {
-      fill(game.players[game.player_i].color_won);
+      
+      fill(ColorPalet.get(`player_${game.player_i+1}_text`));
       textSize(40);
       text(`à ton tour`, Scale.x(40), Scale.y(700));
-      fill(...Settings.COLOR_TEXT_NETRAL);
+      fill(ColorPalet.get("theme_text"));
       textSize(20);
       text(`reste ${game.remain}`, Scale.x(50), Scale.y(750));
     } else {
       if (game.winer_i===-1)
       {
-        fill(...Settings.COLOR_TEXT_NETRAL);
+        fill(ColorPalet.get("theme_text"));
         textSize(70);
         text(`égalitée`, Scale.x(40), Scale.y(700));
       } else {
-        fill(game.players[game.winer_i].color_won);
+        fill(ColorPalet.get(`player_${game.winer_i+1}_text`));
         textSize(70);
         text(`a gagné`, Scale.x(40), Scale.y(700));
       }

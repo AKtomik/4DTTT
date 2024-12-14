@@ -105,11 +105,11 @@ class Box {
 		switch (this.state)
 		{
 			case (BoxStateType.EMPTY):
-    		return color(Settings.COLOR_BOX_EMPTY);
+    		return ColorPalet.get(`box_empty_in`);
 			case (BoxStateType.FILL_BY):
-				return this.check_player.color_fill;
+				return ColorPalet.get(`player_${this.check_player.igIndex+1}_dark`);
 			case (BoxStateType.WON_BY):
-				return this.check_player.color_won;
+				return ColorPalet.get(`player_${this.check_player.igIndex+1}_ligth`);
 		}
   };
   display()

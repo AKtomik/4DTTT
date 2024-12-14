@@ -117,11 +117,10 @@ class Game {
 };
 
 class Player {
-	constructor(is_bot, color_fill, color_won) {
+	constructor(is_bot, igIndex) {
 		this.is_bot=is_bot;
 		this.score=0;
-		this.color_fill=color_fill;
-		this.color_won=color_won;
+		this.igIndex=igIndex;
 	}
 	//score
 	score_add()
