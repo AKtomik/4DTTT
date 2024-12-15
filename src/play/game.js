@@ -122,6 +122,8 @@ class Player {
 		this.name=playerName;
 		this.score=0;
 		this.igIndex=igIndex;
+		this.animation={};
+		this.animation["step_in"]=0;
 	}
 	//score
 	score_add()

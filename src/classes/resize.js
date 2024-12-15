@@ -46,6 +46,15 @@ class Scale {
   {
     return numberBy1000*Scale.SCALER[Scale.MAX_I];
   }
+  //unsize
+  static reverse_x(aPixelNumber)
+  {
+    return aPixelNumber/Scale.SCALER[0];
+  }
+  static reverse_y(aPixelNumber)
+  {
+    return aPixelNumber/Scale.SCALER[1];
+  }
 }
 
 window.onresize = function() {

@@ -33,6 +33,7 @@ function setup() {
   //theme
   ColorPalet.switch("default");
   ColorPalet.switch("dark_mode");
+  //ColorPalet.switch("nigth");
 
   //init
   createCanvas(...Scale.resize());
@@ -129,6 +130,9 @@ function draw() {
     const here_forward_more_x=50;
     const here_forward_more_size=5;
     const here_size_y=50;
+    const here_size_x=50;//width added to it
+    const here_size_backmiddle=25;
+    const here_time_forward=30;
     
     const playerForwardIndex=(game.remain>0) ? game.player_i : game.winer_i;
     let maxWidth=0;
@@ -149,19 +153,29 @@ function draw() {
         maxWidth=width;
       }
     }
+    maxWidth*=1.2;//! just because
     for (let playerIndex=0;playerIndex<game.players.length;playerIndex++)
     {//draw each player
-      let at=createVector(0,here_at_begin_y+here_at_slide_y*playerIndex);
-      let sizing=createVector(maxWidth+((playerIndex===playerForwardIndex) ? here_forward_more_x : 0), here_size_y);
+      let step_in=game.players[playerIndex].animation["step_in"]/here_time_forward;
+      if (step_in<1 && playerIndex===playerForwardIndex)
+      {
+        game.players[playerIndex].animation["step_in"]++;
+      }
+      if (step_in>0 && !(playerIndex===playerForwardIndex))
+      {
+        game.players[playerIndex].animation["step_in"]--;
+      }
+      step_in=(Math.cos((1-step_in)*Math.PI)+1)/2;
+
+      let at=createVector(0,here_at_begin_y+here_at_slide_y*playerIndex);  
+      let sizing=createVector(here_size_x+step_in*here_forward_more_x, here_size_y);
       
       fill(ColorPalet.get(`player_${playerIndex+1}_dark`));
-      //fill(ColorPalet.get(`theme_sign`));
-      let backmiddle=25;
       beginShape()
       vertex(Scale.x(at.x), Scale.y(at.y))
-      vertex(Scale.x(at.x+sizing.x), Scale.y(at.y))
-      vertex(Scale.x(at.x+sizing.x-backmiddle), Scale.y(at.y+(sizing.y/2)))
-      vertex(Scale.x(at.x+sizing.x), Scale.y(at.y+sizing.y))
+      vertex(maxWidth+Scale.x(at.x+sizing.x), Scale.y(at.y))
+      vertex(maxWidth+Scale.x(at.x+sizing.x-here_size_backmiddle), Scale.y(at.y+(sizing.y/2)))
+      vertex(maxWidth+Scale.x(at.x+sizing.x), Scale.y(at.y+sizing.y))
       vertex(Scale.x(at.x), Scale.y(at.y+sizing.y))
       endShape()
 
@@ -176,7 +190,10 @@ function draw() {
         scoreWidth=textWidth(String(game.players[playerIndex].score));
       }
       
-      textSize(Scale.min(here_text_size_name+ ((playerIndex===playerForwardIndex) ? ((1+Math.sin(frameCount/5))/2)*here_forward_more_size : 0 )));
+      let size_more=(game.remain>0)
+      ? step_in
+      : ((1+Math.sin(frameCount/5))/2)
+      textSize(Scale.min(here_text_size_name+ size_more*here_forward_more_size));
       textStyle(NORMAL);
       fill(ColorPalet.get("theme_text"));
       text(String(game.players[playerIndex].name), Scale.x(at.x+scoreWidth+10), Scale.y(at.y+sizing.y/2));
@@ -188,17 +205,17 @@ function draw() {
     {
       fill(ColorPalet.get("theme_text"));
       textSize(Scale.min(25));
-      text(`reste ${game.remain}`, Scale.x(50), Scale.y(750));
+      text(`reste ${game.remain}`, Scale.x(50), Scale.y(450+100*game.players.length));
     } else {
       if (game.winer_i===-1)
       {
         fill(ColorPalet.get("theme_text"));
         textSize(Scale.min(80));
-        text(`égalitée`, Scale.x(40), Scale.y(700));
+        text(`égalitée`, Scale.x(40), Scale.y(450+100*game.players.length));
       } else {
         fill(ColorPalet.get(`player_${game.winer_i+1}_text`));
         textSize(Scale.min(80));
-        text(`${game.players[game.winer_i].name} won`, Scale.x(40), Scale.y(700));
+        text(`${game.players[game.winer_i].name} won`, Scale.x(40), Scale.y(450+100*game.players.length));
       }
     }
   }
