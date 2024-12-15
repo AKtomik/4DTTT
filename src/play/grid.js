@@ -83,6 +83,19 @@ class Grid {
 	{//deperciated
 		this.front_method=frontFunction;
 	};
+
+	//action
+	init()
+	{
+		console.log("this:",this);
+    translation_init_nD(this);
+    perspective_init_nD(this);
+	}
+	display()
+	{
+    perspective_draw_nD(this);
+    translation_draw_nD(this);
+	}
 };
 
 

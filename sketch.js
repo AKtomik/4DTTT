@@ -52,22 +52,14 @@ function setup() {
   }
 
   //let gridMechanic=
-  new Mechanic(grid, 
-  (grid) => {
-    translation_init_nD(grid);
-    perspective_init_nD(grid);
-  },
-  (grid) => {
-    perspective_draw_nD(grid);
-    translation_draw_nD(grid);
-  });
+  new Mechanic(grid, grid.init, grid.display);
 
   game = new Game(grid, players);
   let gameMechanic=new Mechanic(game);
-  gameMechanic.addAction(SketchEvents.PRESS, translation_key_nD);
-  gameMechanic.addAction(SketchEvents.CLICK, collision_by_front);
-  gameMechanic.addAction(SketchEvents.DRAG, translation_drag_nD);
-  gameMechanic.addAction(SketchEvents.WHEEL, translation_wheel_nD);
+  gameMechanic.addAction(SketchEvents.PRESS, game.action_press);
+  gameMechanic.addAction(SketchEvents.CLICK, game.action_click);
+  gameMechanic.addAction(SketchEvents.DRAG, game.action_drag);
+  gameMechanic.addAction(SketchEvents.WHEEL, game.action_wheel);
   //--
 
 

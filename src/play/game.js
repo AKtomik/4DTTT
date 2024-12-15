@@ -115,6 +115,23 @@ class Game {
 
 		return ifScoreChanged;
 	}
+
+	action_press(event)
+	{
+		translation_key_nD(event, this);
+	}
+	action_click(event)
+	{
+		collision_by_front(event, this);
+	}
+	action_drag(event)
+	{
+		translation_drag_nD(event, this);
+	}
+	action_wheel(event)
+	{
+		translation_wheel_nD(event, this);
+	}
 };
 
 class Player {

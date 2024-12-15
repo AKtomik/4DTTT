@@ -28,34 +28,34 @@ class Mechanic {
 	static event(eventType)
 	{//do action
 		for (let mechanic of Mechanic.eventLisener[eventType])
-			mechanic.action[eventType].function(mechanic.object)
+			mechanic.action[eventType].method.call(mechanic.object)
 	}
 	
 	static eventWithObject(eventType, eventObject)
 	{
 		for (let mechanic of Mechanic.eventLisener[eventType])
-			mechanic.action[eventType].function(eventObject, mechanic.object)
+			mechanic.action[eventType].method.call(mechanic.object, eventObject)
 	}
 
-	constructor(object, initFunction, displayFunction)
+	constructor(object, initMethod, displayMethod)
 	{//add mechanic
 		this.object=object;//object is argument when event action function
 		
 		//actions
 		this.action= {};
-		if (initFunction)
-			this.addAction(SketchEvents.INIT, initFunction, 0);
-		if (displayFunction)
-			this.addAction(SketchEvents.DISPLAY, displayFunction, 0);
+		if (initMethod)
+			this.addAction(SketchEvents.INIT, initMethod, 0);
+		if (displayMethod)
+			this.addAction(SketchEvents.DISPLAY, displayMethod, 0);
 
 		//init
 		if (Mechanic.inited)
-			initFunction(this.object);
+			initMethod.call(this.object);
 	}
 
-	addAction(eventType, actionedFunction, actionPriority=0)
+	addAction(eventType, actionedMethod, actionPriority=0)
 	{
-		this.action[eventType]={function: actionedFunction, proiority:actionPriority};
+		this.action[eventType]={method: actionedMethod, proiority:actionPriority};
 		Mechanic.eventLisener[eventType].push(this);
 		//! todo: sort by priority
 	}
@@ -64,5 +64,13 @@ class Mechanic {
 	{
 		delete this.action[eventType];
 		Mechanic.eventLisener[eventType].remove(this);
+	}
+	
+	killActions()
+	{
+		for (let action in this.action)
+		{
+			this.removeAction(action);
+		}
 	}
 };
