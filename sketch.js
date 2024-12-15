@@ -74,6 +74,8 @@ bugScreen=[
   {chance: 200, amount: 2}
 ]
 
+let frameAgo = {};
+let frameAgoLast = 0;
 function draw() {
 
   //--
@@ -121,9 +123,39 @@ function draw() {
       }
       if (speeds)
         speeds="\nspeed :\n"+speeds;
+      
+      const now=new Date().getTime();
+      frameAgo[frameCount]=now;//now
+      const frameLogValue=[1,3,10,60];
+      let frameLoged={};
+      let frameIndex=frameCount;
+      //console.log("oui");
+      for (let logTime of frameLogValue)
+      {
+        let timeDownLog=now-logTime*1000;
+        while (frameAgo[frameIndex]>timeDownLog && frameIndex>=0)
+        {
+          frameIndex--;
+        }
+        frameLoged[logTime]=Math.round((frameCount-frameIndex)/logTime);
+      }
+      let toLast=frameAgoLast;
+      frameAgoLast=frameIndex;
+      while (toLast<frameIndex)
+      {
+        delete frameAgo[frameIndex];
+        frameIndex--;
+      }
+      
       text(`
       perfs :
-      ${Math.round(1000/(deltaTime))} fps
+      frame ${frameCount}
+      ${Math.round(1000/(deltaTime))} fps - now
+      ${frameLoged[1]} fps -  1s
+      ${frameLoged[3]} fps -  3s
+      ${frameLoged[10]} fps - 10s
+      ${frameLoged[60]} fps - 60s
+      ${Object.keys(frameAgo).length} expensive
 
       ${speeds}`, Scale.x(980), Scale.y(20));
     }
