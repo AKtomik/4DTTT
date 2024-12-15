@@ -137,7 +137,8 @@ function perspective_init_nD(grid)
         v[dimIndex]=v[dimIndex]*2-1;//slide in order to origin be centered
       }
       //!add distance to cote (dim 3, index 2)
-      v[2] += Settings.PERSPECTIVE_DISTANCE;//add distance
+      if (Settings.RULE_BOX_D>2)
+        v[2] += Settings.PERSPECTIVE_DISTANCE;//add distance
   	  //add the point to summits
       h_box.morph.add_point(v);
     }
@@ -149,14 +150,16 @@ function perspective_init_nD(grid)
         v[dimIndex]=v[dimIndex]*2-1;//slide in order to origin be centered
       }
       //!add distance to cote (dim 3, index 2)
-      v[2] += Settings.PERSPECTIVE_DISTANCE;//add distance
+      if (Settings.RULE_BOX_D>2)
+        v[2] += Settings.PERSPECTIVE_DISTANCE;//add distance
   	  //add the point to summits
       h_box.center=v;
     }
   }
 	//center
   grid.center=new Array(D).fill(0);
-	grid.center[2] += Settings.PERSPECTIVE_DISTANCE;
+  if (Settings.RULE_BOX_D>2)
+	  grid.center[2] += Settings.PERSPECTIVE_DISTANCE;
 
   //front method
   grid.set_front_method((grid, posKey1, posKey2) => //check the z-axis of center
@@ -167,14 +170,18 @@ function perspective_init_nD(grid)
 
 function perspective_draw_nD(grid)
 {
-	//screen
+  //projection
   const margin = Scale.min(Settings.POS_BOX_MARGIN);
   let square_top = [(Scale.x(Settings.POS_BOX_FULL) - Scale.min(Settings.POS_BOX_FULL))/2 + margin, (Scale.y(Settings.POS_BOX_FULL) - Scale.min(Settings.POS_BOX_FULL))/2 + margin];
-  let square_size = [Scale.min(Settings.POS_BOX_FULL) - 2*margin, Scale.min(Settings.POS_BOX_FULL) - 2*margin];
-	
-	
-  //projection
+  let square_size = [Scale.min(Settings.POS_BOX_FULL) - 2*margin, Scale.min(Settings.POS_BOX_FULL) - 2*margin];	
 	const fovDist = 1/Math.tan(Settings.PERSPECTIVE_FOV);
+  const projectToFlatPos=pos => {
+				let flatPos=projectionNDto2D(pos,fovDist);
+				return [
+          square_top[0]+(flatPos[0]+.5)*square_size[0],
+          square_top[1]+(flatPos[1]+.5)*square_size[1]
+          ];
+			};
   
   //order
   for (let posKey of grid.map_keys)
@@ -193,17 +200,11 @@ function perspective_draw_nD(grid)
   grid.sort_keys();
 
   for (let posKey of grid.map_keys)
-  {
+  {//draw boxes
     const h_box = grid.at(posKey);
 
     //project points
-		let projections=h_box.morph.points.map(pos => {
-				let flatPos=projectionNDto2D(pos,fovDist);
-				return [
-          square_top[0]+(flatPos[0]+.5)*square_size[0],
-          square_top[1]+(flatPos[1]+.5)*square_size[1]
-          ];
-			});
+		let projections=h_box.morph.points.map(projectToFlatPos);
 
     //Chan
     let projectionsOut=convexHull(projections.slice());
@@ -216,6 +217,7 @@ function perspective_draw_nD(grid)
     //draw shape
     stroke(255);
     fill(h_box.color);
+    //fill(ColorPalet.get("box_empty_in"));
     strokeWeight(1);
     h_box.display();
 
@@ -230,6 +232,23 @@ function perspective_draw_nD(grid)
   	    line(...projections[edge[0]], ...projections[edge[1]]);
   	    //point(...summit);
   		}
+    }
+  }
+
+  if (Settings.PERSPECTIVE_SHOW_LINE)
+  {
+    for (checkLine of grid.checklist)
+    {
+      let lastPoint=checkLine[0];
+      stroke(lastPoint.color);
+      strokeWeight(4);
+      lastPoint=projectToFlatPos(lastPoint.center);
+      for (let pointLineIndex=1;pointLineIndex<checkLine.length;pointLineIndex++)
+      {
+        let actualPoint=projectToFlatPos(checkLine[pointLineIndex].center);
+        line(...lastPoint, ...actualPoint);
+        lastPoint=actualPoint;
+      }
     }
   }
 }

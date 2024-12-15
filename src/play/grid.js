@@ -11,6 +11,7 @@ class Grid {
     this.map_width = width;
     this.map = {};
 		this.map_keys = [];
+		this.checklist=[];
 
 		//build
 		this.build_map_deep(width, deepth);
@@ -63,6 +64,11 @@ class Grid {
 		return this.map[posKey];
 		//return undefined if not set
 	};
+
+	add_checkline(checkLineArray)
+	{
+		this.checklist.push(checkLineArray);
+	}
 
 	//display
 	sort_keys()

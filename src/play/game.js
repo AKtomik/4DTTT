@@ -60,6 +60,7 @@ class Game {
 						{
 							boxChecking.won(dir);
 						}
+						this.grid.add_checkline(checked);
 						checker.score_add();
 						ifScoreChanged=true;
 						box=false;

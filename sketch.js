@@ -192,7 +192,7 @@ function draw() {
       
       let size_more=(game.remain>0)
       ? step_in
-      : ((1+Math.sin(frameCount/5))/2)
+      : ((1+Math.sin(frameCount/5))/2)*step_in;
       textSize(Scale.min(here_text_size_name+ size_more*here_forward_more_size));
       textStyle(NORMAL);
       fill(ColorPalet.get("theme_text"));
