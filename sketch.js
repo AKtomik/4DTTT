@@ -1,5 +1,5 @@
 //--- click ---
-let draging = false;
+var draging = false;
 function mouseClicked(event) {//like released
   if (draging)
   {

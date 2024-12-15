@@ -232,7 +232,7 @@ function translation_draw_nD(grid)
 		if (grid.velocity[moveKey]!==0)
 		{
 			//decelerate
-			if (!down_negative && !down_postivie)
+			if (!down_negative && !down_postivie && !draging)//draging from outside
 			{
 				const sign=(grid.velocity[moveKey]>0) ? 1 : -1;
 				grid.velocity[moveKey]=(grid.velocity[moveKey]*Math.pow(Settings.VELOCITY_FRICTION_Q,Settings.SPEED))-(Settings.VELOCITY_FRICTION_R*sign*Settings.SPEED);
