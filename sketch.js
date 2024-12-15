@@ -32,8 +32,8 @@ function setup() {
   //--
   //theme
   ColorPalet.switch("default");
-  ColorPalet.switch("dark_mode");
-  //ColorPalet.switch("nigth");
+  //ColorPalet.switch("dark_mode");
+  ColorPalet.switch("nigth");
 
   //init
   createCanvas(...Scale.resize());
@@ -67,10 +67,28 @@ function setup() {
   Mechanic.init();
 }
 
+
+bugScreen=[
+  {chance: 10000, amount: 100},
+  {chance: 500, amount: 10},
+  {chance: 200, amount: 2}
+]
+
 function draw() {
 
   //--
   background(ColorPalet.get("theme_background"));
+
+  {//bug
+    for (let bug of bugScreen)
+    {
+      if (Math.floor(Math.random()*bug.chance)===0)
+      {
+        for (let i=0;i<bug.amount;i++)
+          new Bug();
+      }
+    }
+  }
 
   {//texts
 

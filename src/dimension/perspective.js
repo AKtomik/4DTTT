@@ -92,6 +92,7 @@ function binToInt(binArray)
 function perspective_init_nD(grid)
 {
   const D=Settings.RULE_BOX_D;
+  console.log("creating an hypercube of dim:",Settings.RULE_BOX_D);
 	//create cubes
   const just_total = (Settings.RULE_BOX_WIDTH+((Settings.RULE_BOX_WIDTH-1)*Settings.PERSPECTIVE_GAP));
   const just_size = 1/just_total;

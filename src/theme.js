@@ -33,8 +33,10 @@ const colorSet = {
 		theme_background:[0,100,200],
 		theme_sign:[0,127,255],
 		theme_text:[0],
+		
 		box_empty_in:[0,128],
 		box_empty_out:[255],
+
 		player_1_text:[0,255,0],
 		player_1_dark:[0,128,0],
 		player_1_ligth:[128,255,0],

@@ -49,7 +49,7 @@ class Mechanic {
 			this.addAction(SketchEvents.DISPLAY, displayMethod, 0);
 
 		//init
-		if (Mechanic.inited)
+		if (Mechanic.inited && initMethod)
 			initMethod.call(this.object);
 	}
 
@@ -63,7 +63,7 @@ class Mechanic {
 	removeAction(eventType)
 	{
 		delete this.action[eventType];
-		Mechanic.eventLisener[eventType].remove(this);
+		Mechanic.eventLisener[eventType]=Mechanic.eventLisener[eventType].filter((v) => v!==this);
 	}
 	
 	killActions()
