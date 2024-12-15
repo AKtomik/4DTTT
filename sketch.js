@@ -25,7 +25,6 @@ function keyPressed(event) {
 
 //--- draw ---
 var game;
-var grid;
 function setup() {
   Mechanic.prepare();
 
@@ -44,18 +43,8 @@ function setup() {
 
 
   //objects
-  grid = new Grid(Settings.RULE_BOX_WIDTH, Settings.RULE_BOX_D);
-  let players=[];
-  for (let playerIndex=0;playerIndex<Settings.PLAYERS;playerIndex++)
-  {
-    players.push(new Player(false, playerIndex, `player ${playerIndex+1}`));
-  }
-
-  //let gridMechanic=
-  new Mechanic(grid, grid.init, grid.display);
-
-  game = new Game(grid, players);
-  let gameMechanic=new Mechanic(game);
+  game = new Game();
+  let gameMechanic=new Mechanic(game, game.init, game.display);
   gameMechanic.addAction(SketchEvents.PRESS, game.action_press);
   gameMechanic.addAction(SketchEvents.CLICK, game.action_click);
   gameMechanic.addAction(SketchEvents.DRAG, game.action_drag);
@@ -118,8 +107,8 @@ function draw() {
       let speeds="";
       for (let moveKey of Object.keys(move_aviable))
       {
-        if (grid.velocity[moveKey])
-        speeds+=`${Math.round(grid.velocity[moveKey]*100)} ${matrix[moveKey].lore}\n`;
+        if (game.grid.velocity[moveKey])
+        speeds+=`${Math.round(game.grid.velocity[moveKey]*100)} ${matrix[moveKey].lore}\n`;
       }
       if (speeds)
         speeds="\nspeed :\n"+speeds;

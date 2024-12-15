@@ -169,12 +169,9 @@ function perspective_init_nD(grid)
   );
 }
 
-function perspective_draw_nD(grid)
+function perspective_draw_nD(grid, square_top, square_size)
 {
   //projection
-  const margin = Scale.min(Settings.POS_BOX_MARGIN);
-  let square_top = [(Scale.x(Settings.POS_BOX_FULL) - Scale.min(Settings.POS_BOX_FULL))/2 + margin, (Scale.y(Settings.POS_BOX_FULL) - Scale.min(Settings.POS_BOX_FULL))/2 + margin];
-  let square_size = [Scale.min(Settings.POS_BOX_FULL) - 2*margin, Scale.min(Settings.POS_BOX_FULL) - 2*margin];	
 	const fovDist = 1/Math.tan(Settings.PERSPECTIVE_FOV);
   const projectToFlatPos=pos => {
 				let flatPos=projectionNDto2D(pos,fovDist);

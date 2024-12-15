@@ -150,7 +150,7 @@ const matrix = {
 
 
 
-const move_aviable = {};//will contains only aviables mooves
+let move_aviable = {};//will contains only aviables mooves
 
 let keycode_to_move = {};
 
@@ -198,6 +198,7 @@ function translation_add_strength(gridVelocity, translationKey, power, resetOppo
 
 function translation_init_nD(grid)
 {
+	move_aviable={};
 	for (let moveKey of Object.keys(matrix))
 	{
 		if (!(matrix[moveKey].translation.dim>Settings.RULE_BOX_D))

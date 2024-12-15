@@ -27,6 +27,9 @@
 
     <!-- graphics -->
     <script src="src/meta/bug.js"></script>
+    
+    <!-- html -->
+    <script src="src/interface.js"></script>
 
     <!-- geometry -->
     <script src="src/geometry/flat.js"></script> <!-- 2D geometry -->
@@ -39,5 +42,23 @@
     
     <!-- skeleton -->
     <script src="sketch.js"></script>
+    
+    
+    <!-- html -->
+    <div>
+      <select onchange="interfaceSwitchStyle(this.value)" id="inter_dim">
+        <option value="2">2D</option>
+        <option value="3">3D</option>
+        <option value="4" selected>4D</option>
+        <option value="5">5D</option>
+      </select>
+      <button onclick="interfaceRestart()" id="inter_restart">restart</button>
+      <select onchange="interfaceSwitchStyle(this.value)" id="inter_theme">
+        <option value="default">default</option>
+        <option value="dark_mode">dark mode</option>
+        <option value="nigth" selected>nigth</option>
+        <option value="outline">outline</option>
+      </select>
+    </div>
   </body>
 </html>

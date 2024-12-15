@@ -1,14 +1,6 @@
 //not dimensionnal dependant
 class Game {
-  constructor(grid, ptrPlayers, state=0) {
-    
-		this.grid=grid;
-		this.players=ptrPlayers;
-		this.player_i=Math.floor(Math.random()*this.players.length);
-		this.winer_i=-1;
-
-		this.state=state;
-		this.remain=grid.map_keys.length;
+  constructor(state=0) {
   }
 
   get playing() {
@@ -131,6 +123,33 @@ class Game {
 	action_wheel(event)
 	{
 		translation_wheel_nD(event, this);
+	}
+	
+	init()
+	{
+		this.grid=new Grid(Settings.RULE_BOX_WIDTH, Settings.RULE_BOX_D);
+	  this.players=[];
+	  for (let playerIndex=0;playerIndex<Settings.PLAYERS;playerIndex++)
+	  {
+	    this.players.push(new Player(false, playerIndex, `player ${playerIndex+1}`));
+	  }
+		this.player_i=Math.floor(Math.random()*this.players.length);
+		this.winer_i=-1;
+
+		this.state=0;
+		this.remain=this.grid.map_keys.length;
+
+
+    translation_init_nD(this.grid);
+    perspective_init_nD(this.grid);
+	}
+	display()
+	{
+    translation_draw_nD(this.grid);
+	  const margin = Scale.min(Settings.POS_BOX_MARGIN);
+	  let square_top = [(Scale.x(Settings.POS_BOX_FULL) - Scale.min(Settings.POS_BOX_FULL))/2 + margin, (Scale.y(Settings.POS_BOX_FULL) - Scale.min(Settings.POS_BOX_FULL))/2 + margin];
+	  let square_size = [Scale.min(Settings.POS_BOX_FULL) - 2*margin, Scale.min(Settings.POS_BOX_FULL) - 2*margin];	
+    perspective_draw_nD(this.grid, square_top, square_size);
 	}
 };
 
