@@ -49,11 +49,50 @@ function setup() {
   gameMechanic.addAction(SketchEvents.CLICK, game.action_click);
   gameMechanic.addAction(SketchEvents.DRAG, game.action_drag);
   gameMechanic.addAction(SketchEvents.WHEEL, game.action_wheel);
+
+  
+  {//ui
+    const dimSelector = [//!parameter
+        {value:"2", text:"2D"},
+        {value:"3", text:"3D"},
+        {value:"4", text:"4D"},
+    ];
+    let selectDimOptions=Array.from(new Array(dimSelector.length)).map((element,i) => 
+      {
+        element = document.createElement("option");
+        element.value=dimSelector[i].value;
+        element.appendChild(document.createTextNode(dimSelector[i].text));
+        return element;
+      }
+    );
+    let selectDim=new HtmlButton("select", [50,100], selectDimOptions);
+    interface_restart_id_dim=selectDim.id;//!be acessible from interface file
+
+    let buttonRestart=new HtmlButton("button", [100,100], [document.createTextNode("restart")]);
+    buttonRestart.onClick(interfaceRestart, false);
+
+    const styleSelector = [//!parameter
+        {value:"default", text:"default"},
+        {value:"dark_mode", text:"dark"},
+        {value:"nigth", text:"nigth"},
+        {value:"outline", text:"outline"},
+    ];
+    let selectStyleOptions=Array.from(new Array(styleSelector.length)).map((element,i) => 
+      {
+        element = document.createElement("option");
+        element.value=styleSelector[i].value;
+        element.appendChild(document.createTextNode(styleSelector[i].text));
+        return element;
+      }
+    );
+    let selectStyle=new HtmlButton("select", [150,100], selectStyleOptions);
+    selectStyle.onChange(interfaceSwitchStyle, true);
+  }
   //--
 
 
-  Mechanic.event(SketchEvents.INIT);
   Mechanic.init();
+  Mechanic.event(SketchEvents.INIT);
 }
 
 
@@ -254,3 +293,6 @@ function draw() {
   //--
   Mechanic.event(SketchEvents.DISPLAY);
 }
+
+window.addEventListener("resize", () => {Mechanic.event(SketchEvents.RESIZE)});
+window.addEventListener("resize", console.log("resize"));

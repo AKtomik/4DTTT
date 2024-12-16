@@ -16,7 +16,7 @@ class Bug {
 		this.frame++;
 		if (this.frame>this.maxFrame)
 		{
-			this.mechanic.killActions();
+			this.mechanic.kill();
 			delete this.mechanic;
 		}
 		let randomColor=Object.keys(ColorPalet.colors)[Math.floor(Math.random()*Object.keys(ColorPalet.colors).length)];

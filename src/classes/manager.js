@@ -6,6 +6,8 @@ class SketchEvents {
 	static CLICK=3;
 	static DRAG=4;
 	static WHEEL=5;
+
+	static RESIZE=6;
 }
 
 
@@ -27,6 +29,10 @@ class Mechanic {
 
 	static event(eventType)
 	{//do action
+		if (!Mechanic.inited) {
+			console.warn("event thrown before init. eventType:",eventType);
+			return;
+		}
 		for (let mechanic of Mechanic.eventLisener[eventType])
 			mechanic.action[eventType].method.call(mechanic.object)
 	}
@@ -66,11 +72,13 @@ class Mechanic {
 		Mechanic.eventLisener[eventType]=Mechanic.eventLisener[eventType].filter((v) => v!==this);
 	}
 	
-	killActions()
+	kill()
 	{
+		//kill actions
 		for (let action in this.action)
 		{
 			this.removeAction(action);
 		}
+		//should be removed by garbage collector
 	}
 };

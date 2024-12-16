@@ -7,20 +7,6 @@ canvas {
   display: block;
 }
 
-div {
-  #inter_dim {
-    position: absolute;
-    left: 50px;
-    top: 50px;
-  }
-  #inter_restart {
-    position: absolute;
-    left: 100px;
-    top: 50px;
-  }
-  #inter_theme {
-    position: absolute;
-    left: 100px;
-    top: 100px;
-  }
+#generator {
+  display: 1;
 }

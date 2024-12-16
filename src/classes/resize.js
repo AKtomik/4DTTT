@@ -57,6 +57,4 @@ class Scale {
   }
 }
 
-window.onresize = function() {
-  resizeCanvas(...Scale.resize());
-}
+window.addEventListener("resize", () => {resizeCanvas(...Scale.resize())});

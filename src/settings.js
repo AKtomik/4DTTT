@@ -5,7 +5,7 @@ class Settings {
 	static PLAYERS = 2;
 	
 	//how many box width
-	static RULE_BOX_WIDTH=3;//const
+	static RULE_BOX_WIDTH=1;//const
 	//how many dimensions
 	static RULE_BOX_D=4;//const
 	//how many to check in order to score
