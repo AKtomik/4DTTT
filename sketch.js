@@ -50,23 +50,42 @@ function setup() {
 
   
   {//ui
+    let optionsMaker = (selectorParamter) => Array.from(new Array(selectorParamter.length)).map((element,i) => 
+      {
+        element = document.createElement("option");
+        element.value=selectorParamter[i].value;
+        element.appendChild(document.createTextNode(selectorParamter[i].text));
+        return element;
+      }
+    );
+
     const dimSelector = [//!parameter
         {value:"2", text:"2D"},
         {value:"3", text:"3D"},
         {value:"4", text:"4D"},
+        {value:"5", text:"5D"},
+        {value:"6", text:"6D"},
     ];
-    let selectDimOptions=Array.from(new Array(dimSelector.length)).map((element,i) => 
-      {
-        element = document.createElement("option");
-        element.value=dimSelector[i].value;
-        element.appendChild(document.createTextNode(dimSelector[i].text));
-        return element;
-      }
-    );
-    let selectDim=new HtmlButton("select", [50,100], selectDimOptions);
+    let selectDim=new HtmlButton("select", [50,100], optionsMaker(dimSelector));
     interface_restart_id_dim=selectDim.id;//!be acessible from interface file
+    
+    const widthSelector = [//!parameter
+        {value:"1", text:"1x1"},
+        {value:"2", text:"2x2"},
+        {value:"3", text:"3x3"},
+        {value:"4", text:"4x4"},
+        {value:"5", text:"5x5"},
+        {value:"6", text:"6x6"},
+        {value:"10", text:"10x10"},
+        {value:"15", text:"15x15"},
+        {value:"20", text:"20x20"},
+        {value:"50", text:"50x50"},
+        {value:"100", text:"100x100"},
+    ];
+    let selectWidth=new HtmlButton("select", [100,100], optionsMaker(widthSelector));
+    interface_restart_id_width=selectWidth.id;//!be acessible from interface file
 
-    let buttonRestart=new HtmlButton("button", [100,100], [document.createTextNode("restart")]);
+    let buttonRestart=new HtmlButton("button", [150,100], [document.createTextNode("restart")]);
     buttonRestart.onClick(interfaceRestart, false);
 
     const styleSelector = [//!parameter
@@ -78,15 +97,7 @@ function setup() {
         {value:"nigth", text:"nigth"},
         {value:"outline", text:"outline"},
     ];
-    let selectStyleOptions=Array.from(new Array(styleSelector.length)).map((element,i) => 
-      {
-        element = document.createElement("option");
-        element.value=styleSelector[i].value;
-        element.appendChild(document.createTextNode(styleSelector[i].text));
-        return element;
-      }
-    );
-    let selectStyle=new HtmlButton("select", [100,150], selectStyleOptions);
+    let selectStyle=new HtmlButton("select", [100,150], optionsMaker(styleSelector));
     selectStyle.onChange(interfaceSwitchStyle, true);
   }
   //--

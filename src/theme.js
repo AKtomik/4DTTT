@@ -37,7 +37,7 @@ const colorSet = {
 		box_empty_in:[0,128],
 		box_empty_out:[255],
 
-		player_1_text:[0,0,255],
+		player_1_text:[0,200,255],
 		player_1_dark:[0,0,128],
 		player_1_ligth:[0,200,255],
 		player_2_text:[255,0,0],
@@ -49,11 +49,11 @@ const colorSet = {
 	},
 	
 	purple: {
-		theme_background:[70,25,50],
+		theme_background:[200,100,150],
 		theme_sign:[128,50,100],
 		theme_text:[0],
 		
-		box_empty_in:[0,128],
+		box_empty_in:[250,150,200,128],
 		box_empty_out:[255,128,255],
 	},
 	
