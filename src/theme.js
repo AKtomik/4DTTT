@@ -37,30 +37,64 @@ const colorSet = {
 		box_empty_in:[0,128],
 		box_empty_out:[255],
 
-		player_1_text:[0,255,0],
-		player_1_dark:[0,128,0],
-		player_1_ligth:[128,255,0],
+		player_1_text:[0,0,255],
+		player_1_dark:[0,0,128],
+		player_1_ligth:[0,200,255],
 		player_2_text:[255,0,0],
 		player_2_dark:[128,0,0],
 		player_2_ligth:[255,0,0],
-		player_3_text:[0,0,255],
-		player_3_dark:[0,0,128],
-		player_3_ligth:[0,255,255],
+		player_3_text:[0,255,0],
+		player_3_dark:[0,128,0],
+		player_3_ligth:[128,255,0],
+	},
+	
+	purple: {
+		theme_background:[70,25,50],
+		theme_sign:[128,50,100],
+		theme_text:[0],
+		
+		box_empty_in:[0,128],
+		box_empty_out:[255,128,255],
+	},
+	
+	sky: {
+		theme_background:[0,100,200],
+		theme_sign:[0,127,255],
+		theme_text:[0],
+		
+		box_empty_in:[0,128],
+		box_empty_out:[255],
 	},
 
-	dark_mode: {
+	brigth: {
+		theme_background:[255],
+		theme_sign:[200],
+		theme_text:[0],
+		
+		box_empty_in:[128,128],
+		box_empty_out:[0,255],
+	},
+
+	nigth: {
 		theme_background:[0,32,64],
 		theme_sign:[0,64,128],
 		theme_text:[255],
+
 		box_empty_in:[255,128],
 		box_empty_out:[0],
 	},
 
-	nigth: {
+	space: {
 		theme_background:[0],
 		theme_sign:[64],
 		theme_text:[255],
+
 		box_empty_in:[255],
 		box_empty_out:[0],
+	},
+	
+	outline: {
+		box_empty_in:[0,0],
+		box_empty_out:[255],
 	}
 };

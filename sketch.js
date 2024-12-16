@@ -31,8 +31,6 @@ function setup() {
   //--
   //theme
   ColorPalet.switch("default");
-  //ColorPalet.switch("dark_mode");
-  ColorPalet.switch("nigth");
 
   //init
   createCanvas(...Scale.resize());
@@ -73,7 +71,10 @@ function setup() {
 
     const styleSelector = [//!parameter
         {value:"default", text:"default"},
-        {value:"dark_mode", text:"dark"},
+        {value:"sky", text:"sky"},
+        {value:"brigth", text:"brigth"},
+        {value:"purple", text:"pinky pink"},
+        {value:"space", text:"space"},
         {value:"nigth", text:"nigth"},
         {value:"outline", text:"outline"},
     ];
@@ -85,7 +86,7 @@ function setup() {
         return element;
       }
     );
-    let selectStyle=new HtmlButton("select", [150,100], selectStyleOptions);
+    let selectStyle=new HtmlButton("select", [100,150], selectStyleOptions);
     selectStyle.onChange(interfaceSwitchStyle, true);
   }
   //--
@@ -157,7 +158,6 @@ function draw() {
       const frameLogValue=[1,3,10,60];
       let frameLoged={};
       let frameIndex=frameCount;
-      //console.log("oui");
       for (let logTime of frameLogValue)
       {
         let timeDownLog=now-logTime*1000;
@@ -295,4 +295,3 @@ function draw() {
 }
 
 window.addEventListener("resize", () => {Mechanic.event(SketchEvents.RESIZE)});
-window.addEventListener("resize", console.log("resize"));
