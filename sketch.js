@@ -39,67 +39,8 @@ function setup() {
   frameRate(Settings.FPS);
   describe('ttt');
 
+  interfaceMenu();
 
-  //objects
-  game = new Game();
-  let gameMechanic=new Mechanic(game, game.init, game.display);
-  gameMechanic.addAction(SketchEvents.PRESS, game.action_press);
-  gameMechanic.addAction(SketchEvents.CLICK, game.action_click);
-  gameMechanic.addAction(SketchEvents.DRAG, game.action_drag);
-  gameMechanic.addAction(SketchEvents.WHEEL, game.action_wheel);
-
-  
-  {//ui
-    let optionsMaker = (selectorParamter) => Array.from(new Array(selectorParamter.length)).map((element,i) => 
-      {
-        element = document.createElement("option");
-        element.value=selectorParamter[i].value;
-        element.appendChild(document.createTextNode(selectorParamter[i].text));
-        return element;
-      }
-    );
-
-    const dimSelector = [//!parameter
-        {value:"2", text:"2D"},
-        {value:"3", text:"3D"},
-        {value:"4", text:"4D"},
-        {value:"5", text:"5D"},
-        {value:"6", text:"6D"},
-    ];
-    let selectDim=new HtmlButton("select", [50,100], optionsMaker(dimSelector));
-    interface_restart_id_dim=selectDim.id;//!be acessible from interface file
-    
-    const widthSelector = [//!parameter
-        {value:"1", text:"1x1"},
-        {value:"2", text:"2x2"},
-        {value:"3", text:"3x3"},
-        {value:"4", text:"4x4"},
-        {value:"5", text:"5x5"},
-        {value:"6", text:"6x6"},
-        {value:"10", text:"10x10"},
-        {value:"15", text:"15x15"},
-        {value:"20", text:"20x20"},
-        {value:"50", text:"50x50"},
-        {value:"100", text:"100x100"},
-    ];
-    let selectWidth=new HtmlButton("select", [100,100], optionsMaker(widthSelector));
-    interface_restart_id_width=selectWidth.id;//!be acessible from interface file
-
-    let buttonRestart=new HtmlButton("button", [150,100], [document.createTextNode("restart")]);
-    buttonRestart.onClick(interfaceRestart, false);
-
-    const styleSelector = [//!parameter
-        {value:"default", text:"default"},
-        {value:"sky", text:"sky"},
-        {value:"brigth", text:"brigth"},
-        {value:"purple", text:"pinky pink"},
-        {value:"space", text:"space"},
-        {value:"nigth", text:"nigth"},
-        {value:"outline", text:"outline"},
-    ];
-    let selectStyle=new HtmlButton("select", [100,150], optionsMaker(styleSelector));
-    selectStyle.onChange(interfaceSwitchStyle, true);
-  }
   //--
 
 
