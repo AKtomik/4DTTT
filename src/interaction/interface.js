@@ -49,6 +49,8 @@ function interfaceStart()
   gameMechanic.addAction(SketchEvents.CLICK, game.action_click);
   gameMechanic.addAction(SketchEvents.DRAG, game.action_drag);
   gameMechanic.addAction(SketchEvents.WHEEL, game.action_wheel);
+  for (let i=0;i<1000;i++)
+    new HtmlBug(BugType.RECT_RANDOM_COLOR);
 
   
   {//ui
@@ -74,6 +76,8 @@ function interfaceStart()
 
 function interfaceRestart()
 {
+  for (let i=0;i<1000;i++)
+    new HtmlBug(BugType.RECT_RANDOM_COLOR, undefined, undefined, undefined, [500,500]);
 	Mechanic.event(SketchEvents.INIT);
 }
 

@@ -5,7 +5,7 @@ class HtmlButton {
 	//build
 	constructor(htmlElementType="button", pos=[0,0], childs=[document.createTextNode("<childless>")]) {
 		//self
-		this.pos=pos;
+		this.position=pos;
 		this.id="generated_B"+String(HtmlButton.iterator++);
 		//html
 		this.element=document.createElement(htmlElementType);
@@ -13,6 +13,7 @@ class HtmlButton {
 		this.element.append(...childs);
 		//css
 		this.element.style.position="absolute";
+		//do
 	  document.getElementById("generator").appendChild(this.element);
 		this.resize();
 		//mechanic
@@ -41,8 +42,8 @@ class HtmlButton {
 	
 	//call
 	resize() {
-		this.element.style.left=parseInt(Scale.x(this.pos[0]))+"px";
-		this.element.style.top=parseInt(Scale.y(this.pos[1]))+"px";
+		this.element.style.left=parseInt(Scale.x(this.position[0]))+"px";
+		this.element.style.top=parseInt(Scale.y(this.position[1]))+"px";
 	};
 
 	kill() {

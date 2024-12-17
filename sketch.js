@@ -68,7 +68,7 @@ function draw() {
       if (Math.floor(Math.random()*bug.chance)===0)
       {
         for (let i=0;i<bug.amount;i++)
-          new Bug();
+          new HtmlBug(BugType.RECT_RANDOM_COLOR);
       }
     }
   }
