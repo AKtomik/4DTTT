@@ -2,6 +2,7 @@ class BugType {
 	static RECT_RANDOM_COLOR=0;
 	static RECT_RANDOM_BLEND=1;
 	static RECT_NEGATIVE_BLEND=2;
+	static RECT_RANDOM_BLEND_AND_COLOR=3;
 }
 
 const bugPropety = {
@@ -24,6 +25,16 @@ const bugPropety = {
 			bug.element.style.background="#fff";
 		},
 		display: (bug) => {
+			bug.element.style.mixBlendMode=bugBlendsList[Math.floor(Math.random()*bugBlendsList.length)];
+		}
+	},
+	[BugType.RECT_RANDOM_BLEND_AND_COLOR]: {
+		init: (bug) => {
+			bug.element.style.background="#fff";
+		},
+		display: (bug) => {
+			let randomColorKey=Object.keys(ColorPalet.colors)[Math.floor(Math.random()*Object.keys(ColorPalet.colors).length)];
+			bug.element.style.background=ColorPalet.colors[randomColorKey].toString("#rrggbbaa");
 			bug.element.style.mixBlendMode=bugBlendsList[Math.floor(Math.random()*bugBlendsList.length)];
 		}
 	}
