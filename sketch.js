@@ -58,6 +58,7 @@ bugScreen=[
 let frameAgo = {};
 let frameAgoLast = 0;
 function draw() {
+  draging=false;
 
   //--
   background(ColorPalet.get("theme_background"));

@@ -39,8 +39,8 @@ class MatrixTranslation {
 	}
 };
 
-const matrix_strength = .1*Settings.SPEED;
-const matrix_angle = Math.PI/32*Settings.SPEED;
+const matrix_strength = .1;
+const matrix_angle = Math.PI/32;
 
 const matrix = {
 	//move
@@ -160,7 +160,7 @@ function translation_key_nD(keyEvent, game)
 	if (!translationKey || !(move_aviable[translationKey]) || keyEvent.repeat)
 		return;
 	const sign=(keycode_to_move[keyEvent.keyCode].oppose) ? -1 : 1;
-	translation_add_strength(game.grid.velocity, translationKey, Settings.VELOCITY_ADD_PUSH*Settings.SPEED*sign);
+	translation_add_strength(game.grid.velocity[translationKey], Settings.VELOCITY_ADD_PUSH*Settings.SPEED*sign);
 }
 
 function translation_drag_nD(dragEvent, game)
@@ -172,7 +172,7 @@ function translation_drag_nD(dragEvent, game)
 	};
 	for (let translationKey in translations)
 	{
-		translation_add_strength(game.grid.velocity, translationKey, Settings.VELOCITY_ADD_DRAG*(translations[translationKey])*Settings.SPEED);
+		translation_add_strength(game.grid.velocity[translationKey], Settings.VELOCITY_ADD_DRAG*(translations[translationKey])*Settings.SPEED);
 	}
 }
 
@@ -180,19 +180,19 @@ function translation_wheel_nD(wheelEvent, game)
 {
 	let translationKey="wz/";
 	{
-		translation_add_strength(game.grid.velocity, translationKey, Settings.VELOCITY_ADD_WHEEL*wheelEvent.delta*Settings.SPEED);
+		translation_add_strength(game.grid.velocity[translationKey], Settings.VELOCITY_ADD_WHEEL*wheelEvent.delta*Settings.SPEED);
 	}
 }
 
-function translation_add_strength(gridVelocity, translationKey, power, resetOppose=true)
+function translation_add_strength(velocityElement, power, resetOppose=true)
 {
 	const sign=(power<0) ? -1 : 1;
-	if (resetOppose && gridVelocity[translationKey]*sign<0)
+	if (resetOppose && velocityElement.accelerate*sign<0)
 	{
-		gridVelocity[translationKey]=0;
+		velocityElement.accelerate=0;
 		return;
 	}
-	gridVelocity[translationKey]+=power;
+	velocityElement.accelerate+=power;
 }
 
 
@@ -204,7 +204,7 @@ function translation_init_nD(grid)
 		if (!(matrix[moveKey].translation.dim>Settings.RULE_BOX_D))
 		{
 			move_aviable[moveKey]=true;
-			grid.velocity[moveKey]=0;
+			grid.velocity[moveKey]={accelerate:0, comma:0, spin:0};
 			if (matrix[moveKey].keycode.positive)
 				keycode_to_move[matrix[moveKey].keycode.positive]={translationKey: moveKey, oppose: false};
 			if (matrix[moveKey].keycode.negative)
@@ -218,51 +218,69 @@ async function translation_draw_nD(grid)
 {
 	for (let moveKey of Object.keys(move_aviable))
 	{
+		let velocityElement=grid.velocity[moveKey];
+		console.log(velocityElement);
+
 		const down_postivie=keyIsDown(matrix[moveKey].keycode.positive);
 		const down_negative=keyIsDown(matrix[moveKey].keycode.negative);
 		//accelerate
 		if (down_postivie)
 		{
-			grid.velocity[moveKey]+=Settings.VELOCITY_ADD_REMAIN*Settings.SPEED;
+			velocityElement.accelerate+=Settings.VELOCITY_ADD_REMAIN*Settings.SPEED;
 		}
 		if (down_negative)
 		{
-			grid.velocity[moveKey]-=Settings.VELOCITY_ADD_REMAIN*Settings.SPEED;
+			velocityElement.accelerate-=Settings.VELOCITY_ADD_REMAIN*Settings.SPEED;
 		}
 
-		if (grid.velocity[moveKey]!==0)
+		if (velocityElement.accelerate)
 		{
-			//decelerate
-			if (!down_negative && !down_postivie && !draging)//draging from outside
-			{
-				const sign=(grid.velocity[moveKey]>0) ? 1 : -1;
-				grid.velocity[moveKey]=(grid.velocity[moveKey]*Math.pow(Settings.VELOCITY_FRICTION_Q,Settings.SPEED))-(Settings.VELOCITY_FRICTION_R*sign*Settings.SPEED);
-				if (!(grid.velocity[moveKey]*sign>0))
+			
+			//transfert
+			velocityElement.comma+=velocityElement.accelerate;
+			const commaSign=velocityElement.comma/Math.abs(velocityElement.comma);//can change sign just after
+			const spinAdded=Math.floor(velocityElement.comma*commaSign)*commaSign;
+			velocityElement.comma-=spinAdded;
+			velocityElement.spin+=spinAdded;
+			//const spinSign=velocityElement.spin/Math.abs(velocityElement.spin);
+
+			const value_want=0;
+			if (velocityElement.accelerate!==value_want)
+			{//decelerate
+				if (!down_negative && !down_postivie && !draging)//draging from outside
 				{
-					grid.velocity[moveKey]=0;
+					const sign=(velocityElement.accelerate>value_want) ? 1 : -1;
+					velocityElement.accelerate=(velocityElement.accelerate*Math.pow(Settings.VELOCITY_FRICTION_Q,Settings.SPEED))-(Settings.VELOCITY_FRICTION_R*sign*Settings.SPEED);
+					if (!(velocityElement.accelerate*sign>value_want))
+					{
+						velocityElement.accelerate=0;
+					}
 				}
 			}
-			//translate
-			const power=grid.velocity[moveKey];
-			if (power)
 			{
-				//find matrix
-				const translationObject=matrix[moveKey].translation;
+				//translation
+				const power=velocityElement.spin;
+				velocityElement.spin-=power;//use all spin
+				if (power)
+				{
+					//find matrix
+					const translationObject=matrix[moveKey].translation;
 
-				//if (translationObject.dim>)
-				//console.log(`move with matrix: ${translationObject.matrix}`);
+					//if (translationObject.dim>)
+					//console.log(`move with matrix: ${translationObject.matrix}`);
 
-				//do the translation
-				translationObject.calibrate(power);
-			  for (let posKey of game.grid.map_keys)
-			  {
-			    const h_box = grid.at(posKey);
-					h_box.morph.each(pos => translationObject.translate(pos, power, grid.center));
-					h_box.center=translationObject.translate(h_box.center, power, grid.center);
+					//do the translation
+					translationObject.calibrate(power);
+				  for (let posKey of game.grid.map_keys)
+				  {
+				    const h_box = grid.at(posKey);
+						h_box.morph.each(pos => translationObject.translate(pos, power, grid.center));
+						h_box.center=translationObject.translate(h_box.center, power, grid.center);
+					}
+					grid.center=translationObject.translate(grid.center, power, grid.center);
 				}
-				grid.center=translationObject.translate(grid.center, power, grid.center);
-			}
 
+			}
 		}
 	}
 }

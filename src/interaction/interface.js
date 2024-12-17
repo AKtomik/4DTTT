@@ -1,5 +1,7 @@
 function interfaceSwitchStyle(element)
 {
+  //document.getElementById("generator").focus();
+  //buttonList.buttonTest.focus();
 	ColorPalet.switch(element.value);
 }
 
@@ -30,8 +32,11 @@ let gameMechanic=null;
 function interfaceStart()
 {
   //transition
-  for (let i=0;i<100;i++)
-    new HtmlBug(BugType.RECT_RANDOM_COLOR, undefined, undefined, undefined, [500, 500], 0, 10);
+  {
+    for (let i=0;i<100;i++)
+      new HtmlBug(BugType.RECT_RANDOM_COLOR, undefined, undefined, undefined, [500, 500], 0, 10);
+      draw();//!to see loading
+  }
 
 	//settings
 	Settings.RULE_BOX_D=parseInt(document.getElementById(buttonList.selectDim.id).value);
@@ -84,8 +89,11 @@ function interfaceStart()
 function interfaceRestart()
 {
   //transition
-  for (let i=0;i<100;i++)
-    new HtmlBug(BugType.RECT_RANDOM_COLOR, undefined, undefined, undefined, [500, 500], 0, 10);
+  {
+    for (let i=0;i<100;i++)
+      new HtmlBug(BugType.RECT_RANDOM_COLOR, undefined, undefined, undefined, [500, 500], 0, 10);
+    draw();//!to see loading state
+  }
   //do
 	Mechanic.event(SketchEvents.INIT);
 }
@@ -93,9 +101,11 @@ function interfaceRestart()
 function interfaceMenu()
 {
   //transition
-  if (frameCount>1)
+  if (frameCount>1) {
     for (let i=0;i<100;i++)
       new HtmlBug(BugType.RECT_RANDOM_COLOR, undefined, undefined, undefined, [500, 500], 0, 10);
+    draw();//!to see loading state
+  }
 
 	//destroy
 	if (game)
