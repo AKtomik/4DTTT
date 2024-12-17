@@ -13,6 +13,7 @@ class HtmlButton {
 		this.element.append(...childs);
 		//css
 		this.element.style.position="absolute";
+		this.element.style.transform="translate(-50%,-50%)";
 		//do
 	  document.getElementById("generator").appendChild(this.element);
 		this.resize();

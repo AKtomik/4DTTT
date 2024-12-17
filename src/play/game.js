@@ -269,7 +269,6 @@ class Game {
       {
         textSize(Scale.min(here_text_size_score));
         textStyle(NORMAL);
-        fill(ColorPalet.get("theme_text"));
         fill(ColorPalet.get(`player_${playerIndex+1}_ligth`));
         text(String(game.players[playerIndex].score), Scale.x(at.x+5), Scale.y(at.y+sizing.y/2-10));
         scoreWidth=textWidth(String(game.players[playerIndex].score));
@@ -280,7 +279,8 @@ class Game {
       : ((1+Math.sin(frameCount/5))/2)*step_in;
       textSize(Scale.min(here_text_size_name+ size_more*here_forward_more_size));
       textStyle(NORMAL);
-      fill(ColorPalet.get("theme_text"));
+      fill(ColorPalet.get(`player_${playerIndex+1}_ligth`));
+      //fill(ColorPalet.get("theme_text"));
       text(String(game.players[playerIndex].name), Scale.x(at.x+scoreWidth+10), Scale.y(at.y+sizing.y/2));
     }
 

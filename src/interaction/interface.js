@@ -10,23 +10,29 @@ let optionsMaker = (selectorParamter) => Array.from(new Array(selectorParamter.l
     element = document.createElement("option");
     element.value=selectorParamter[i].value;
     element.appendChild(document.createTextNode(selectorParamter[i].text));
+    if (selectorParamter[i].default)
+      element.selected=true;
     return element;
   }
 );
 
 var buttonList= {
-selectDim:null,
-selectWidth:null,
-selectStyle:null,
-doneStart:null,
-buttonRestart:null,
-buttonBack:null,
+//selectDim:null,
+//selectWidth:null,
+//selectStyle:null,
+//doneStart:null,
+//buttonRestart:null,
+//buttonBack:null,
 }
 let gameMechanic=null;
 
 
 function interfaceStart()
 {
+  //transition
+  for (let i=0;i<100;i++)
+    new HtmlBug(BugType.RECT_RANDOM_COLOR, undefined, undefined, undefined, [500, 500], 0, 10);
+
 	//settings
 	Settings.RULE_BOX_D=parseInt(document.getElementById(buttonList.selectDim.id).value);
 	Settings.RULE_BOX_WIDTH=parseInt(document.getElementById(buttonList.selectWidth.id).value);
@@ -49,8 +55,6 @@ function interfaceStart()
   gameMechanic.addAction(SketchEvents.CLICK, game.action_click);
   gameMechanic.addAction(SketchEvents.DRAG, game.action_drag);
   gameMechanic.addAction(SketchEvents.WHEEL, game.action_wheel);
-  for (let i=0;i<1000;i++)
-    new HtmlBug(BugType.RECT_RANDOM_COLOR);
 
   
   {//ui
@@ -63,7 +67,7 @@ function interfaceStart()
     const styleSelector = [//!parameter
         {value:"default", text:"default"},
         {value:"sky", text:"sky"},
-        {value:"brigth", text:"brigth"},
+        {value:"brigth", text:"brigth", default: true},
         {value:"purple", text:"pinky pink"},
         {value:"space", text:"space"},
         {value:"nigth", text:"nigth"},
@@ -71,18 +75,28 @@ function interfaceStart()
     ];
     buttonList.selectStyle=new HtmlButton("select", [100,150], optionsMaker(styleSelector));
     buttonList.selectStyle.onChange(interfaceSwitchStyle, true);
+    
+    buttonList.buttonTest=new HtmlButton("button", [100,200], [document.createTextNode("test")]);
+    buttonList.buttonTest.onClick(interfaceTest, false);
   }
 }
 
 function interfaceRestart()
 {
-  for (let i=0;i<1000;i++)
-    new HtmlBug(BugType.RECT_RANDOM_COLOR, undefined, undefined, undefined, [500,500]);
+  //transition
+  for (let i=0;i<100;i++)
+    new HtmlBug(BugType.RECT_RANDOM_COLOR, undefined, undefined, undefined, [500, 500], 0, 10);
+  //do
 	Mechanic.event(SketchEvents.INIT);
 }
 
 function interfaceMenu()
 {
+  //transition
+  if (frameCount>1)
+    for (let i=0;i<100;i++)
+      new HtmlBug(BugType.RECT_RANDOM_COLOR, undefined, undefined, undefined, [500, 500], 0, 10);
+
 	//destroy
 	if (game)
 	{
@@ -102,7 +116,7 @@ function interfaceMenu()
     const dimSelector = [//!parameter
         {value:"2", text:"2D"},
         {value:"3", text:"3D"},
-        {value:"4", text:"4D"},
+        {value:"4", text:"4D", default: true},
         {value:"5", text:"5D"},
         {value:"6", text:"6D"},
     ];
@@ -111,7 +125,7 @@ function interfaceMenu()
     const widthSelector = [//!parameter
         {value:"1", text:"1x1"},
         {value:"2", text:"2x2"},
-        {value:"3", text:"3x3"},
+        {value:"3", text:"3x3", default: true},
         {value:"4", text:"4x4"},
         {value:"5", text:"5x5"},
         {value:"6", text:"6x6"},
@@ -126,4 +140,13 @@ function interfaceMenu()
     buttonList.doneStart=new HtmlButton("button", [500,500], [document.createTextNode("play")]);
     buttonList.doneStart.onClick(interfaceStart, false);
   }
+}
+
+function interfaceTest()
+{
+  new HtmlBug(BugType.RECT_RANDOM_BLEND, [500,0],[500,1000],[1000,2],[1000,2],0,10);
+  const dist = 20;
+  new HtmlBug(BugType.RECT_RANDOM_BLEND, [100-dist,200-dist],[100+dist,200+dist],[0,0],[100,100],15,20);
+  for (let i=0;i<10;i++)
+    new HtmlBug(BugType.RECT_RANDOM_COLOR, [100-dist,200-dist],[100+dist,200+dist],[0,0],[100,100],0,10);
 }

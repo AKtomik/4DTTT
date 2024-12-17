@@ -30,12 +30,12 @@ class ColorPalet {
 
 const colorSet = {
 	default: {
-		theme_background:[0,100,200],
-		theme_sign:[0,127,255],
+		theme_background:[255],
+		theme_sign:[200],
 		theme_text:[0],
 		
-		box_empty_in:[0,128],
-		box_empty_out:[255],
+		box_empty_in:[128,128],
+		box_empty_out:[0],
 
 		player_1_text:[0,200,255],
 		player_1_dark:[0,0,128],
@@ -72,7 +72,7 @@ const colorSet = {
 		theme_text:[0],
 		
 		box_empty_in:[128,128],
-		box_empty_out:[0,255],
+		box_empty_out:[0],
 	},
 
 	nigth: {
