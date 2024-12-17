@@ -306,7 +306,7 @@ class Game {
 		//--
 
 
-    translation_draw_nD(this.grid);
+    translation_draw_nD(this.grid);//dont wait the promise to be resolved
 	  const margin = Scale.min(Settings.POS_BOX_MARGIN);
 	  let square_top = [(Scale.x(Settings.POS_BOX_FULL) - Scale.min(Settings.POS_BOX_FULL))/2 + margin, (Scale.y(Settings.POS_BOX_FULL) - Scale.min(Settings.POS_BOX_FULL))/2 + margin];
 	  let square_size = [Scale.min(Settings.POS_BOX_FULL) - 2*margin, Scale.min(Settings.POS_BOX_FULL) - 2*margin];	

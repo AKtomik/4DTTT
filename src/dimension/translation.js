@@ -214,7 +214,7 @@ function translation_init_nD(grid)
 }
 
 
-function translation_draw_nD(grid)
+async function translation_draw_nD(grid)
 {
 	for (let moveKey of Object.keys(move_aviable))
 	{
