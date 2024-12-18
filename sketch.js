@@ -1,6 +1,7 @@
 //--- click ---
 var draging = false;
 function mouseClicked(event) {//like released
+  console.log(event);
   if (draging)
   {
     draging=false;
@@ -57,7 +58,6 @@ bugScreen=[
 let frameAgo = {};
 let frameAgoLast = 0;
 function draw() {
-  draging=false;
 
   //--
   background(ColorPalet.get("theme_background"));

@@ -273,7 +273,7 @@ async function translation_draw_nD(grid)
 			translation_add_strength(velocityElement, Settings.VELOCITY_ADD_REMAIN, -Settings.SPEED);
 		}
 
-		const power=translation_extract_speed(velocityElement, down_negative || down_postivie);
+		const power=translation_extract_speed(velocityElement, down_negative || down_postivie || draging);
 
 		//translation
 		if (power)
