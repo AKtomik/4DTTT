@@ -209,51 +209,31 @@ function sequencial_add(value, reasons, times)
 
 function translation_add_strength(velocityElement, reasons, times=1, resetOppose=true)
 {
-	if (reasons.q===0 && reasons.r===0) 
-		return;
-	const lastVelocity=velocityElement.velocity;
-	velocityElement.velocity=sequencial_add(velocityElement.velocity, reasons, times);
-	velocityElement.sign=(velocityElement.velocity<0) ? -1 : 1;
-	//!Settings.SPEED
-	if (resetOppose && ((lastVelocity>0) && (velocityElement.velocity<lastVelocity)) || ((lastVelocity<0) && (lastVelocity<velocityElement.velocity)))
+	const power=reasons*times;
+	const sign=(power<0) ? -1 : 1;
+	if (resetOppose && velocityElement.velocity*sign<0)
 	{
 		velocityElement.velocity=0;
 		return;
 	}
+	velocityElement.velocity+=power;
 }
 
 function translation_extract_speed(velocityElement, down)
 {
-	let remainToSpin=velocityElement.velocity;
-	let gap=(Math.floor((Math.abs(velocityElement.notch)+Math.abs(velocityElement.velocity))*1000000)/1000000)%1;
-	if (gap)
+	if (velocityElement.velocity===0) return;
+	//decelerate
+	if (!down)
 	{
-		remainToSpin+=((1-(gap))*velocityElement.sign);
-	}
-	velocityElement.power=null;
-
-	if (remainToSpin)
-	{
-		let wasRemainToSpin=remainToSpin;
-		let willRemainToSpin=sequencial_add(remainToSpin, Settings.VELOCITY_TRANSFERT, Math.abs(remainToSpin)/remainToSpin)
-		if (Math.abs(wasRemainToSpin)/wasRemainToSpin!==Math.abs(willRemainToSpin)/willRemainToSpin)//change sign
-		{//greater than velocity+notch
-			willRemainToSpin=0;
-		}
-		const power=remainToSpin-willRemainToSpin;
-
-		//const power=remainToSpin;
-		if (Math.abs(power)>Math.abs(velocityElement.velocity))
+		const sign=(velocityElement.velocity>0) ? 1 : -1;
+		velocityElement.velocity=(velocityElement.velocity*Math.pow(Settings.VELOCITY_FRICTION_Q,Settings.SPEED))-(Settings.VELOCITY_FRICTION_R*sign*Settings.SPEED);
+		if (!(velocityElement.velocity*sign>0))
 		{
 			velocityElement.velocity=0;
-		} else {
-			velocityElement.velocity-=power;
 		}
-		velocityElement.notch+=power;
-		//velocityElement.power=power;
-		velocityElement.power=gap;
-		return power;
 	}
+	//translate
+	return velocityElement.velocity;
 }
 
 
@@ -265,7 +245,7 @@ function translation_init_nD(grid)
 		if (!(matrix_move[moveKey].translation.dim>Settings.RULE_BOX_D))
 		{
 			move_aviable[moveKey]=true;
-			grid.velocity[moveKey]={velocity:0, notch:0, power:null, sign: 1};
+			grid.velocity[moveKey]={velocity:0};
 			if (matrix_move[moveKey].keycode.positive)
 				keycode_to_move[matrix_move[moveKey].keycode.positive]={translationKey: moveKey, oppose: false};
 			if (matrix_move[moveKey].keycode.negative)
@@ -280,30 +260,26 @@ async function translation_draw_nD(grid)
 	for (let moveKey of Object.keys(move_aviable))
 	{
 		let velocityElement=grid.velocity[moveKey];
-		//console.log(velocityElement);
 
 		const down_postivie=keyIsDown(matrix_move[moveKey].keycode.positive);
 		const down_negative=keyIsDown(matrix_move[moveKey].keycode.negative);
 		//accelerate
 		if (down_postivie)
 		{
-			translation_add_strength(velocityElement, Settings.VELOCITY_ADD_REMAIN, Settings.SPEED*velocityElement.sign);
+			translation_add_strength(velocityElement, Settings.VELOCITY_ADD_REMAIN, Settings.SPEED);
 		}
 		if (down_negative)
 		{
-			translation_add_strength(velocityElement, Settings.VELOCITY_ADD_REMAIN, Settings.SPEED*velocityElement.sign);
+			translation_add_strength(velocityElement, Settings.VELOCITY_ADD_REMAIN, -Settings.SPEED);
 		}
 
-		const power=translation_extract_speed(velocityElement);
+		const power=translation_extract_speed(velocityElement, down_negative || down_postivie);
 
 		//translation
 		if (power)
 		{
 			//find matrix
 			const translationObject=matrix_move[moveKey].translation;
-
-			//if (translationObject.dim>)
-			//console.log(`move with matrix: ${translationObject.matrix}`);
 
 			//do the translation
 			translationObject.calibrate(power);

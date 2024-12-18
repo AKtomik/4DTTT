@@ -23,10 +23,12 @@ class Settings {
 	
 	static VELOCITY_SCALE_ANGLE = Math.PI/32;
 	static VELOCITY_SCALE_STRAIGTH = 1;
-	static VELOCITY_ADD_PUSH = {r: 1, q: 1};
-	static VELOCITY_ADD_REMAIN = {r: .1, q: 1.01};
-	static VELOCITY_ADD_DRAG = {r: 100, q: 1};
-	static VELOCITY_ADD_WHEEL = {r: .01, q: 1};
-	static VELOCITY_TRANSFERT = {r: -.0001, q: .95};
 	static VELOCITY_CENTER = 0;
+
+	static VELOCITY_ADD_PUSH = .1;
+	static VELOCITY_ADD_REMAIN = .01;
+	static VELOCITY_ADD_DRAG = 1;
+	static VELOCITY_ADD_WHEEL = .001;
+	static VELOCITY_FRICTION_Q = .99;
+	static VELOCITY_FRICTION_R = 0.01;
 };

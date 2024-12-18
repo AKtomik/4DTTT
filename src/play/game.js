@@ -172,9 +172,8 @@ class Game {
       let speeds="";
       for (let moveKey of Object.keys(move_aviable))
       {
-        //if (game.grid.velocity[moveKey].power)
-        //speeds+=`${Math.round(game.grid.velocity[moveKey].velocity*100)} ${matrix_move[moveKey].lore}\n`;
-        speeds+=`${Math.round(game.grid.velocity[moveKey].power*100)} ${Math.round(game.grid.velocity[moveKey].velocity*100)} ${Math.round(game.grid.velocity[moveKey].sign)}=${Math.round(game.grid.velocity[moveKey].notch*100)/100} ${matrix_move[moveKey].lore}\n`;
+        if (game.grid.velocity[moveKey].velocity)
+          speeds+=`${Math.round(game.grid.velocity[moveKey].velocity*100)} ${matrix_move[moveKey].lore}\n`;
       }
       if (speeds)
         speeds="\nspeed :\n"+speeds;
