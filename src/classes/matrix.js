@@ -8,7 +8,7 @@ class Matrix {
 	constructor(numberOfLine, numberOfColumn)
 	{
 		if (!numberOfLine)
-			throw new Error(`not dimension given to the matrix`);
+			throw new Error(`no size given to the matrix`);
 		if (!numberOfColumn)
 			numberOfColumn=numberOfLine;
 

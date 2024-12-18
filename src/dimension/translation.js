@@ -39,14 +39,14 @@ class MatrixTranslation {
 	}
 };
 
-const matrix_strength = .1;
-const matrix_angle = Math.PI/32;
+const matrix_straigth = Settings.VELOCITY_SCALE_STRAIGTH;
+const matrix_angle = Settings.VELOCITY_SCALE_ANGLE;
 
-const matrix = {
+const matrix_move = {
 	//move
 	"x<->": {
 		lore: "to X",
-		translation: new MatrixTranslation(2, new Matrix(3,3).build_identity().set_column(2, [matrix_strength,0,1]), false, true),
+		translation: new MatrixTranslation(2, new Matrix(3,3).build_identity().set_column(2, [matrix_straigth,0,1]), false, true),
 		keycode: {
 			negative: 70,
 			positive: 72
@@ -54,7 +54,7 @@ const matrix = {
 	},
 	"y<->": {
 		lore: "to Y",
-		translation: new MatrixTranslation(2, new Matrix(3,3).build_identity().set_column(2, [0,matrix_strength,1]), false, true),
+		translation: new MatrixTranslation(2, new Matrix(3,3).build_identity().set_column(2, [0,matrix_straigth,1]), false, true),
 		keycode: {
 			negative: 84,
 			positive: 71
@@ -62,7 +62,7 @@ const matrix = {
 	},
 	"z<->": {
 		lore: "to Z",
-		translation: new MatrixTranslation(3, new Matrix(4,4).build_identity().set_column(3, [0,0,matrix_strength,1]), false, true),
+		translation: new MatrixTranslation(3, new Matrix(4,4).build_identity().set_column(3, [0,0,matrix_straigth,1]), false, true),
 		keycode: {
 			negative: 82,
 			positive: 89
@@ -70,7 +70,7 @@ const matrix = {
 	},
 	"w<->": {
 		lore: "to W",
-		translation: new MatrixTranslation(4, new Matrix(5,5).build_identity().set_column(4, [0,0,0,matrix_strength,1]), false, true),
+		translation: new MatrixTranslation(4, new Matrix(5,5).build_identity().set_column(4, [0,0,0,matrix_straigth,1]), false, true),
 		keycode: {
 			negative: 78,
 			positive: 66
@@ -125,6 +125,7 @@ const matrix = {
 		}
 	},
 	//sphere
+	/*
 	"x/me": {
 		lore: "shpere X",
 		translation: new MatrixTranslation(3, new Matrix(4,4).build_identity(), false, false, (matrix, power) => matrix.set_at(1,1,Math.cos(matrix_angle*power/4)).set_at(2,2,Math.cos(matrix_angle*power/4)).set_at(1,2,Math.sin(matrix_angle*power/4)).set_at(2,1,-Math.sin(matrix_angle*power/4))),
@@ -146,6 +147,7 @@ const matrix = {
 			positive: 80
 		}
 	},
+	*/
 };
 
 
@@ -160,7 +162,7 @@ function translation_key_nD(keyEvent, grid)
 	if (!translationKey || !(move_aviable[translationKey]) || keyEvent.repeat)
 		return;
 	const sign=(keycode_to_move[keyEvent.keyCode].oppose) ? -1 : 1;
-	translation_add_strength(grid.velocity[translationKey], Settings.VELOCITY_ADD_PUSH*Settings.SPEED*sign);
+	translation_add_strength(grid.velocity[translationKey], Settings.VELOCITY_ADD_PUSH, Settings.SPEED*sign);
 }
 
 function translation_drag_nD(dragEvent, grid)
@@ -172,7 +174,7 @@ function translation_drag_nD(dragEvent, grid)
 	};
 	for (let translationKey in translations)
 	{
-		translation_add_strength(grid.velocity[translationKey], Settings.VELOCITY_ADD_DRAG*(translations[translationKey])*Settings.SPEED);
+		translation_add_strength(grid.velocity[translationKey], Settings.VELOCITY_ADD_DRAG, (translations[translationKey])*Settings.SPEED);
 	}
 }
 
@@ -180,35 +182,60 @@ function translation_wheel_nD(wheelEvent, grid)
 {
 	let translationKey="wz/";
 	{
-		translation_add_strength(grid.velocity[translationKey], Settings.VELOCITY_ADD_WHEEL*wheelEvent.delta*Settings.SPEED);
+		translation_add_strength(grid.velocity[translationKey], Settings.VELOCITY_ADD_WHEEL, wheelEvent.delta);
 	}
 }
 
-function translation_add_strength(velocityElement, power, resetOppose=true)
+function sequencial_add(value, reasons, times)
 {
-	const sign=(power<0) ? -1 : 1;
-	if (resetOppose && velocityElement.accelerate*sign<0)
+	let r=reasons.r;
+	let q=reasons.q;
+	if (times<0)
 	{
-		velocityElement.accelerate=0;
+		//reasons.q=1/reasons.q;
+		r*=-1;
+		times*=-1;
+	}
+	if (times===1)
+	{
+		return value*q+r;
+	}
+	if (q===1)
+	{
+		return value+r*times;
+	}
+	return value*Math.pow(q, times)+r*((1-Math.pow(q,times))/(1-q));
+}
+
+function translation_add_strength(velocityElement, reasons, times=1, resetOppose=true)
+{
+	if (reasons.q===0 && reasons.r===0) 
+		return;
+	const lastVelocity=velocityElement.velocity;
+	velocityElement.velocity=sequencial_add(velocityElement.velocity, reasons, times);
+	velocityElement.sign=(velocityElement.velocity<0) ? -1 : 1;
+	//!Settings.SPEED
+	if (resetOppose && velocityElement.sign*(lastVelocity)>velocityElement.sign*(velocityElement.velocity))
+	{
+		velocityElement.velocity=0;
 		return;
 	}
-	velocityElement.accelerate+=power;
 }
 
 
 function translation_init_nD(grid)
 {
 	move_aviable={};
-	for (let moveKey of Object.keys(matrix))
+	for (let moveKey of Object.keys(matrix_move))
 	{
-		if (!(matrix[moveKey].translation.dim>Settings.RULE_BOX_D))
+		if (!(matrix_move[moveKey].translation.dim>Settings.RULE_BOX_D))
 		{
 			move_aviable[moveKey]=true;
-			grid.velocity[moveKey]={accelerate:0, comma:0, spin:0};
-			if (matrix[moveKey].keycode.positive)
-				keycode_to_move[matrix[moveKey].keycode.positive]={translationKey: moveKey, oppose: false};
-			if (matrix[moveKey].keycode.negative)
-				keycode_to_move[matrix[moveKey].keycode.negative]={translationKey: moveKey, oppose: true};
+			grid.velocity[moveKey]={velocity:0, notch:0, power:null, sign: 1};
+			if (matrix_move[moveKey].keycode.positive)
+				keycode_to_move[matrix_move[moveKey].keycode.positive]={translationKey: moveKey, oppose: false};
+			if (matrix_move[moveKey].keycode.negative)
+				keycode_to_move[matrix_move[moveKey].keycode.negative]={translationKey: moveKey, oppose: true};
 		}
 	}
 }
@@ -221,50 +248,57 @@ async function translation_draw_nD(grid)
 		let velocityElement=grid.velocity[moveKey];
 		//console.log(velocityElement);
 
-		const down_postivie=keyIsDown(matrix[moveKey].keycode.positive);
-		const down_negative=keyIsDown(matrix[moveKey].keycode.negative);
+		const down_postivie=keyIsDown(matrix_move[moveKey].keycode.positive);
+		const down_negative=keyIsDown(matrix_move[moveKey].keycode.negative);
 		//accelerate
 		if (down_postivie)
 		{
-			velocityElement.accelerate+=Settings.VELOCITY_ADD_REMAIN*Settings.SPEED;
+			translation_add_strength(velocityElement, Settings.VELOCITY_ADD_REMAIN, Settings.SPEED*velocityElement.sign);
 		}
 		if (down_negative)
 		{
-			velocityElement.accelerate-=Settings.VELOCITY_ADD_REMAIN*Settings.SPEED;
+			translation_add_strength(velocityElement, Settings.VELOCITY_ADD_REMAIN, Settings.SPEED*velocityElement.sign);
 		}
 
-		if (velocityElement.accelerate)
-		{
-			
-			//transfert
-			velocityElement.comma+=velocityElement.accelerate;
-			const commaSign=velocityElement.comma/Math.abs(velocityElement.comma);//can change sign just after
-			const spinAdded=Math.floor(velocityElement.comma*commaSign)*commaSign;
-			velocityElement.comma-=spinAdded;
-			velocityElement.spin+=spinAdded;
-			//const spinSign=velocityElement.spin/Math.abs(velocityElement.spin);
+		let remainToSpin=velocityElement.velocity;
+		let gap=(Math.floor((Math.abs(velocityElement.notch)+Math.abs(velocityElement.velocity))*100)/100)%1;
+		if (gap)
+			remainToSpin+=(1-(gap))*velocityElement.sign;
+		//if (velocityElement.sign===1)
+		//	remainToSpin+=1-(abs(velocityElement.notch)%1);
+		//if (velocityElement.sign===-1)
+		//	remainToSpin-=(abs(velocityElement.notch)%1);
+		velocityElement.power=null;
 
-			const value_want=0;
-			if (velocityElement.accelerate!==value_want)
-			{//decelerate
-				if (!down_negative && !down_postivie && !draging)//draging from outside
-				{
-					const sign=(velocityElement.accelerate>value_want) ? 1 : -1;
-					velocityElement.accelerate=(velocityElement.accelerate*Math.pow(Settings.VELOCITY_FRICTION_Q,Settings.SPEED))-(Settings.VELOCITY_FRICTION_R*sign*Settings.SPEED);
-					if (!(velocityElement.accelerate*sign>value_want))
-					{
-						velocityElement.accelerate=0;
-					}
-				}
+		if (remainToSpin)
+		{
+			let wasRemainToSpin=remainToSpin;
+			let willRemainToSpin=sequencial_add(remainToSpin, Settings.VELOCITY_TRANSFERT, Math.abs(remainToSpin)/remainToSpin)
+			if (Math.abs(wasRemainToSpin)/wasRemainToSpin!==Math.abs(willRemainToSpin)/willRemainToSpin)//change sign
+			{//greater than velocity+notch
+				willRemainToSpin=0;
 			}
+			const power=remainToSpin-willRemainToSpin;
+
+			//const power=remainToSpin;
+			if (Math.abs(power)>Math.abs(velocityElement.velocity))
+			{
+				velocityElement.velocity=0;
+			} else {
+				velocityElement.velocity-=power;
+			}
+			velocityElement.notch+=power;
+			//velocityElement.power=power;
+			velocityElement.power=gap;
+
+			//power+=velocityElement.center;
+
 			{
 				//translation
-				const power=velocityElement.spin;
-				velocityElement.spin-=power;//use all spin
 				if (power)
 				{
 					//find matrix
-					const translationObject=matrix[moveKey].translation;
+					const translationObject=matrix_move[moveKey].translation;
 
 					//if (translationObject.dim>)
 					//console.log(`move with matrix: ${translationObject.matrix}`);
