@@ -24,9 +24,9 @@ class Settings {
 	static VELOCITY_SCALE_ANGLE = Math.PI/32;
 	static VELOCITY_SCALE_STRAIGTH = 1;
 	static VELOCITY_ADD_PUSH = {r: 1, q: 1};
-	static VELOCITY_ADD_REMAIN = {r: .0, q: 1.03};
+	static VELOCITY_ADD_REMAIN = {r: .1, q: 1.01};
 	static VELOCITY_ADD_DRAG = {r: 100, q: 1};
 	static VELOCITY_ADD_WHEEL = {r: .01, q: 1};
-	static VELOCITY_TRANSFERT = {r: -.05, q: .95};
+	static VELOCITY_TRANSFERT = {r: -.0001, q: .95};
 	static VELOCITY_CENTER = 0;
 };

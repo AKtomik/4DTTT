@@ -215,10 +215,44 @@ function translation_add_strength(velocityElement, reasons, times=1, resetOppose
 	velocityElement.velocity=sequencial_add(velocityElement.velocity, reasons, times);
 	velocityElement.sign=(velocityElement.velocity<0) ? -1 : 1;
 	//!Settings.SPEED
-	if (resetOppose && velocityElement.sign*(lastVelocity)>velocityElement.sign*(velocityElement.velocity))
+	if (resetOppose && ((lastVelocity>0) && (velocityElement.velocity<lastVelocity)) || ((lastVelocity<0) && (lastVelocity<velocityElement.velocity)))
 	{
 		velocityElement.velocity=0;
 		return;
+	}
+}
+
+function translation_extract_speed(velocityElement, down)
+{
+	let remainToSpin=velocityElement.velocity;
+	let gap=(Math.floor((Math.abs(velocityElement.notch)+Math.abs(velocityElement.velocity))*1000000)/1000000)%1;
+	if (gap)
+	{
+		remainToSpin+=((1-(gap))*velocityElement.sign);
+	}
+	velocityElement.power=null;
+
+	if (remainToSpin)
+	{
+		let wasRemainToSpin=remainToSpin;
+		let willRemainToSpin=sequencial_add(remainToSpin, Settings.VELOCITY_TRANSFERT, Math.abs(remainToSpin)/remainToSpin)
+		if (Math.abs(wasRemainToSpin)/wasRemainToSpin!==Math.abs(willRemainToSpin)/willRemainToSpin)//change sign
+		{//greater than velocity+notch
+			willRemainToSpin=0;
+		}
+		const power=remainToSpin-willRemainToSpin;
+
+		//const power=remainToSpin;
+		if (Math.abs(power)>Math.abs(velocityElement.velocity))
+		{
+			velocityElement.velocity=0;
+		} else {
+			velocityElement.velocity-=power;
+		}
+		velocityElement.notch+=power;
+		//velocityElement.power=power;
+		velocityElement.power=gap;
+		return power;
 	}
 }
 
@@ -260,61 +294,26 @@ async function translation_draw_nD(grid)
 			translation_add_strength(velocityElement, Settings.VELOCITY_ADD_REMAIN, Settings.SPEED*velocityElement.sign);
 		}
 
-		let remainToSpin=velocityElement.velocity;
-		let gap=(Math.floor((Math.abs(velocityElement.notch)+Math.abs(velocityElement.velocity))*100)/100)%1;
-		if (gap)
-			remainToSpin+=(1-(gap))*velocityElement.sign;
-		//if (velocityElement.sign===1)
-		//	remainToSpin+=1-(abs(velocityElement.notch)%1);
-		//if (velocityElement.sign===-1)
-		//	remainToSpin-=(abs(velocityElement.notch)%1);
-		velocityElement.power=null;
+		const power=translation_extract_speed(velocityElement);
 
-		if (remainToSpin)
+		//translation
+		if (power)
 		{
-			let wasRemainToSpin=remainToSpin;
-			let willRemainToSpin=sequencial_add(remainToSpin, Settings.VELOCITY_TRANSFERT, Math.abs(remainToSpin)/remainToSpin)
-			if (Math.abs(wasRemainToSpin)/wasRemainToSpin!==Math.abs(willRemainToSpin)/willRemainToSpin)//change sign
-			{//greater than velocity+notch
-				willRemainToSpin=0;
+			//find matrix
+			const translationObject=matrix_move[moveKey].translation;
+
+			//if (translationObject.dim>)
+			//console.log(`move with matrix: ${translationObject.matrix}`);
+
+			//do the translation
+			translationObject.calibrate(power);
+		  for (let posKey of grid.map_keys)
+		  {
+		    const h_box = grid.at(posKey);
+				h_box.morph.each(pos => translationObject.translate(pos, power, grid.center));
+				h_box.center=translationObject.translate(h_box.center, power, grid.center);
 			}
-			const power=remainToSpin-willRemainToSpin;
-
-			//const power=remainToSpin;
-			if (Math.abs(power)>Math.abs(velocityElement.velocity))
-			{
-				velocityElement.velocity=0;
-			} else {
-				velocityElement.velocity-=power;
-			}
-			velocityElement.notch+=power;
-			//velocityElement.power=power;
-			velocityElement.power=gap;
-
-			//power+=velocityElement.center;
-
-			{
-				//translation
-				if (power)
-				{
-					//find matrix
-					const translationObject=matrix_move[moveKey].translation;
-
-					//if (translationObject.dim>)
-					//console.log(`move with matrix: ${translationObject.matrix}`);
-
-					//do the translation
-					translationObject.calibrate(power);
-				  for (let posKey of grid.map_keys)
-				  {
-				    const h_box = grid.at(posKey);
-						h_box.morph.each(pos => translationObject.translate(pos, power, grid.center));
-						h_box.center=translationObject.translate(h_box.center, power, grid.center);
-					}
-					grid.center=translationObject.translate(grid.center, power, grid.center);
-				}
-
-			}
+			grid.center=translationObject.translate(grid.center, power, grid.center);
 		}
 	}
 }
