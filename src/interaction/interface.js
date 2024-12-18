@@ -26,8 +26,9 @@ var buttonList= {
 //buttonRestart:null,
 //buttonBack:null,
 }
-let gameMechanic=null;
 
+var game;
+var cube;
 
 function interfaceStart()
 {
@@ -35,7 +36,12 @@ function interfaceStart()
   {
     for (let i=0;i<100;i++)
       new HtmlBug(BugType.RECT_RANDOM_COLOR, undefined, undefined, undefined, [500, 500], 0, 10);
-      draw();//!to see loading
+    background(0);
+    //console.time("redraw");
+    //console.log("before redraw",frameCount);
+    redraw(1);//!to see loading state
+    //console.timeEnd("redraw");
+    //console.log("afgtrr redraw",frameCount);
   }
 
 	//settings
@@ -52,14 +58,11 @@ function interfaceStart()
 			buttonList[buttonKey]=null;
 		}
 	}
+  cube.kill();
+  cube=null;
 
   //objects
   game = new Game();
-  gameMechanic=new Mechanic(game, game.init, game.display);
-  gameMechanic.addAction(SketchEvents.PRESS, game.action_press);
-  gameMechanic.addAction(SketchEvents.CLICK, game.action_click);
-  gameMechanic.addAction(SketchEvents.DRAG, game.action_drag);
-  gameMechanic.addAction(SketchEvents.WHEEL, game.action_wheel);
 
   
   {//ui
@@ -92,7 +95,7 @@ function interfaceRestart()
   {
     for (let i=0;i<100;i++)
       new HtmlBug(BugType.RECT_RANDOM_COLOR, undefined, undefined, undefined, [500, 500], 0, 10);
-    draw();//!to see loading state
+    redraw();//!to see loading state
   }
   //do
 	Mechanic.event(SketchEvents.INIT);
@@ -104,13 +107,13 @@ function interfaceMenu()
   if (frameCount>1) {
     for (let i=0;i<100;i++)
       new HtmlBug(BugType.RECT_RANDOM_COLOR, undefined, undefined, undefined, [500, 500], 0, 10);
-    draw();//!to see loading state
+    redraw();//!to see loading state
   }
 
 	//destroy
 	if (game)
 	{
-		gameMechanic.kill();
+		game.kill();
 		game=null;
 	}
 	for (let buttonKey in buttonList)
@@ -150,6 +153,9 @@ function interfaceMenu()
     buttonList.doneStart=new HtmlButton("button", [500,500], [document.createTextNode("play")]);
     buttonList.doneStart.onClick(interfaceStart, false);
   }
+
+  //object
+  cube=new JustCube();
 }
 
 function interfaceTest()

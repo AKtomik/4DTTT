@@ -154,16 +154,16 @@ let move_aviable = {};//will contains only aviables mooves
 
 let keycode_to_move = {};
 
-function translation_key_nD(keyEvent, game)
+function translation_key_nD(keyEvent, grid)
 {
 	const translationKey=keycode_to_move[keyEvent.keyCode]?.translationKey;
 	if (!translationKey || !(move_aviable[translationKey]) || keyEvent.repeat)
 		return;
 	const sign=(keycode_to_move[keyEvent.keyCode].oppose) ? -1 : 1;
-	translation_add_strength(game.grid.velocity[translationKey], Settings.VELOCITY_ADD_PUSH*Settings.SPEED*sign);
+	translation_add_strength(grid.velocity[translationKey], Settings.VELOCITY_ADD_PUSH*Settings.SPEED*sign);
 }
 
-function translation_drag_nD(dragEvent, game)
+function translation_drag_nD(dragEvent, grid)
 {
 	const mouseVector=[winMouseX-pwinMouseX, winMouseY-pwinMouseY];
 	const translations={
@@ -172,15 +172,15 @@ function translation_drag_nD(dragEvent, game)
 	};
 	for (let translationKey in translations)
 	{
-		translation_add_strength(game.grid.velocity[translationKey], Settings.VELOCITY_ADD_DRAG*(translations[translationKey])*Settings.SPEED);
+		translation_add_strength(grid.velocity[translationKey], Settings.VELOCITY_ADD_DRAG*(translations[translationKey])*Settings.SPEED);
 	}
 }
 
-function translation_wheel_nD(wheelEvent, game)
+function translation_wheel_nD(wheelEvent, grid)
 {
 	let translationKey="wz/";
 	{
-		translation_add_strength(game.grid.velocity[translationKey], Settings.VELOCITY_ADD_WHEEL*wheelEvent.delta*Settings.SPEED);
+		translation_add_strength(grid.velocity[translationKey], Settings.VELOCITY_ADD_WHEEL*wheelEvent.delta*Settings.SPEED);
 	}
 }
 
@@ -219,7 +219,7 @@ async function translation_draw_nD(grid)
 	for (let moveKey of Object.keys(move_aviable))
 	{
 		let velocityElement=grid.velocity[moveKey];
-		console.log(velocityElement);
+		//console.log(velocityElement);
 
 		const down_postivie=keyIsDown(matrix[moveKey].keycode.positive);
 		const down_negative=keyIsDown(matrix[moveKey].keycode.negative);
@@ -271,7 +271,7 @@ async function translation_draw_nD(grid)
 
 					//do the translation
 					translationObject.calibrate(power);
-				  for (let posKey of game.grid.map_keys)
+				  for (let posKey of grid.map_keys)
 				  {
 				    const h_box = grid.at(posKey);
 						h_box.morph.each(pos => translationObject.translate(pos, power, grid.center));

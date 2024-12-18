@@ -24,7 +24,6 @@ function keyPressed(event) {
 
 
 //--- draw ---
-var game;
 function setup() {
   Mechanic.prepare();
 

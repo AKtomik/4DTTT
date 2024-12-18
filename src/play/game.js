@@ -1,6 +1,16 @@
 //not dimensionnal dependant
 class Game {
   constructor(state=0) {
+    
+    this.mechanic=new Mechanic(this, this.init, this.display);
+    this.mechanic.addAction(SketchEvents.PRESS, this.action_press);
+    this.mechanic.addAction(SketchEvents.CLICK, this.action_click);
+    this.mechanic.addAction(SketchEvents.DRAG, this.action_drag);
+    this.mechanic.addAction(SketchEvents.WHEEL, this.action_wheel);
+  }
+
+  kill() {
+    this.mechanic.kill();
   }
 
   get playing() {
@@ -110,19 +120,19 @@ class Game {
 
 	action_press(event)
 	{
-		translation_key_nD(event, this);
+		translation_key_nD(event, this.grid);
 	}
 	action_click(event)
 	{
-		collision_by_front(event, this);
+		collision_by_front(event, this.grid);
 	}
 	action_drag(event)
 	{
-		translation_drag_nD(event, this);
+		translation_drag_nD(event, this.grid);
 	}
 	action_wheel(event)
 	{
-		translation_wheel_nD(event, this);
+		translation_wheel_nD(event, this.grid);
 	}
 	
 	init()
@@ -329,3 +339,45 @@ class Player {
 		this.score+=1;
 	}
 }
+
+class JustCube {
+  constructor(state=0) {
+    this.mechanic=new Mechanic(this, this.init, this.display);
+    this.mechanic.addAction(SketchEvents.PRESS, this.action_press);
+    this.mechanic.addAction(SketchEvents.DRAG, this.action_drag);
+    this.mechanic.addAction(SketchEvents.WHEEL, this.action_wheel);
+  }
+
+  kill() {
+    this.mechanic.kill();
+  }
+
+	action_press(event)
+	{
+		translation_key_nD(event, this.grid);
+	}
+	action_drag(event)
+	{
+		translation_drag_nD(event, this.grid);
+	}
+	action_wheel(event)
+	{
+		translation_wheel_nD(event, this.grid);
+	}
+	
+	init()
+	{
+		this.grid=new Grid(Settings.RULE_BOX_WIDTH, Settings.RULE_BOX_D);
+    translation_init_nD(this.grid);
+    perspective_init_nD(this.grid);
+	}
+	display()
+	{
+    translation_draw_nD(this.grid);//dont wait the promise to be resolved
+	  const margin = Scale.min(400);
+    // [/2] -> [/10]
+	  let square_top = [(Scale.x(Settings.POS_BOX_FULL) - Scale.min(Settings.POS_BOX_FULL))/10 + margin, (Scale.y(Settings.POS_BOX_FULL) - Scale.min(Settings.POS_BOX_FULL))/2 + margin];
+	  let square_size = [Scale.min(Settings.POS_BOX_FULL) - 2*margin, Scale.min(Settings.POS_BOX_FULL) - 2*margin];	
+    perspective_draw_nD(this.grid, square_top, square_size);
+	}
+};
