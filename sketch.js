@@ -1,7 +1,6 @@
 //--- click ---
 var draging = false;
 function mouseClicked(event) {//like released
-  console.log(event);
   if (draging)
   {
     draging=false;

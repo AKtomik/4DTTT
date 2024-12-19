@@ -44,10 +44,6 @@ function interfaceStart()
     //console.log("afgtrr redraw",frameCount);
   }
 
-	//settings
-	Settings.RULE_BOX_D=parseInt(document.getElementById(buttonList.selectDim.id).value);
-	Settings.RULE_BOX_WIDTH=parseInt(document.getElementById(buttonList.selectWidth.id).value);
-
 	//destroy
 	for (let buttonKey in buttonList)
 	{
@@ -58,7 +54,8 @@ function interfaceStart()
 			buttonList[buttonKey]=null;
 		}
 	}
-  cube.kill();
+  if (cube)
+    cube.kill();
   cube=null;
 
   //objects
@@ -129,33 +126,44 @@ function interfaceMenu()
     const dimSelector = [//!parameter
         {value:"2", text:"2D"},
         {value:"3", text:"3D"},
-        {value:"4", text:"4D", default: true},
+        {value:"4", text:"4D"},
         {value:"5", text:"5D"},
         {value:"6", text:"6D"},
     ];
-    buttonList.selectDim=new HtmlButton("select", [475,400], optionsMaker(dimSelector));
+    buttonList.selectDim=new HtmlButton("select", [500,450], optionsMaker(dimSelector));
+    buttonList.selectDim.onChange(interfaceMenuSelect);
     
     const widthSelector = [//!parameter
-        {value:"1", text:"1x1"},
-        {value:"2", text:"2x2"},
-        {value:"3", text:"3x3", default: true},
-        {value:"4", text:"4x4"},
-        {value:"5", text:"5x5"},
-        {value:"6", text:"6x6"},
-        {value:"10", text:"10x10"},
-        {value:"15", text:"15x15"},
-        {value:"20", text:"20x20"},
-        {value:"50", text:"50x50"},
-        {value:"100", text:"100x100"},
+        {value:"1", text:"_x_"},
+        {value:"2", text:"_x_"},
+        {value:"3", text:"_x_"},
+        {value:"4", text:"_x_"},
+        {value:"5", text:"_x_"},
+        {value:"6", text:"_x_"},
+        {value:"10", text:"__x__"},
+        {value:"15", text:"__x__"},
+        {value:"20", text:"__x__"},
+        {value:"50", text:"__x__"},
+        {value:"99", text:"__x__"},
     ];
-    buttonList.selectWidth=new HtmlButton("select", [525,400], optionsMaker(widthSelector));
+    buttonList.selectWidth=new HtmlButton("select", [500,500], optionsMaker(widthSelector));
+    buttonList.selectWidth.onChange(interfaceMenuSelect);
 
-    buttonList.doneStart=new HtmlButton("button", [500,500], [document.createTextNode("play")]);
+    const alignSelector = [//!parameter
+        {value:"2", text:"⟺ 2"},
+        {value:"3", text:"⟺ 3"},
+        {value:"4", text:"⟺ 4"},
+        {value:"5", text:"⟺ 5"},
+        {value:"6", text:"⟺ 6"},
+    ];
+    buttonList.selectAlign=new HtmlButton("select", [500,550], optionsMaker(alignSelector));
+    buttonList.selectAlign.onChange(interfaceMenuSelect);
+
+    buttonList.doneStart=new HtmlButton("button", [500,700], [document.createTextNode("play")]);
     buttonList.doneStart.onClick(interfaceStart, false);
-  }
 
-  //object
-  cube=new JustCube();
+    interfaceMenuSelect(true);
+  }
 }
 
 function interfaceTest()
@@ -165,4 +173,39 @@ function interfaceTest()
   new HtmlBug(BugType.RECT_RANDOM_BLEND, [100-dist,200-dist],[100+dist,200+dist],[0,0],[100,100],15,20);
   for (let i=0;i<10;i++)
     new HtmlBug(BugType.RECT_RANDOM_COLOR, [100-dist,200-dist],[100+dist,200+dist],[0,0],[100,100],0,10);
+}
+
+function interfaceMenuSelect(ifSettingsFirst)
+{
+  //settings
+  const selectDimHtml=document.getElementById(buttonList.selectDim.id);
+  const selectWidthHtml=document.getElementById(buttonList.selectWidth.id);
+  const selectAlignHtml=document.getElementById(buttonList.selectAlign.id);
+  if (ifSettingsFirst)
+  {
+  	selectDimHtml.value=Settings.RULE_BOX_D;
+  	selectWidthHtml.value=Settings.RULE_BOX_WIDTH;
+  	selectAlignHtml.value=Settings.RULE_BOX_ROW_LENGTH;
+  } else
+  {
+  	Settings.RULE_BOX_D=parseInt(selectDimHtml.value);
+  	Settings.RULE_BOX_WIDTH=parseInt(selectWidthHtml.value);
+  	Settings.RULE_BOX_ROW_LENGTH=parseInt(selectAlignHtml.value);
+  }
+
+  //const dimChildrens=selectDimHtml.children;
+  const widthChildrens=selectWidthHtml.children;
+  for (let childs of widthChildrens)
+  {
+    childs.label=childs.value;
+    for (let i=1;i<Settings.RULE_BOX_D;i++)
+    {
+      childs.label+="x"+childs.value;
+    }
+  }
+  
+  //object
+  if (cube)
+    cube.kill();
+  cube=new JustCube();
 }

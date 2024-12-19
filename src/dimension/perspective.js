@@ -77,7 +77,16 @@ function pointsForHypercube(dim, current = [])
     : [0, 1].flatMap(v => pointsForHypercube(dim - 1, [...current, v]));
 }
 
-//function intToBin(int)
+function intToBin(int)
+{
+  let bin=[];
+  for (let i in binArray)
+  {
+    //if (binArray[i] && binArray.length-i-1)
+    integer+=binArray[i]*Math.pow(2, binArray.length-i-1);
+  }
+  return integer;
+}
 function binToInt(binArray)
 {
   let integer=0;
@@ -93,11 +102,12 @@ function perspective_init_nD(grid)
 {
   const D=Settings.RULE_BOX_D;
   console.log("creating an hypercube of dim:",Settings.RULE_BOX_D);
-	//create cubes
+  //around
   const just_total = (Settings.RULE_BOX_WIDTH+((Settings.RULE_BOX_WIDTH-1)*Settings.PERSPECTIVE_GAP));
   const just_size = 1/just_total;
   const just_top = (at) => at*(1+Settings.PERSPECTIVE_GAP)/just_total;
   
+	//create cubes
   const point_size = new Array(D).fill(just_size);//same for everyone
   //define points created for the shape
   const hypercube_points = pointsForHypercube(D);//same for everyone
