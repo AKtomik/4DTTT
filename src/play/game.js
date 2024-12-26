@@ -11,6 +11,7 @@ class Game {
 
   kill() {
     this.mechanic.kill();
+    this.byte.kill();
   }
 
   get playing() {
@@ -148,6 +149,8 @@ class Game {
 
 		this.state=0;
 		this.remain=this.grid.map_keys.length;
+
+    this.byte=new ByteCharacter([500, 50], [100, 100]);
 
 
     translation_init_nD(this.grid);

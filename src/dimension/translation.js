@@ -209,6 +209,7 @@ function sequencial_add(value, reasons, times)
 
 function translation_add_strength(velocityElement, reasons, times=1, resetOppose=true)
 {
+	if (!velocityElement) return;
 	const power=reasons*times;
 	const sign=(power<0) ? -1 : 1;
 	if (resetOppose && velocityElement.velocity*sign<0)

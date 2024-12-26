@@ -37,6 +37,9 @@ const colorSet = {
 		box_empty_in:[128,128],
 		box_empty_out:[0],
 
+		byte_straigth:[0],
+		byte_fill:[255],
+
 		player_1_text:[0,200,255],
 		player_1_dark:[0,0,128],
 		player_1_ligth:[0,200,255],
