@@ -34,6 +34,10 @@ class Scale {
   {
     return numberBy1000*Scale.SCALER[1];
   }
+  static xy(bothNumberBy1000)
+  {
+    return [Scale.x(bothNumberBy1000[0]), Scale.y(bothNumberBy1000[1])];
+  }
   static diag(numberBy1000)
   {
     return numberBy1000*Scale.DIAG;

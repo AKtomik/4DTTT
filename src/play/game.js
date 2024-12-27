@@ -150,7 +150,7 @@ class Game {
 		this.state=0;
 		this.remain=this.grid.map_keys.length;
 
-    this.byte=new ByteCharacter([500, 50], [100, 100]);
+    this.byte=new ByteCharacter(new Anchor([1000, 1000], [100, 100], [AnchorConstraintType.LEFT, AnchorConstraintType.LEFT], AnchorRatioType.EQUALMIN));
 
 
     translation_init_nD(this.grid);

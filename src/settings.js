@@ -1,6 +1,6 @@
 class Settings {	
 	static FPS = 15;
-	static SPEED = 3;
+	static SPEED = 2;
 	static DEBUG = true;
 	static PLAYERS = 2;
 	
