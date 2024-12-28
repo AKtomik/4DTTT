@@ -34,7 +34,8 @@ class ByteCharacter {
 		//position
 		this.anchor=anchor;
 		//bubble
-		this.speaking=new ByteSpeaking(new Anchor([this.anchor.centerPos[0]-50, this.anchor.centerPos[1]+50], [200, 80], [AnchorConstraintType.LEFT, AnchorConstraintType.MIDDLE], AnchorRatioType.NONE))
+		this.bubbleObject=new ByteBubble(new Anchor([this.anchor.centerPos[0]-50, this.anchor.centerPos[1]+50], [200, 80], [AnchorConstraintType.LEFT, AnchorConstraintType.MIDDLE], AnchorRatioType.NONE))
+		this.setSpeak("meowwwwww (this is meowwing if you dont understand)");
 		//do
 		this.resize();
 		//mechanic
@@ -45,13 +46,15 @@ class ByteCharacter {
     //this.mechanic.addAction(SketchEvents.WHEEL, this.action_wheel);
 	};
 
+	//mechaic
 	resize() {
 		this.anchor.resize();
-		this.speaking.resize();
+		this.bubbleObject.resize();
 	}
 
 	kill() {
 		this.mechanic.kill();
+		this.bubbleObject.kill();
 	}
 
 	init() {
@@ -88,7 +91,6 @@ class ByteCharacter {
 		
 		//added
 		let blink=Math.floor(this.random*20)===0;
-		let speaking=true;
 		
 		//emotion (cant multiples)
 		let happy=false;
@@ -104,7 +106,7 @@ class ByteCharacter {
 
 		let sayan=false;
 
-		if (speaking)
+		if (this.speaking)
 		{
 			if (this.expression_speak_time<5)
 			{
@@ -150,6 +152,8 @@ class ByteCharacter {
 		this.draw_eye(true, eyeType);
 		//mouth
 		this.draw_mouth(mouthType);
+		//speak
+		this.speakTick();
 	};
 
 	//draw
@@ -369,28 +373,60 @@ class ByteCharacter {
 		}
 	}
 
-	speak()
+	setSpeak(text)
 	{
+		this.speaking=true;
+		this.speak_text=text;
+		this.speak_index=0;
+		this.speak_fraction=0;
+		this.speak_speed=1/2;
+		
+		this.bubbleObject.changeText("", this.speak_text);
+	}
 
+	speakTick()
+	{
+		if (!this.speaking) return;
+		
+		this.speak_fraction+=this.speak_speed*Settings.SPEED;
+		let addedCharIndex=Math.floor(this.speak_fraction);
+		if (addedCharIndex<1) return;
+		this.speak_fraction-=addedCharIndex;
+
+		this.speak_index+=addedCharIndex;
+		if (this.speak_index>=this.speak_text.length)
+		{
+			this.speak_index=this.speak_text.length;
+			this.speaking=false;
+		}
+
+		console.log("this.speak_index:",this.speak_index,"/",this.speak_text.length);
+		this.bubbleObject.changeText(this.speak_text.slice(0, this.speak_index), this.speak_text.slice(this.speak_index, this.speak_text.length));
 	}
 
 }
 
-class ByteSpeaking {
+class ByteBubble {
 	static iterator=0;
 	constructor(anchor) {
 		//self
 		this.anchor=anchor;
-		this.id="generated_D"+String(ByteSpeaking.iterator++);
+		this.id="generated_D"+String(ByteBubble.iterator++);
 		//html
 		this.bubbleElement=document.createElement("div");
 		this.bubbleElement.className="bubble-out";
 		this.bubbleElement.id=this.id;
 		
-		this.textElement=document.createElement("p");
-		this.textElement.className="bubble-text";
-		this.textElement.textContent= "yea";
-		this.bubbleElement.appendChild(this.textElement);
+		this.speak_textElement=document.createElement("p");
+		this.speak_textElement.className="bubble-text";
+		this.speak_textElement.textContent= "this is ";
+		
+		this.speak_textHiddenDiv=document.createElement("span");
+		this.speak_textHiddenDiv.className="writting-text";
+		this.speak_textHiddenDiv.textContent="hidden";
+
+		this.speak_textElement.appendChild(this.speak_textHiddenDiv);
+		this.bubbleElement.appendChild(this.speak_textElement);
 		//css
 		this.bubbleElement.style.position="absolute";
 		this.bubbleElement.style.overflow="hidden";
@@ -417,18 +453,31 @@ class ByteSpeaking {
 			do {
 				console.log("fontSize:",fontSize);
 	      fontSize -= step; // Reduce font size
-	      this.textElement.style.fontSize = `${fontSize}vw`;
+	      this.speak_textElement.style.fontSize = `${fontSize}vw`;
 
 	      // Prevent font size from going too small
 	      if (fontSize < minFontSize) {
-	        this.textElement.style.fontSize = `${minFontSize}vw`; // Set a minimum font size
+	        this.speak_textElement.style.fontSize = `${minFontSize}vw`; // Set a minimum font size
 	        break;
 	      }
 	    }
 	    while (
-	      this.textElement.scrollHeight > this.bubbleElement.offsetHeight || // Text exceeds container height
-	      this.textElement.scrollWidth > this.bubbleElement.offsetWidth // Text exceeds container width
+	      this.speak_textElement.scrollHeight > this.bubbleElement.offsetHeight || // Text exceeds container height
+	      this.speak_textElement.scrollWidth > this.bubbleElement.offsetWidth // Text exceeds container width
 	    ) 
 	  }
+	}
+
+	kill()
+	{
+  	document.getElementById(this.id).remove();//all others are childs
+	}
+
+	changeText(textShown, textHidden)
+	{
+		this.speak_textElement.textContent=textShown;
+		this.speak_textHiddenDiv.textContent=textHidden;
+		this.speak_textElement.appendChild(this.speak_textHiddenDiv);
+		this.resize();
 	}
 }

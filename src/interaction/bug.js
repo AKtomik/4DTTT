@@ -69,6 +69,13 @@ class HtmlBug {
 		this.mechanic.addAction(SketchEvents.DISPLAY, this.display);
 	}
 
+	kill()
+	{
+  	document.getElementById(this.id).remove();
+		this.mechanic.kill();
+		delete this.mechanic;
+	}
+
 	display()
 	{
 		//console.log("show bug");
@@ -76,9 +83,8 @@ class HtmlBug {
 		this.life-=1;
 		if (this.life<=0)
 		{
-	  	document.getElementById(this.id).remove();
-			this.mechanic.kill();
-			delete this.mechanic;
+			this.kill();
+			return;
 		}
 		
 		//fill(ColorPalet.colors[randomColorKey]);
