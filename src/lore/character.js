@@ -7,6 +7,7 @@ class ByteEyes {
 	static SAYAN=7;
 	static SHOKY=8;
 	static CUTY=9;
+	static BORY=10;
 }
 
 class ByteMouth {
@@ -32,6 +33,9 @@ class ByteCharacter {
 	constructor(anchor) {
 		//position
 		this.anchor=anchor;
+		//bubble
+		this.speaking=new ByteSpeaking(new Anchor([this.anchor.centerPos[0]-50, this.anchor.centerPos[1]+50], [200, 80], [AnchorConstraintType.LEFT, AnchorConstraintType.MIDDLE], AnchorRatioType.NONE))
+		//do
 		this.resize();
 		//mechanic
     this.mechanic=new Mechanic(this, this.init, this.display);
@@ -43,6 +47,7 @@ class ByteCharacter {
 
 	resize() {
 		this.anchor.resize();
+		this.speaking.resize();
 	}
 
 	kill() {
@@ -90,6 +95,7 @@ class ByteCharacter {
 		let deady=false;
 		let angry=false;
 		let cuty=false;
+		let bory=true;
 
 		let blased=false;
 		let satisfied=false;
@@ -128,6 +134,8 @@ class ByteCharacter {
 			eyeType=ByteEyes.CLOSED;
 		if (deady)
 			eyeType=ByteEyes.DEADY;
+		if (bory)
+			eyeType=ByteEyes.BORY;
 		if (cuty)
 		{
 			mouthType=ByteMouth.CUTY;
@@ -249,6 +257,15 @@ class ByteCharacter {
 				return;
 			}
 
+			case (ByteEyes.BORY): {
+				let eyeSize=[1/50, 1/4];
+				rect(...this.anchor.pos([eyeCenter[0]-eyeSize[0]/2,eyeCenter[1]-eyeSize[1]/2]), ...this.anchor.size(eyeSize));
+				eyeSize=[1/4, 1/50];
+				eyeCenter[1]-=1/8;
+				rect(...this.anchor.pos([eyeCenter[0]-eyeSize[0]/2,eyeCenter[1]-eyeSize[1]/2]), ...this.anchor.size(eyeSize));
+				return;
+			}
+
 			case (ByteEyes.SAYAN): {
 
 				let randomColorKey=Object.keys(ColorPalet.colors)[Math.floor(this.random*Object.keys(ColorPalet.colors).length)];
@@ -352,4 +369,66 @@ class ByteCharacter {
 		}
 	}
 
+	speak()
+	{
+
+	}
+
+}
+
+class ByteSpeaking {
+	static iterator=0;
+	constructor(anchor) {
+		//self
+		this.anchor=anchor;
+		this.id="generated_D"+String(ByteSpeaking.iterator++);
+		//html
+		this.bubbleElement=document.createElement("div");
+		this.bubbleElement.className="bubble-out";
+		this.bubbleElement.id=this.id;
+		
+		this.textElement=document.createElement("p");
+		this.textElement.className="bubble-text";
+		this.textElement.textContent= "yea";
+		this.bubbleElement.appendChild(this.textElement);
+		//css
+		this.bubbleElement.style.position="absolute";
+		this.bubbleElement.style.overflow="hidden";
+		//do
+	  document.getElementById("generator").appendChild(this.bubbleElement);
+		this.resize();
+	};
+
+	resize() {
+		this.anchor.resize();
+		//size
+		this.bubbleElement.style.left=parseInt(this.anchor.topCoord[0])+"px";
+		this.bubbleElement.style.top=parseInt(this.anchor.topCoord[1])+"px";
+		this.bubbleElement.style.width=parseInt(this.anchor.sizeCoord[0])+"px";
+		this.bubbleElement.style.height=parseInt(this.anchor.sizeCoord[1])+"px";
+		
+	  {//fitTextToContainer
+			const minFontSize=.1;
+			const maxFontSize=2;
+			const step=.1;
+
+	    let fontSize = maxFontSize; // Start with a base font size
+	    // Reduce font size until it fits within the container
+			do {
+				console.log("fontSize:",fontSize);
+	      fontSize -= step; // Reduce font size
+	      this.textElement.style.fontSize = `${fontSize}vw`;
+
+	      // Prevent font size from going too small
+	      if (fontSize < minFontSize) {
+	        this.textElement.style.fontSize = `${minFontSize}vw`; // Set a minimum font size
+	        break;
+	      }
+	    }
+	    while (
+	      this.textElement.scrollHeight > this.bubbleElement.offsetHeight || // Text exceeds container height
+	      this.textElement.scrollWidth > this.bubbleElement.offsetWidth // Text exceeds container width
+	    ) 
+	  }
+	}
 }

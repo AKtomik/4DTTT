@@ -9,4 +9,31 @@ canvas {
 
 #generator {
   display: 1;
+
+  .bubble-out {
+    position: relative;
+    width: 300px; /* Fixed container width */
+    height: 200px; /* Fixed container height */
+    background-color: #e0e0e0;
+    overflow: hidden; /* Prevent text overflow */
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: 2px solid #000;
+  }
+
+  .bubble-text {
+    font-family: 'Courier New', Courier, monospace;
+
+    line-height: .8; /* Fine-tune spacing between lines */
+    text-align: center;
+
+    word-wrap: break-word;
+    white-space: pre-wrap; /* Allow multiline text */
+    
+    /*background-color: #f0f0f0;*/
+    /*border: 2px solid #cccccc;*/
+  }
 }
