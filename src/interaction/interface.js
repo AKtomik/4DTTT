@@ -1,51 +1,3 @@
-//--- class ---
-
-//class State {
-//  //when changing state, only thing remain is var infos.
-//  constructor(creationFunction= ()=>{}, transitionFunction= ()=>{})
-//  {
-//    this.creationFunction=creationFunction;
-//    this.transitionFunction=transitionFunction;
-//  }
-
-//  do()
-//  {
-//    //transition
-//    this.transitionFunction();
-//    //destroy
-//  	for (let buttonKey in buttonList)
-//  	{
-//  		let button=buttonList[buttonKey];
-//  		if (button)
-//  		{
-//  			button.kill();
-//  			buttonList[buttonKey]=null;
-//  		}
-//  	}
-//    if (game)
-//      game.kill();
-//    game=null;
-//    if (cube)
-//      cube.kill();
-//    cube=null;
-//    //creation
-//    this.creationFunction();
-//  }
-//}
-
-//class Action {
-//  //an action to run.
-//  constructor(runFunction= ()=>{})
-//  {
-//    this.runFunction=runFunction;
-//  }
-
-//  do()
-//  {
-//    this.runFunction();
-//  }
-//}
-
 
 //--- common ---
 function stateDestroy()
@@ -65,6 +17,9 @@ function stateDestroy()
   if (cube)
     cube.kill();
   cube=null;
+  if (bytee)
+    bytee.kill();
+  bytee=null;
 }
 
 let optionsMaker = (selectorParamter) => Array.from(new Array(selectorParamter.length)).map((element,i) => 
@@ -81,6 +36,7 @@ let optionsMaker = (selectorParamter) => Array.from(new Array(selectorParamter.l
 var buttonList= {};
 var game;
 var cube;
+var bytee;
 var infos= {};
 
 //--- transition ---
@@ -129,6 +85,7 @@ state.gamemode.free.start = () =>
   stateDestroy();
   
   //objects
+  bytee=new ByteCharacter(new Anchor([500, 0], [100, 100], [AnchorConstraintType.MIDDLE, AnchorConstraintType.RIGHT], AnchorRatioType.EQUALMIN));
   game = new Game();
   {//ui
     buttonList.buttonBack=new HtmlButton("button", [100,100], [document.createTextNode("back")]);
@@ -152,6 +109,7 @@ state.gamemode.free.start = () =>
     buttonList.buttonTest=new HtmlButton("button", [100,200], [document.createTextNode("test")]);
     buttonList.buttonTest.onClick(action.ui.test, false);
   }
+
 }
 
 state.gamemode.free.restart = () =>

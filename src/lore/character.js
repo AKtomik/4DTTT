@@ -72,7 +72,9 @@ class ByteCharacter {
 	kill() {
 		console.log("byte killed");
 		this.mechanic.kill();
+		this.mechanic=null;
 		this.bubbleObject.kill();
+		this.bubbleObject=null;
 	}
 
 	init() {

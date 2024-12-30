@@ -12,49 +12,78 @@ class Game {
   kill() {
     console.log("kill game");
     this.mechanic.kill();
-    this.byte.kill();
   }
 
   get playing() {
-    return this.players[this.player_i];
+    return this.players[this.turn_i];
   }
 
-  say_turn(stating)
+  playerName(playerIndex) {
+    if (playerIndex===-1)
+      return "no one";
+    return this.players[playerIndex].name;
+  }
+
+  say_turn(stating=false, playerScored=-1)
   {
+    if (!bytee) return;
+
     let byteText="..";
     let byteEmotion=byteEmotionFace.normal;
     let keepByteEmotion=false;
+
+    const playerPlayingName=this.playerName(this.turn_i);
+    const playerWiningName=this.playerName(this.winer_i);
     
     //[ logic here
     if (stating)
-    {
-      byteText="lets go!";
+    {//start the game
+      byteText=`lets go! ${playerPlayingName} start, because I want.`;
       byteEmotion=byteEmotionFace.happy;
 
     }
     else if (this.remain===0)
-    {
-      byteText="it's ended.";
-      byteEmotion=byteEmotionFace.cuty;
-      keepByteEmotion=true;
+    {//finish the game
+      if (this.winer_i===-1)
+      {//tie
+        byteText=`it's ended. but no one won.`;
+        byteEmotion=byteEmotionFace.bory;
+        keepByteEmotion=true;
+      } else {//no tie
+        byteText=`it's ended. ${playerWiningName} won!`;
+        byteEmotion=byteEmotionFace.cuty;
+        keepByteEmotion=true;
+      }
     }
     else
-    {
-      byteText="next.";
-      byteEmotion=byteEmotionFace.normal;
+    {//change turn
+      if (playerScored===-1)
+      {//no one scored
+        byteText=`${playerPlayingName}'s turn.`;
+        byteEmotion=byteEmotionFace.normal;
+      } else {//someone scored
+        if (playerScored==this.winer_i && playerScored!=this.lastWiner_i)
+        {
+          byteText=`${this.playerName(playerScored)} scored and take the lead!\n ${playerPlayingName}'s turn.`;
+          byteEmotion=byteEmotionFace.cuty;
+        } else {
+          byteText=`${this.playerName(playerScored)} scored!\n ${playerPlayingName}'s turn.`;
+          byteEmotion=byteEmotionFace.happy;
+        }
+      }
     }
     //]
 
     //save last emotion if needed
     if (this.lastKeepedByteEmotion)
     {
-      this.byte.removeEmotion(this.lastKeepedByteEmotion);
+      bytee.removeEmotion(this.lastKeepedByteEmotion);
     }
     if (keepByteEmotion)
       this.lastKeepedByteEmotion=byteEmotion;
 
-    this.byte.setSpeak(byteText);
-    this.byte.addEmotion(byteEmotion, keepByteEmotion);
+    bytee.setSpeak(byteText);
+    bytee.addEmotion(byteEmotion, keepByteEmotion);
   }
 
   player_check_at(posKey) {
@@ -67,12 +96,13 @@ class Game {
     box.check(placer);
 
 		//check won
-		this.check_won_at(posKey);
+		const scoredNow=this.check_won_at(posKey);
 		this.remain--;
 
 		//switch user
-		this.player_i=(this.player_i+1)%this.players.length;//skip
-    this.say_turn();
+    const turnNow=this.turn_i;
+		this.turn_i=(this.turn_i+1)%this.players.length;//skip
+    this.say_turn(false, scoredNow ? turnNow : -1);
     return true;
   }
 	check_won_at(posKey) {
@@ -138,6 +168,7 @@ class Game {
 
 		if (ifScoreChanged)
 		{//calculate winer
+      this.lastWiner_i=this.winer_i;
 			let bestScore=0;
 			let bestPlayer=-1;
 			for (let playerIndex=0;playerIndex<this.players.length;playerIndex++)
@@ -184,14 +215,13 @@ class Game {
 	  {
 	    this.players.push(new Player(false, playerIndex, `player ${playerIndex+1}`));
 	  }
-		this.player_i=Math.floor(Math.random()*this.players.length);
+		this.turn_i=Math.floor(Math.random()*this.players.length);
 		this.winer_i=-1;
 
 		this.state=0;
 		this.remain=this.grid.map_keys.length;
 
-    this.byte=new ByteCharacter(new Anchor([500, 0], [100, 100], [AnchorConstraintType.MIDDLE, AnchorConstraintType.RIGHT], AnchorRatioType.EQUALMIN));
-    //this.byte.addEmotion(byteEmotionFace.bory, true);
+    //bytee.addEmotion(byteEmotionFace.bory, true);
     this.say_turn(true);
 
     translation_init_nD(this.grid);
@@ -273,7 +303,7 @@ class Game {
     const here_size_backmiddle=25;
     const here_time_forward=30;
     
-    const playerForwardIndex=(game.remain>0) ? game.player_i : game.winer_i;
+    const playerForwardIndex=(game.remain>0) ? game.turn_i : game.winer_i;
     let maxWidth=0;
     for (let playerIndex=0;playerIndex<game.players.length;playerIndex++)
     {//calculate max width
@@ -344,7 +374,7 @@ class Game {
     {
       fill(ColorPalet.get("theme_text"));
       textSize(Scale.min(25));
-      text(`reste ${game.remain}`, Scale.x(50), Scale.y(450+100*game.players.length));
+      text(`remain ${game.remain}`, Scale.x(50), Scale.y(450+100*game.players.length));
     } else {
       if (game.winer_i===-1)
       {
