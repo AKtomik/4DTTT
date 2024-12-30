@@ -22,6 +22,24 @@ class ByteMouth {
 	static CUTY=9;
 }
 
+var byteEmotionFace={
+	//_default: {},
+	normal: {eyesType: ByteEyes.OPEN, mouthType: ByteMouth.SHUT},
+
+	happy: {eyesType: ByteEyes.HAPPY},
+	deady: {eyesType: ByteEyes.DEADY},
+	angry: {eyesType: ByteEyes.ANGRY},
+	cuty: {mouthType: ByteMouth.CUTY, eyesType: ByteEyes.CUTY},
+	bory: {eyesType: ByteEyes.BORY},
+
+	satisfied: {mouthType: ByteMouth.HAPPY},
+	ultraSatisfied: {mouthType: ByteMouth.LAUGTHY},
+	contraried: {mouthType: ByteMouth.SADDY},
+
+	sayan: {eyesType: ByteEyes.SAYAN, noBlink: true},
+	close: {eyesType: ByteEyes.CLOSED, noBlink: true},
+};
+
 const ByteMouthSpeak = [
 	ByteMouth.OPEN1,
 	ByteMouth.OPEN2,
@@ -31,8 +49,10 @@ const ByteMouthSpeak = [
 
 class ByteCharacter {
 	constructor(anchor) {
-		//position
+		console.log("byte borned");
+		//self
 		this.anchor=anchor;
+		this.emotions=[];
 		//bubble
 		this.bubbleObject=new ByteBubble(new Anchor([this.anchor.anchorPos[0]-50, this.anchor.anchorPos[1]+50], [200, 80], [AnchorConstraintType.LEFT, AnchorConstraintType.MIDDLE], AnchorRatioType.NONE))
 		this.setSpeak("meowwwwww (this is meowwing if you dont understand)");
@@ -50,6 +70,7 @@ class ByteCharacter {
 	}
 
 	kill() {
+		console.log("byte killed");
 		this.mechanic.kill();
 		this.bubbleObject.kill();
 	}
@@ -81,28 +102,34 @@ class ByteCharacter {
     endShape(CLOSE);
 
 		//expression
-		let eyeType=ByteEyes.OPEN;
+		let eyesType=ByteEyes.OPEN;
 		let mouthType=ByteMouth.SHUT;
+		let canBlink=true;
 		
 		//[
+		//emotions
+		for (let emotion of this.emotions)
+		{
+			console.log("unit emotion:",emotion);
+			if (emotion.face.eyesType!==undefined)
+			{
+				eyesType=emotion.face.eyesType;
+			}
+			if (emotion.face.mouthType!==undefined)
+			{
+				mouthType=emotion.face.mouthType;
+			}
+			if (emotion.face.noBlink!==undefined)
+			{
+				canBlink=!emotion.face.noBlink;
+			}
+		}
+
 		
 		//added
-		let blink=Math.floor(this.random*20)===0;
-		
-		//emotion (cant multiples)
-		let happy=false;
-		let deady=false;
-		let angry=false;
-		let cuty=false;
-		let bory=true;
+		let blinking= (canBlink && Math.floor(this.random*50)===0);
 
-		let blased=false;
-		let satisfied=false;
-		let ultraSatisfied=false;
-		let contraried=false;
-
-		let sayan=false;
-
+		//special expressions
 		if (this.speaking)
 		{
 			if (this.expression_speak_time<5)
@@ -117,36 +144,18 @@ class ByteCharacter {
 			}
 			mouthType=this.expression_speak_mouth;
 		}
-		
-		if (satisfied)
-			mouthType=ByteMouth.HAPPY;
-		if (ultraSatisfied)
-			mouthType=ByteMouth.LAUGTHY;
-		if (contraried)
-			mouthType=ByteMouth.SADDY;
-
-		if (happy)
-			eyeType=ByteEyes.HAPPY;
-		if (angry)
-			eyeType=ByteEyes.ANGRY;
-		if (blink || blased)
-			eyeType=ByteEyes.CLOSED;
-		if (deady)
-			eyeType=ByteEyes.DEADY;
-		if (bory)
-			eyeType=ByteEyes.BORY;
-		if (cuty)
+		if (blinking)
 		{
-			mouthType=ByteMouth.CUTY;
-			eyeType=ByteEyes.CUTY;
+			eyesType=ByteEyes.CLOSED;
 		}
-		if (sayan)
-			eyeType=ByteEyes.SAYAN;
+
+
+		//smt
 		//]
 		
 		//eyes
-		this.draw_eye(false, eyeType);
-		this.draw_eye(true, eyeType);
+		this.draw_eye(false, eyesType);
+		this.draw_eye(true, eyesType);
 		//mouth
 		this.draw_mouth(mouthType);
 		//speak
@@ -372,6 +381,7 @@ class ByteCharacter {
 
 	setSpeak(text)
 	{
+
 		this.speaking=true;
 		this.speak_text=text;
 		this.speak_index=0;
@@ -379,6 +389,16 @@ class ByteCharacter {
 		this.speak_speed=1/2;
 		
 		this.bubbleObject.changeText("", this.speak_text);
+	}
+
+	addEmotion(emotionFace, emotionKeepAfterSpeak)
+	{
+		this.emotions.push({face: emotionFace, keep: emotionKeepAfterSpeak});
+	}
+	
+	removeEmotion(emotionFace)
+	{
+		this.emotions=this.emotions.filter((v) => v!=emotionFace);
 	}
 
 	speakTick()
@@ -394,6 +414,7 @@ class ByteCharacter {
 		if (this.speak_index>=this.speak_text.length)
 		{
 			this.speak_index=this.speak_text.length;
+			this.emotions=this.emotions.filter((v) => v.keep);
 			this.speaking=false;
 		}
 

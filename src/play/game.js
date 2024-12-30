@@ -10,12 +10,51 @@ class Game {
   }
 
   kill() {
+    console.log("kill game");
     this.mechanic.kill();
     this.byte.kill();
   }
 
   get playing() {
     return this.players[this.player_i];
+  }
+
+  say_turn(stating)
+  {
+    let byteText="..";
+    let byteEmotion=byteEmotionFace.normal;
+    let keepByteEmotion=false;
+    
+    //[ logic here
+    if (stating)
+    {
+      byteText="lets go!";
+      byteEmotion=byteEmotionFace.happy;
+
+    }
+    else if (this.remain===0)
+    {
+      byteText="it's ended.";
+      byteEmotion=byteEmotionFace.cuty;
+      keepByteEmotion=true;
+    }
+    else
+    {
+      byteText="next.";
+      byteEmotion=byteEmotionFace.normal;
+    }
+    //]
+
+    //save last emotion if needed
+    if (this.lastKeepedByteEmotion)
+    {
+      this.byte.removeEmotion(this.lastKeepedByteEmotion);
+    }
+    if (keepByteEmotion)
+      this.lastKeepedByteEmotion=byteEmotion;
+
+    this.byte.setSpeak(byteText);
+    this.byte.addEmotion(byteEmotion, keepByteEmotion);
   }
 
   player_check_at(posKey) {
@@ -33,6 +72,7 @@ class Game {
 
 		//switch user
 		this.player_i=(this.player_i+1)%this.players.length;//skip
+    this.say_turn();
     return true;
   }
 	check_won_at(posKey) {
@@ -151,7 +191,8 @@ class Game {
 		this.remain=this.grid.map_keys.length;
 
     this.byte=new ByteCharacter(new Anchor([500, 0], [100, 100], [AnchorConstraintType.MIDDLE, AnchorConstraintType.RIGHT], AnchorRatioType.EQUALMIN));
-
+    //this.byte.addEmotion(byteEmotionFace.bory, true);
+    this.say_turn(true);
 
     translation_init_nD(this.grid);
     perspective_init_nD(this.grid);
