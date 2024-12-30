@@ -12,8 +12,8 @@ class AnchorRatioType {
 
 class Anchor {
 	//make
-	constructor(centerPos, sizePos, XandYTypes, ratioType=AnchorRatioType.NONE) {
-		this.centerPos=centerPos;
+	constructor(anchorPos, sizePos, XandYTypes, ratioType=AnchorRatioType.NONE) {
+		this.anchorPos=anchorPos;
 		this.sizePos=sizePos;
 		
 		this.topCoord=[null, null];
@@ -35,7 +35,7 @@ class Anchor {
 			case AnchorRatioType.EQUALMAX: this.sizeCoord=[Scale.max(this.sizePos[0]),Scale.max(this.sizePos[1])]; break;
 		}
 		//top
-		let topCoord=Scale.xy(this.centerPos.slice());
+		let topCoord=Scale.xy(this.anchorPos.slice());
 		for (let i of [0,1])
 		{
 			switch (this.constraints[i])

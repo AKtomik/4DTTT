@@ -38,7 +38,7 @@ function setup() {
   frameRate(Settings.FPS);
   describe('ttt');
 
-  interfaceMenu();
+  state.root();
 
   //--
 

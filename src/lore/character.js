@@ -34,16 +34,13 @@ class ByteCharacter {
 		//position
 		this.anchor=anchor;
 		//bubble
-		this.bubbleObject=new ByteBubble(new Anchor([this.anchor.centerPos[0]-50, this.anchor.centerPos[1]+50], [200, 80], [AnchorConstraintType.LEFT, AnchorConstraintType.MIDDLE], AnchorRatioType.NONE))
+		this.bubbleObject=new ByteBubble(new Anchor([this.anchor.anchorPos[0]-50, this.anchor.anchorPos[1]+50], [200, 80], [AnchorConstraintType.LEFT, AnchorConstraintType.MIDDLE], AnchorRatioType.NONE))
 		this.setSpeak("meowwwwww (this is meowwing if you dont understand)");
 		//do
 		this.resize();
 		//mechanic
     this.mechanic=new Mechanic(this, this.init, this.display);
     this.mechanic.addAction(SketchEvents.RESIZE, this.resize);
-    //this.mechanic.addAction(SketchEvents.PRESS, this.action_press);
-    //this.mechanic.addAction(SketchEvents.DRAG, this.action_drag);
-    //this.mechanic.addAction(SketchEvents.WHEEL, this.action_wheel);
 	};
 
 	//mechaic
@@ -400,7 +397,6 @@ class ByteCharacter {
 			this.speaking=false;
 		}
 
-		console.log("this.speak_index:",this.speak_index,"/",this.speak_text.length);
 		this.bubbleObject.changeText(this.speak_text.slice(0, this.speak_index), this.speak_text.slice(this.speak_index, this.speak_text.length));
 	}
 
@@ -451,7 +447,6 @@ class ByteBubble {
 	    let fontSize = maxFontSize; // Start with a base font size
 	    // Reduce font size until it fits within the container
 			do {
-				console.log("fontSize:",fontSize);
 	      fontSize -= step; // Reduce font size
 	      this.speak_textElement.style.fontSize = `${fontSize}vw`;
 

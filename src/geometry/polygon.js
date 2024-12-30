@@ -108,10 +108,10 @@ class ConcretePolygon {
   }
 }
 
-
 class AbstractPolygon {
-
-	//shape
+  //is in N-dim 
+  //but dont have collision/shape
+  
   constructor() {
     this.points = [];
   }

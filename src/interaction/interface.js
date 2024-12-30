@@ -1,11 +1,71 @@
-function interfaceSwitchStyle(element)
-{
-  //document.getElementById("generator").focus();
-  //buttonList.buttonTest.focus();
-	ColorPalet.switch(element.value);
+//--- class ---
+
+//class State {
+//  //when changing state, only thing remain is var infos.
+//  constructor(creationFunction= ()=>{}, transitionFunction= ()=>{})
+//  {
+//    this.creationFunction=creationFunction;
+//    this.transitionFunction=transitionFunction;
+//  }
+
+//  do()
+//  {
+//    //transition
+//    this.transitionFunction();
+//    //destroy
+//  	for (let buttonKey in buttonList)
+//  	{
+//  		let button=buttonList[buttonKey];
+//  		if (button)
+//  		{
+//  			button.kill();
+//  			buttonList[buttonKey]=null;
+//  		}
+//  	}
+//    if (game)
+//      game.kill();
+//    game=null;
+//    if (cube)
+//      cube.kill();
+//    cube=null;
+//    //creation
+//    this.creationFunction();
+//  }
+//}
+
+//class Action {
+//  //an action to run.
+//  constructor(runFunction= ()=>{})
+//  {
+//    this.runFunction=runFunction;
+//  }
+
+//  do()
+//  {
+//    this.runFunction();
+//  }
+//}
+
+
+//--- common ---
+function stateDestroy()
+{//to call after transition and before creation
+	for (let buttonKey in buttonList)
+	{
+		let button=buttonList[buttonKey];
+		if (button)
+		{
+			button.kill();
+			buttonList[buttonKey]=null;
+		}
+	}
+  if (game)
+    game.kill();
+  game=null;
+  if (cube)
+    cube.kill();
+  cube=null;
 }
-
-
 
 let optionsMaker = (selectorParamter) => Array.from(new Array(selectorParamter.length)).map((element,i) => 
   {
@@ -17,57 +77,65 @@ let optionsMaker = (selectorParamter) => Array.from(new Array(selectorParamter.l
     return element;
   }
 );
-
-var buttonList= {
-//selectDim:null,
-//selectWidth:null,
-//selectStyle:null,
-//doneStart:null,
-//buttonRestart:null,
-//buttonBack:null,
-}
-
+//keeped values
+var buttonList= {};
 var game;
 var cube;
+var infos= {};
 
-function interfaceStart()
+//--- transition ---
+
+function transition_buggy()
+{
+  for (let i=0;i<100;i++)
+    new HtmlBug(BugType.RECT_RANDOM_COLOR, undefined, undefined, undefined, [500, 500], 0, 10);
+  background(0);
+  //console.time("redraw");
+  //console.log("before redraw",frameCount);
+  noLoop();
+  redraw(1);//!to see loading state
+  loop();
+  //console.timeEnd("redraw");
+  //console.log("afgtrr redraw",frameCount);
+}
+
+
+//--- values ---
+
+var state= {gamemode:{free:{}}, menu:{first: {}}};
+var action= {settings:{}, ui: {}, menu:{}};
+//var effects= {};
+
+state.root=() => 
+{//first action here
+  state.menu.first.open(true);
+};
+
+//--settings--
+action.settings.switchStyle= (element) =>
+{
+  //document.getElementById("generator").focus();
+  //buttonList.buttonTest.focus();
+	ColorPalet.switch(element.value);
+}
+
+//--gamemode--
+state.gamemode.free.start = () =>
 {
   //transition
-  {
-    for (let i=0;i<100;i++)
-      new HtmlBug(BugType.RECT_RANDOM_COLOR, undefined, undefined, undefined, [500, 500], 0, 10);
-    background(0);
-    //console.time("redraw");
-    //console.log("before redraw",frameCount);
-    redraw(1);//!to see loading state
-    //console.timeEnd("redraw");
-    //console.log("afgtrr redraw",frameCount);
-  }
+  transition_buggy();
 
 	//destroy
-	for (let buttonKey in buttonList)
-	{
-		let button=buttonList[buttonKey];
-		if (button)
-		{
-			button.kill();
-			buttonList[buttonKey]=null;
-		}
-	}
-  if (cube)
-    cube.kill();
-  cube=null;
-
+  stateDestroy();
+  
   //objects
   game = new Game();
-
-  
   {//ui
     buttonList.buttonBack=new HtmlButton("button", [100,100], [document.createTextNode("back")]);
-    buttonList.buttonBack.onClick(interfaceMenu, false);
+    buttonList.buttonBack.onClick(state.menu.first.open, false);
 		
     buttonList.buttonRestart=new HtmlButton("button", [150,100], [document.createTextNode("restart")]);
-    buttonList.buttonRestart.onClick(interfaceRestart, false);
+    buttonList.buttonRestart.onClick(state.gamemode.free.restart, false);
 
     const styleSelector = [//!parameter
         {value:"default", text:"default"},
@@ -79,14 +147,14 @@ function interfaceStart()
         {value:"outline", text:"outline"},
     ];
     buttonList.selectStyle=new HtmlButton("select", [100,150], optionsMaker(styleSelector));
-    buttonList.selectStyle.onChange(interfaceSwitchStyle, true);
+    buttonList.selectStyle.onChange(action.settings.switchStyle, true);
     
     buttonList.buttonTest=new HtmlButton("button", [100,200], [document.createTextNode("test")]);
-    buttonList.buttonTest.onClick(interfaceTest, false);
+    buttonList.buttonTest.onClick(action.ui.test, false);
   }
 }
 
-function interfaceRestart()
+state.gamemode.free.restart = () =>
 {
   //transition
   {
@@ -98,29 +166,16 @@ function interfaceRestart()
 	Mechanic.event(SketchEvents.INIT);
 }
 
-function interfaceMenu()
+state.menu.first.open = (isRoot) =>
 {
   //transition
-  if (frameCount>1) {
-    for (let i=0;i<100;i++)
-      new HtmlBug(BugType.RECT_RANDOM_COLOR, undefined, undefined, undefined, [500, 500], 0, 10);
-    redraw();//!to see loading state
+  if (!isRoot)
+  {
+    transition_buggy();
   }
 
 	//destroy
-	if (game)
-	{
-		game.kill();
-		game=null;
-	}
-	for (let buttonKey in buttonList)
-	{
-		let button=buttonList[buttonKey];
-		if (button) {
-			button.kill();
-			buttonList[buttonKey]=null;
-		}
-	}
+  stateDestroy();
 
   {//ui
     const dimSelector = [//!parameter
@@ -131,7 +186,7 @@ function interfaceMenu()
         {value:"6", text:"6D"},
     ];
     buttonList.selectDim=new HtmlButton("select", [500,450], optionsMaker(dimSelector));
-    buttonList.selectDim.onChange(interfaceMenuSelect);
+    buttonList.selectDim.onChange(action.menu.select);
     
     const widthSelector = [//!parameter
         {value:"1", text:"_x_"},
@@ -147,7 +202,7 @@ function interfaceMenu()
         {value:"99", text:"__x__"},
     ];
     buttonList.selectWidth=new HtmlButton("select", [500,500], optionsMaker(widthSelector));
-    buttonList.selectWidth.onChange(interfaceMenuSelect);
+    buttonList.selectWidth.onChange(action.menu.select);
 
     const alignSelector = [//!parameter
         {value:"2", text:"⟺ 2"},
@@ -157,16 +212,16 @@ function interfaceMenu()
         {value:"6", text:"⟺ 6"},
     ];
     buttonList.selectAlign=new HtmlButton("select", [500,550], optionsMaker(alignSelector));
-    buttonList.selectAlign.onChange(interfaceMenuSelect);
+    buttonList.selectAlign.onChange(action.menu.select);
 
     buttonList.doneStart=new HtmlButton("button", [500,700], [document.createTextNode("play")]);
-    buttonList.doneStart.onClick(interfaceStart, false);
+    buttonList.doneStart.onClick(state.gamemode.free.start, false);
 
-    interfaceMenuSelect(true);
+    action.menu.select(true);
   }
 }
 
-function interfaceTest()
+action.ui.test = () =>
 {
   new HtmlBug(BugType.RECT_RANDOM_BLEND, [500,0],[500,1000],[1000,2],[1000,2],0,10);
   const dist = 20;
@@ -175,7 +230,7 @@ function interfaceTest()
     new HtmlBug(BugType.RECT_RANDOM_COLOR, [100-dist,200-dist],[100+dist,200+dist],[0,0],[100,100],0,10);
 }
 
-function interfaceMenuSelect(ifSettingsFirst)
+action.menu.select = (ifSettingsFirst) =>
 {
   //settings
   const selectDimHtml=document.getElementById(buttonList.selectDim.id);
