@@ -19,7 +19,7 @@ class Settings {
 	static PERSPECTIVE_FOV = Math.PI/8;
 	static PERSPECTIVE_DISTANCE = 3;
 	static PERSPECTIVE_GAP = 1;
-	static PERSPECTIVE_SHOW_LINE = true;
+	static PERSPECTIVE_SHOW_WINRAY = true;
 	
 	static VELOCITY_SCALE_ANGLE = Math.PI/32;
 	static VELOCITY_SCALE_STRAIGTH = 1;

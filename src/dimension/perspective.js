@@ -243,7 +243,7 @@ function perspective_draw_nD(grid, square_top, square_size)
     }
   }
 
-  if (Settings.PERSPECTIVE_SHOW_LINE)
+  if (Settings.PERSPECTIVE_SHOW_WINRAY)
   {
     for (checkLine of grid.checklist)
     {

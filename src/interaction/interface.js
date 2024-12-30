@@ -75,6 +75,13 @@ action.settings.switchStyle= (element) =>
 	ColorPalet.switch(element.value);
 }
 
+action.settings.toggleRay= () =>
+{
+	Settings.PERSPECTIVE_SHOW_WINRAY=!Settings.PERSPECTIVE_SHOW_WINRAY;
+}
+
+
+
 //--gamemode--
 state.gamemode.free.start = () =>
 {
@@ -105,6 +112,9 @@ state.gamemode.free.start = () =>
     ];
     buttonList.selectStyle=new HtmlButton("select", [100,150], optionsMaker(styleSelector));
     buttonList.selectStyle.onChange(action.settings.switchStyle, true);
+
+    buttonList.buttonRay=new HtmlButton("button", [150, 150], [document.createTextNode("ray")]);
+    buttonList.buttonRay.onClick(action.settings.toggleRay, false);
     
     buttonList.buttonTest=new HtmlButton("button", [100,200], [document.createTextNode("test")]);
     buttonList.buttonTest.onClick(action.ui.test, false);
