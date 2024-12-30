@@ -50,7 +50,7 @@ class Game {
         byteEmotion=byteEmotionFace.bory;
         keepByteEmotion=true;
       } else {//no tie
-        byteText=`it's ended. ${playerWiningName} won!`;
+        byteText=`it's ended. ${playerWiningName} won! GG`;
         byteEmotion=byteEmotionFace.cuty;
         keepByteEmotion=true;
       }
