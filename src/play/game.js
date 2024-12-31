@@ -290,7 +290,7 @@ class Game {
       ${frameLoged[60]} fps - 60s
       ${Object.keys(frameAgo).length} expensive
 
-      ${speeds}`, Scale.x(980), Scale.y(20));
+      ${speeds}`, Scale.x(980), Scale.y((settingsButtonPos) ? settingsButtonPos[1]+100 : 20));
     }
     
     //players

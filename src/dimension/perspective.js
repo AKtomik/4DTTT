@@ -217,6 +217,22 @@ function perspective_draw_nD(grid, square_top, square_size)
           square_top[1]+(flatPos[1]*size_scale+.5)*square_size[1]
           ];
 			};
+  const draw_ray=(grid) => {
+        for (checkLine of grid.checklist)
+        {
+          let lastPoint=checkLine[0];
+          stroke(lastPoint.color);
+          strokeWeight(4);
+          lastPoint=projectToFlatPos(lastPoint.center);
+          for (let pointLineIndex=1;pointLineIndex<checkLine.length;pointLineIndex++)
+          {
+            let actualPoint=projectToFlatPos(checkLine[pointLineIndex].center);
+            line(...lastPoint, ...actualPoint);
+            lastPoint=actualPoint;
+          }
+        }
+      }
+
   
   //order
   for (let posKey of grid.map_keys)
@@ -234,6 +250,11 @@ function perspective_draw_nD(grid, square_top, square_size)
   }
   grid.sort_keys();
 
+  if (Settings.PERSPECTIVE_MODE_WINRAY==2)
+  {
+    draw_ray(grid);
+  }
+
   for (let posKey of grid.map_keys)
   {//draw boxes
     const h_box = grid.at(posKey);
@@ -250,7 +271,7 @@ function perspective_draw_nD(grid, square_top, square_size)
     //hitbox
     h_box.shape.set_points(projectionsOut);
     //draw shape
-    stroke(255);
+    stroke(ColorPalet.get("theme_background"));
     fill(h_box.color);
     //fill(ColorPalet.get("box_empty_in"));
     strokeWeight(1);
@@ -258,6 +279,7 @@ function perspective_draw_nD(grid, square_top, square_size)
 
     //draw outline
     //if (false)
+    if (Settings.PERSPECTIVE_SHOW_OUTLINE && !grid.exposition)
     {
       //stroke(h_box.color);
       stroke(ColorPalet.get("box_empty_out"));
@@ -270,26 +292,16 @@ function perspective_draw_nD(grid, square_top, square_size)
     }
   }
 
-  if (Settings.PERSPECTIVE_SHOW_WINRAY)
+  if (Settings.PERSPECTIVE_MODE_WINRAY==1)
   {
-    for (checkLine of grid.checklist)
-    {
-      let lastPoint=checkLine[0];
-      stroke(lastPoint.color);
-      strokeWeight(4);
-      lastPoint=projectToFlatPos(lastPoint.center);
-      for (let pointLineIndex=1;pointLineIndex<checkLine.length;pointLineIndex++)
-      {
-        let actualPoint=projectToFlatPos(checkLine[pointLineIndex].center);
-        line(...lastPoint, ...actualPoint);
-        lastPoint=actualPoint;
-      }
-    }
+    draw_ray(grid);
   }
+
   //noFill();
   //stroke(ColorPalet.get("box_empty_out"));
   //rect(...square_top, ...square_size);
 }
+
 
 function projection3Dto2D(pos3D, fovDist)
 {

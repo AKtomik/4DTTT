@@ -7,6 +7,10 @@ canvas {
   display: block;
 }
 
+body {
+  overflow: hidden; /* Prevent buttons overflow */
+}
+
 #generator {
   display: 1;
 
@@ -39,4 +43,5 @@ canvas {
     /*background-color: #f0f0f0;*/
     /*border: 2px solid #cccccc;*/
   }
+
 }

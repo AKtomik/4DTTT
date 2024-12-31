@@ -40,6 +40,11 @@ class HtmlButton {
 			this.element.onchange= ()=>code();
 		}
 	};
+
+	setClass(className)
+	{
+		this.element.className=className;
+	}
 	
 	//call
 	resize() {

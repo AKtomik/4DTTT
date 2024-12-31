@@ -21,7 +21,10 @@ class Settings {
 	static PERSPECTIVE_FOV = Math.PI/8;
 	static PERSPECTIVE_DISTANCE = 3;
 	static PERSPECTIVE_GAP = 1;
-	static PERSPECTIVE_SHOW_WINRAY = true;
+	
+	static PERSPECTIVE_MODE_WINRAY = true;
+	static PERSPECTIVE_SHOW_OUTLINE = true;//by tweek
+	//static PERSPECTIVE_SHOW_ = true;//by tweek
 	
 	static VELOCITY_SCALE_ANGLE = Math.PI/32;
 	static VELOCITY_SCALE_STRAIGTH = .1;

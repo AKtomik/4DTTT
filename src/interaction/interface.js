@@ -68,21 +68,30 @@ state.root=() =>
 };
 
 //--settings--
-action.settings.switchStyle= (element) =>
+var showSettingsColumn=false;//but toggled just after
+action.settings.toggleDisplay= (element) =>
 {
-  //document.getElementById("generator").focus();
-  //buttonList.buttonTest.focus();
-	ColorPalet.switch(element.value);
+  showSettingsColumn=!showSettingsColumn;
+  document.getElementsByClassName("gameSettingsColumn").forEach(element => {console.log(element);element.style.display=(showSettingsColumn) ? 'block' : 'none'});
 }
 
-action.settings.toggleRay= () =>
+action.settings.switchStyle= () =>
 {
-	Settings.PERSPECTIVE_SHOW_WINRAY=!Settings.PERSPECTIVE_SHOW_WINRAY;
+  const selectColorHtml=document.getElementById(buttonList.selectStyleColor.id);
+  const selectTweekHtml=document.getElementById(buttonList.selectStyleTweek.id);
+  ColorPalet.switch(selectColorHtml.value);
+	ColorPalet.tweek(selectTweekHtml.value);
+}
+
+action.settings.changeRay= (element) =>
+{
+	Settings.PERSPECTIVE_MODE_WINRAY=parseInt(element.value);
 }
 
 
 
 //--gamemode--
+var settingsButtonPos=[];//!
 state.gamemode.free.start = () =>
 {
   //transition
@@ -99,50 +108,79 @@ state.gamemode.free.start = () =>
     buttonList.buttonBack=new HtmlButton("button", [100,100], [document.createTextNode("back")]);
     buttonList.buttonBack.onClick(state.menu.first.open, false);
 		
-    buttonList.buttonRestart=new HtmlButton("button", [150,100], [document.createTextNode("restart")]);
+    buttonList.buttonRestart=new HtmlButton("button", [175,100], [document.createTextNode("restart")]);
     buttonList.buttonRestart.onClick(state.gamemode.free.restart, false);
 
-    const styleSelector = [//!parameter
+    const styleColorSelector = [//!parameter
         {value:"default", text:"default"},
         {value:"sky", text:"sky"},
         {value:"brigth", text:"brigth", default: true},
         {value:"purple", text:"pinky pink"},
         {value:"space", text:"space"},
         {value:"nigth", text:"nigth"},
-        {value:"outline", text:"outline"},
     ];
-    buttonList.selectStyle=new HtmlButton("select", [100,150], optionsMaker(styleSelector));
-    buttonList.selectStyle.onChange(action.settings.switchStyle, true);
-
-    buttonList.buttonRay=new HtmlButton("button", [150, 150], [document.createTextNode("ray")]);
-    buttonList.buttonRay.onClick(action.settings.toggleRay, false);
+    
+    const styleTweekSelector = [//!parameter
+        {value:"solid", text:"solid"},
+        {value:"transparent", text:"transparent"},
+        {value:"outline", text:"outline"},
+        {value:"smooth", text:"smooth"},
+    ];
+    
+    const raySelector = [//!parameter
+        {value:"0", text:"ray off"},
+        {value:"1", text:"rays front", default: true},
+        {value:"2", text:"rays back"},
+    ];
     
     buttonList.buttonTest=new HtmlButton("button", [100,200], [document.createTextNode("test")]);
     buttonList.buttonTest.onClick(action.ui.test, false);
+
+    settingsButtonPos=[925, 25];
+    buttonList.buttonOpenSettings=new HtmlButton("button", settingsButtonPos.slice(), [document.createTextNode("SETTINGS")]);
+    buttonList.buttonOpenSettings.onClick(action.settings.toggleDisplay, false);
+    
+
+    settingsButtonPos[1]+=75;
+    buttonList.buttonRay=new HtmlButton("select", settingsButtonPos.slice(), optionsMaker(raySelector));
+    buttonList.buttonRay.setClass("gameSettingsColumn");
+    buttonList.buttonRay.onChange(action.settings.changeRay, true);
+
+    settingsButtonPos[1]+=50;
+    buttonList.selectStyleColor=new HtmlButton("select", [settingsButtonPos[0]-75,settingsButtonPos[1]], optionsMaker(styleColorSelector));
+    buttonList.selectStyleColor.setClass("gameSettingsColumn");
+    buttonList.selectStyleColor.onChange(action.settings.switchStyle, false);
+
+    buttonList.selectStyleTweek=new HtmlButton("select", settingsButtonPos.slice(), optionsMaker(styleTweekSelector));
+    buttonList.selectStyleTweek.setClass("gameSettingsColumn");
+    buttonList.selectStyleTweek.onChange(action.settings.switchStyle, false);
+
+    action.settings.switchStyle();//! init style
+    action.settings.toggleDisplay();//! init display
     
 
     if (Settings.RULE_BOX_D>=3)
     {
       buttonList.moveFront=new HtmlButton("button", [450, 900], [document.createTextNode("-")]);
       buttonList.moveFront.onClick(() => action.ui.move("z<->",false));
-      buttonList.moveFront=new HtmlButton("button", [450, 950], [document.createTextNode("+")]);
-      buttonList.moveFront.onClick(() => action.ui.move("z<->",true));
+      buttonList.moveBack=new HtmlButton("button", [450, 950], [document.createTextNode("+")]);
+      buttonList.moveBack.onClick(() => action.ui.move("z<->",true));
     }
     
     if (Settings.RULE_BOX_D>=3)
     {
-      buttonList.moveFront=new HtmlButton("button", [500, 900], [document.createTextNode("x")]);
-      buttonList.moveFront.onClick(() => action.ui.move("x/",false));
-      buttonList.moveFront=new HtmlButton("button", [500, 950], [document.createTextNode("y")]);
-      buttonList.moveFront.onClick(() => action.ui.move("y/",false));
+      buttonList.moveAroundX=new HtmlButton("button", [500, 900], [document.createTextNode("x")]);
+      buttonList.moveAroundX.onClick(() => action.ui.move("x/",false));
+      buttonList.moveAroundY=new HtmlButton("button", [500, 950], [document.createTextNode("y")]);
+      buttonList.moveAroundY.onClick(() => action.ui.move("y/",false));
     }
     
     if (Settings.RULE_BOX_D>=4)
     {
-      buttonList.moveFront=new HtmlButton("button", [600, 900], [document.createTextNode("ana")]);
-      buttonList.moveFront.onClick(() => action.ui.move("wz/",false));
-      buttonList.moveFront=new HtmlButton("button", [600, 950], [document.createTextNode("kata")]);
-      buttonList.moveFront.onClick(() => action.ui.move("wz/",true));
+      buttonList.moveAna=new HtmlButton("button", [600, 900], [document.createTextNode("ana")]);
+      buttonList.moveAna.onClick(() => action.ui.move("wz/",false));
+      buttonList.moveKata=new HtmlButton("button", [600, 950], [document.createTextNode("kata")]);
+      buttonList.moveKata.onClick(() => action.ui.move("wz/",true));
     }
   }
 
