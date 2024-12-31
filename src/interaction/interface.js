@@ -93,7 +93,7 @@ state.gamemode.free.start = () =>
   
   //objects
   game = new Game();
-  bytee=new ByteCharacter(new Anchor([500, 0], [100, 100], [AnchorConstraintType.MIDDLE, AnchorConstraintType.RIGHT], AnchorRatioType.EQUALMIN));
+  bytee=new ByteCharacter(new Anchor([500, 10], [100, 100], [AnchorConstraintType.MIDDLE, AnchorConstraintType.RIGHT], AnchorRatioType.EQUALMIN));
   game.linkChar(bytee);
   {//ui
     buttonList.buttonBack=new HtmlButton("button", [100,100], [document.createTextNode("back")]);
@@ -153,6 +153,10 @@ state.menu.first.open = (isRoot) =>
         {value:"4", text:"4D"},
         {value:"5", text:"5D"},
         {value:"6", text:"6D"},
+        //{value:"7", text:"7D"},
+        //{value:"8", text:"8D"},
+        //{value:"9", text:"9D"},
+        //{value:"10", text:"10D"},
     ];
     buttonList.selectDim=new HtmlButton("select", [500,450], optionsMaker(dimSelector));
     buttonList.selectDim.onChange(action.menu.select);

@@ -447,7 +447,7 @@ class JustCube {
 	
 	init()
 	{
-		this.grid=new Grid(Settings.RULE_BOX_WIDTH, Settings.RULE_BOX_D);
+		this.grid=new Grid(Settings.RULE_BOX_WIDTH, Settings.RULE_BOX_D, true);
     translation_init_nD(this.grid);
     perspective_init_nD(this.grid);
 	}

@@ -14,7 +14,7 @@ class Settings {
 	static RULE_BOX_ROW_CHAIN=false;
 
 	static POS_BOX_FULL = 1000;
-	static POS_BOX_MARGIN = 250;
+	static POS_BOX_MARGIN = 150;
 	
 	static BYTE_SPEAK_SPEED_DEFAULT=9;
 
@@ -25,12 +25,12 @@ class Settings {
 	
 	static VELOCITY_SCALE_ANGLE = Math.PI/32;
 	static VELOCITY_SCALE_STRAIGTH = .1;
-	static VELOCITY_CENTER = 0;
+	static VELOCITY_SCALE_EXPO = .15;
 
-	static VELOCITY_ADD_PUSH = 1;
-	static VELOCITY_ADD_REMAIN = .2;//affected by delta
-	static VELOCITY_ADD_DRAG = 5;
-	static VELOCITY_ADD_WHEEL = .002;//affected by wheel
-	static VELOCITY_FRICTION_Q = .7;//affected by delta
-	static VELOCITY_FRICTION_R = .2;//affected by delta
+	static VELOCITY_ADD_PUSH = 10;
+	static VELOCITY_ADD_REMAIN = 4;//affected by delta
+	static VELOCITY_ADD_DRAG = 50;
+	static VELOCITY_ADD_WHEEL = .02;//affected by wheel
+	static VELOCITY_FRICTION_Q = .5;//affected by delta
+	static VELOCITY_FRICTION_R = .3;//affected by delta
 };

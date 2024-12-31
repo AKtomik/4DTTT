@@ -77,7 +77,7 @@ function draw() {
   {//texts
     //title
     fill(ColorPalet.get('theme_text'));
-    textSize(Scale.min(50));
+    textSize(Scale.max(15));
     textAlign(LEFT,TOP);
     strokeWeight(0);
     textStyle(NORMAL);

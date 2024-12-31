@@ -83,7 +83,8 @@ const matrix_move = {
 		keycode: {
 			positive: 90,
 			negative: 83
-		}
+		},
+		exposition: true
 	},
 	"y/": {
 		lore: "roll Y",
@@ -91,7 +92,8 @@ const matrix_move = {
 		keycode: {
 			positive: 68,
 			negative: 81
-		}
+		},
+		exposition: true
 	},
 	"z/": {
 		lore: "roll Z",
@@ -107,7 +109,8 @@ const matrix_move = {
 		translation: new MatrixTranslation(4, new Matrix(5,5).build_identity(), true, false, (matrix, power) => matrix.set_at(0,0,Math.cos(matrix_angle*power)).set_at(0,3,Math.sin(matrix_angle*power)).set_at(3,0,-Math.sin(matrix_angle*power)).set_at(3,3,Math.cos(matrix_angle*power))),
 		keycode: {
 			positive: 86
-		}
+		},
+		exposition: true
 	},
 	"wy/": {
 		lore: "roll Wy",
@@ -222,7 +225,7 @@ function translation_add_strength(velocityElement, reasons, times=1, resetOppose
 
 function translation_extract_speed(velocityElement, down)
 {
-	if (velocityElement.velocity===0) return;
+	if (velocityElement.velocity===0) return 0;
 	//decelerate
 	if (!down)
 	{
@@ -234,7 +237,7 @@ function translation_extract_speed(velocityElement, down)
 		}
 	}
 	//translate
-	return velocityElement.velocity;
+	return velocityElement.velocity*deltaSpeed;
 }
 
 
@@ -246,7 +249,7 @@ function translation_init_nD(grid)
 		if (!(matrix_move[moveKey].translation.dim>Settings.RULE_BOX_D))
 		{
 			move_aviable[moveKey]=true;
-			grid.velocity[moveKey]={velocity:0};
+			grid.velocity[moveKey]={velocity:0, center: (grid.exposition && matrix_move[moveKey].exposition) ? Settings.VELOCITY_SCALE_EXPO : 0};
 			if (matrix_move[moveKey].keycode.positive)
 				keycode_to_move[matrix_move[moveKey].keycode.positive]={translationKey: moveKey, oppose: false};
 			if (matrix_move[moveKey].keycode.negative)
@@ -274,7 +277,7 @@ async function translation_draw_nD(grid)
 			translation_add_strength(velocityElement, Settings.VELOCITY_ADD_REMAIN, -deltaSpeed);
 		}
 
-		const power=translation_extract_speed(velocityElement, down_negative || down_postivie);
+		const power=translation_extract_speed(velocityElement, down_negative || down_postivie)+velocityElement.center;
 
 		//translation
 		if (power)

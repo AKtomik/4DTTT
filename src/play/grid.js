@@ -4,8 +4,9 @@
 class Grid {
 
   //build
-  constructor(width, deepth)
+  constructor(width, deepth, exposition=false)
   {
+		this.exposition=exposition;
 		//map
     this.map_deepth = deepth;
     this.map_width = width;

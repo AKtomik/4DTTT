@@ -179,15 +179,42 @@ function perspective_init_nD(grid)
   );
 }
 
+const sizeScaleByDim=[
+  
+  //for distance=3 fov=Math.PI/8
+  1,//OD
+  1,//1D
+  1/2,//2D
+  9/10,//3D
+  7/10,//4D
+  5/10,//5D
+  295/1000,//6D
+  85/1000,//7D
+
+  //for distance=3 fov=Math.PI/16
+  //1,//OD
+  //1,//1D
+  //5/10,//2D
+  //7/10,//3D
+  //6/10,//4D
+  //5/10,//5D
+  //4/10,//6D
+  //3/10,//7D
+  //2/10,//8D
+  //101/1000,//9D
+  //27/10000,//10D
+]
+
 function perspective_draw_nD(grid, square_top, square_size)
 {
   //projection
 	const fovDist = 1/Math.tan(Settings.PERSPECTIVE_FOV);
+  const size_scale=sizeScaleByDim[Settings.RULE_BOX_D] ? sizeScaleByDim[Settings.RULE_BOX_D] : 1;
   const projectToFlatPos=pos => {
 				let flatPos=projectionNDto2D(pos,fovDist);
 				return [
-          square_top[0]+(flatPos[0]+.5)*square_size[0],
-          square_top[1]+(flatPos[1]+.5)*square_size[1]
+          square_top[0]+(flatPos[0]*size_scale+.5)*square_size[0],
+          square_top[1]+(flatPos[1]*size_scale+.5)*square_size[1]
           ];
 			};
   
@@ -259,6 +286,9 @@ function perspective_draw_nD(grid, square_top, square_size)
       }
     }
   }
+  //noFill();
+  //stroke(ColorPalet.get("box_empty_out"));
+  //rect(...square_top, ...square_size);
 }
 
 function projection3Dto2D(pos3D, fovDist)
