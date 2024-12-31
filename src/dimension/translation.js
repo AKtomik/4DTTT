@@ -101,7 +101,8 @@ const matrix_move = {
 		keycode: {
 			positive: 65,
 			negative: 69
-		}
+		},
+		exposition: true
 	},
 	//rotation/4D
 	"wx/": {
@@ -165,6 +166,15 @@ function translation_key_nD(keyEvent, grid)
 	if (!translationKey || !(move_aviable[translationKey]) || keyEvent.repeat)
 		return;
 	const sign=(keycode_to_move[keyEvent.keyCode].oppose) ? -1 : 1;
+	translation_add_strength(grid.velocity[translationKey], Settings.VELOCITY_ADD_PUSH, sign);
+}
+
+
+function translation_button_nD(translationKey, oppose, grid)
+{
+	if (!translationKey || !(move_aviable[translationKey]))
+		return;
+	const sign=(oppose) ? -1 : 1;
 	translation_add_strength(grid.velocity[translationKey], Settings.VELOCITY_ADD_PUSH, sign);
 }
 

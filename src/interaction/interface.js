@@ -119,6 +119,31 @@ state.gamemode.free.start = () =>
     
     buttonList.buttonTest=new HtmlButton("button", [100,200], [document.createTextNode("test")]);
     buttonList.buttonTest.onClick(action.ui.test, false);
+    
+
+    if (Settings.RULE_BOX_D>=3)
+    {
+      buttonList.moveFront=new HtmlButton("button", [450, 900], [document.createTextNode("-")]);
+      buttonList.moveFront.onClick(() => action.ui.move("z<->",false));
+      buttonList.moveFront=new HtmlButton("button", [450, 950], [document.createTextNode("+")]);
+      buttonList.moveFront.onClick(() => action.ui.move("z<->",true));
+    }
+    
+    if (Settings.RULE_BOX_D>=3)
+    {
+      buttonList.moveFront=new HtmlButton("button", [500, 900], [document.createTextNode("x")]);
+      buttonList.moveFront.onClick(() => action.ui.move("x/",false));
+      buttonList.moveFront=new HtmlButton("button", [500, 950], [document.createTextNode("y")]);
+      buttonList.moveFront.onClick(() => action.ui.move("y/",false));
+    }
+    
+    if (Settings.RULE_BOX_D>=4)
+    {
+      buttonList.moveFront=new HtmlButton("button", [600, 900], [document.createTextNode("ana")]);
+      buttonList.moveFront.onClick(() => action.ui.move("wz/",false));
+      buttonList.moveFront=new HtmlButton("button", [600, 950], [document.createTextNode("kata")]);
+      buttonList.moveFront.onClick(() => action.ui.move("wz/",true));
+    }
   }
 
 }
@@ -201,6 +226,11 @@ action.ui.test = () =>
   new HtmlBug(BugType.RECT_RANDOM_BLEND, [100-dist,200-dist],[100+dist,200+dist],[0,0],[100,100],15,20);
   for (let i=0;i<10;i++)
     new HtmlBug(BugType.RECT_RANDOM_COLOR, [100-dist,200-dist],[100+dist,200+dist],[0,0],[100,100],0,10);
+}
+
+action.ui.move = (translationKey, oppose) =>
+{
+  translation_button_nD(translationKey, oppose, game.grid);
 }
 
 action.menu.select = (ifSettingsFirst) =>
