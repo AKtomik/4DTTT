@@ -31,7 +31,7 @@ class Settings {
 	static VELOCITY_SCALE_EXPO = .15;
 
 	static VELOCITY_ADD_PUSH = 10;
-	static VELOCITY_ADD_REMAIN = 4;//affected by delta
+	static VELOCITY_ADD_REMAIN = 12;//affected by delta
 	static VELOCITY_ADD_DRAG = 50;
 	static VELOCITY_ADD_WHEEL = .02;//affected by wheel
 	static VELOCITY_FRICTION_Q = .5;//affected by delta

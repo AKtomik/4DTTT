@@ -226,6 +226,8 @@ class Game {
 	  }
 		this.turn_i=Math.floor(Math.random()*this.players.length);
 		this.winer_i=-1;
+    if (this.character)
+      this.say_turn(true);
 
 		this.state=0;
 		this.remain=this.grid.map_keys.length;

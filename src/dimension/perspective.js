@@ -272,8 +272,10 @@ function perspective_draw_nD(grid, square_top, square_size)
     h_box.shape.set_points(projectionsOut);
     //draw shape
     stroke(ColorPalet.get("theme_background"));
-    fill(h_box.color);
-    //fill(ColorPalet.get("box_empty_in"));
+    if (grid.exposition)
+      fill(ColorPalet.get("theme_netral"));
+    else
+      fill(h_box.color);
     strokeWeight(1);
     h_box.display();
 

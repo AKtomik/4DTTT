@@ -68,10 +68,14 @@ state.root=() =>
 };
 
 //--settings--
-var showSettingsColumn=false;//but toggled just after
-action.settings.toggleDisplay= (element) =>
+var showSettingsColumn=true;
+action.settings.toggleColumnDisplay= () =>
 {
-  showSettingsColumn=!showSettingsColumn;
+  action.settings.refreshColumnDisplay();
+}
+
+action.settings.refreshColumnDisplay= () =>
+{
   document.getElementsByClassName("gameSettingsColumn").forEach(element => {console.log(element);element.style.display=(showSettingsColumn) ? 'block' : 'none'});
 }
 
@@ -138,7 +142,7 @@ state.gamemode.free.start = () =>
 
     settingsButtonPos=[925, 25];
     buttonList.buttonOpenSettings=new HtmlButton("button", settingsButtonPos.slice(), [document.createTextNode("SETTINGS")]);
-    buttonList.buttonOpenSettings.onClick(action.settings.toggleDisplay, false);
+    buttonList.buttonOpenSettings.onClick(action.settings.toggleColumnDisplay, false);
     
 
     settingsButtonPos[1]+=75;
@@ -156,7 +160,7 @@ state.gamemode.free.start = () =>
     buttonList.selectStyleTweek.onChange(action.settings.switchStyle, false);
 
     action.settings.switchStyle();//! init style
-    action.settings.toggleDisplay();//! init display
+    action.settings.refreshColumnDisplay();//! init display
     
 
     if (Settings.RULE_BOX_D>=3)
