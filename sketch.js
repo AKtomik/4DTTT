@@ -56,12 +56,14 @@ bugScreen=[
 
 let frameAgo = {};
 let frameAgoLast = 0;
+var deltaSpeed;
 function draw() {
 
-  //--
   background(ColorPalet.get("theme_background"));
+  deltaSpeed=deltaTime/1000*Settings.SPEED;
+  //--
 
-  {//bug
+  {//random bug
     for (let bug of bugScreen)
     {
       if (Math.floor(Math.random()*bug.chance)===0)
@@ -74,7 +76,7 @@ function draw() {
 
   {//texts
     //title
-    fill(255);
+    fill(ColorPalet.get('theme_text'));
     textSize(Scale.min(50));
     textAlign(LEFT,TOP);
     strokeWeight(0);

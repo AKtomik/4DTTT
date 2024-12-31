@@ -162,7 +162,7 @@ function translation_key_nD(keyEvent, grid)
 	if (!translationKey || !(move_aviable[translationKey]) || keyEvent.repeat)
 		return;
 	const sign=(keycode_to_move[keyEvent.keyCode].oppose) ? -1 : 1;
-	translation_add_strength(grid.velocity[translationKey], Settings.VELOCITY_ADD_PUSH, Settings.SPEED*sign);
+	translation_add_strength(grid.velocity[translationKey], Settings.VELOCITY_ADD_PUSH, sign);
 }
 
 function translation_drag_nD(dragEvent, grid)
@@ -174,7 +174,7 @@ function translation_drag_nD(dragEvent, grid)
 	};
 	for (let translationKey in translations)
 	{
-		translation_add_strength(grid.velocity[translationKey], Settings.VELOCITY_ADD_DRAG, (translations[translationKey])*Settings.SPEED);
+		translation_add_strength(grid.velocity[translationKey], Settings.VELOCITY_ADD_DRAG, (translations[translationKey]));
 	}
 }
 
@@ -227,7 +227,7 @@ function translation_extract_speed(velocityElement, down)
 	if (!down)
 	{
 		const sign=(velocityElement.velocity>0) ? 1 : -1;
-		velocityElement.velocity=(velocityElement.velocity*Math.pow(Settings.VELOCITY_FRICTION_Q,Settings.SPEED))-(Settings.VELOCITY_FRICTION_R*sign*Settings.SPEED);
+		velocityElement.velocity=(velocityElement.velocity*Math.pow(Settings.VELOCITY_FRICTION_Q,deltaSpeed))-(Settings.VELOCITY_FRICTION_R*sign*deltaSpeed);
 		if (!(velocityElement.velocity*sign>0))
 		{
 			velocityElement.velocity=0;
@@ -267,14 +267,14 @@ async function translation_draw_nD(grid)
 		//accelerate
 		if (down_postivie)
 		{
-			translation_add_strength(velocityElement, Settings.VELOCITY_ADD_REMAIN, Settings.SPEED);
+			translation_add_strength(velocityElement, Settings.VELOCITY_ADD_REMAIN, deltaSpeed);
 		}
 		if (down_negative)
 		{
-			translation_add_strength(velocityElement, Settings.VELOCITY_ADD_REMAIN, -Settings.SPEED);
+			translation_add_strength(velocityElement, Settings.VELOCITY_ADD_REMAIN, -deltaSpeed);
 		}
 
-		const power=translation_extract_speed(velocityElement, down_negative || down_postivie || draging);
+		const power=translation_extract_speed(velocityElement, down_negative || down_postivie);
 
 		//translation
 		if (power)

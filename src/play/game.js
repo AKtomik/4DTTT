@@ -1,6 +1,8 @@
 //not dimensionnal dependant
 class Game {
   constructor(state=0) {
+
+    this.character=null;
     
     this.mechanic=new Mechanic(this, this.init, this.display);
     this.mechanic.addAction(SketchEvents.PRESS, this.action_press);
@@ -24,9 +26,16 @@ class Game {
     return this.players[playerIndex].name;
   }
 
+  linkChar(givenChar)
+  {
+    this.character=givenChar;
+    this.say_turn(true);
+    //this.character.addEmotion(byteEmotionFace.bory, true);
+  }
+
   say_turn(stating=false, playerScored=-1)
   {
-    if (!bytee) return;
+    if (!this.character) return;
 
     let byteText="..";
     let byteEmotion=byteEmotionFace.normal;
@@ -77,13 +86,13 @@ class Game {
     //save last emotion if needed
     if (this.lastKeepedByteEmotion)
     {
-      bytee.removeEmotion(this.lastKeepedByteEmotion);
+      this.character.removeEmotion(this.lastKeepedByteEmotion);
     }
     if (keepByteEmotion)
       this.lastKeepedByteEmotion=byteEmotion;
 
-    bytee.setSpeak(byteText);
-    bytee.addEmotion(byteEmotion, keepByteEmotion);
+    this.character.setSpeak(byteText);
+    this.character.addEmotion(byteEmotion, keepByteEmotion);
   }
 
   player_check_at(posKey) {
@@ -221,9 +230,6 @@ class Game {
 		this.state=0;
 		this.remain=this.grid.map_keys.length;
 
-    //bytee.addEmotion(byteEmotionFace.bory, true);
-    this.say_turn(true);
-
     translation_init_nD(this.grid);
     perspective_init_nD(this.grid);
 	}
@@ -276,7 +282,7 @@ class Game {
       
       text(`
       perfs :
-      frame ${frameCount}
+      frame ${frameCount} delta ${Math.round(deltaTime)}
       ${Math.round(1000/(deltaTime))} fps - now
       ${frameLoged[1]} fps -  1s
       ${frameLoged[3]} fps -  3s

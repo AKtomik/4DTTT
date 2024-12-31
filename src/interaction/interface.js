@@ -92,8 +92,9 @@ state.gamemode.free.start = () =>
   stateDestroy();
   
   //objects
-  bytee=new ByteCharacter(new Anchor([500, 0], [100, 100], [AnchorConstraintType.MIDDLE, AnchorConstraintType.RIGHT], AnchorRatioType.EQUALMIN));
   game = new Game();
+  bytee=new ByteCharacter(new Anchor([500, 0], [100, 100], [AnchorConstraintType.MIDDLE, AnchorConstraintType.RIGHT], AnchorRatioType.EQUALMIN));
+  game.linkChar(bytee);
   {//ui
     buttonList.buttonBack=new HtmlButton("button", [100,100], [document.createTextNode("back")]);
     buttonList.buttonBack.onClick(state.menu.first.open, false);

@@ -132,16 +132,11 @@ class ByteCharacter {
 		let blinking= (canBlink && Math.floor(this.random*50)===0);
 
 		//special expressions
+		const changeSpeakExpression=this.speakTick();
 		if (this.speaking)
 		{
-			if (this.expression_speak_time<5)
+			if (changeSpeakExpression)
 			{
-				this.expression_speak_time+=Settings.SPEED;
-			} else {
-				if (this.expression_speak_time)
-					this.expression_speak_time-=5;
-				else
-					this.expression_speak_time=0;
 				this.expression_speak_mouth=ByteMouthSpeak[Math.floor(this.random*ByteMouthSpeak.length)];
 			}
 			mouthType=this.expression_speak_mouth;
@@ -160,8 +155,6 @@ class ByteCharacter {
 		this.draw_eye(true, eyesType);
 		//mouth
 		this.draw_mouth(mouthType);
-		//speak
-		this.speakTick();
 	};
 
 	//draw
@@ -304,18 +297,18 @@ class ByteCharacter {
 				return;
 			}
 			case ByteMouth.OPEN1: {
+				let sizeses=this.anchor.size([1/6,1/6]);
+				circle(...this.anchor.pos(mouthCenter), (sizeses[0]+sizeses[1])/2);
+				return;
+			}
+			case ByteMouth.OPEN2: {
 				let mouthSize=[1/4, 1/16];
 				rect(...this.anchor.pos([mouthCenter[0]-mouthSize[0]/2,mouthCenter[1]-mouthSize[1]/2]), ...this.anchor.size(mouthSize));
 				return;
 			}
-			case ByteMouth.OPEN2: {
+			case ByteMouth.OPEN3: {
 				let mouthSize=[1/8, 1/8];
 				rect(...this.anchor.pos([mouthCenter[0]-mouthSize[0]/2,mouthCenter[1]-mouthSize[1]/2]), ...this.anchor.size(mouthSize));
-				return;
-			}
-			case ByteMouth.OPEN3: {
-				let sizeses=this.anchor.size([1/6,1/6]);
-				circle(...this.anchor.pos(mouthCenter), (sizeses[0]+sizeses[1])/2);
 				return;
 			}
 			case ByteMouth.OPEN4: {
@@ -388,7 +381,7 @@ class ByteCharacter {
 		this.speak_text=text;
 		this.speak_index=0;
 		this.speak_fraction=0;
-		this.speak_speed=1/2;
+		this.speak_speed=Settings.BYTE_SPEAK_SPEED_DEFAULT;
 		
 		this.bubbleObject.changeText("", this.speak_text);
 	}
@@ -406,8 +399,12 @@ class ByteCharacter {
 	speakTick()
 	{
 		if (!this.speaking) return;
+		if (this.speak_index==0)
+		{
+			this.expression_speak_mouth=ByteMouthSpeak[0];
+		}
 		
-		this.speak_fraction+=this.speak_speed*Settings.SPEED;
+		this.speak_fraction+=this.speak_speed*deltaSpeed;
 		let addedCharIndex=Math.floor(this.speak_fraction);
 		if (addedCharIndex<1) return;
 		this.speak_fraction-=addedCharIndex;
@@ -421,6 +418,7 @@ class ByteCharacter {
 		}
 
 		this.bubbleObject.changeText(this.speak_text.slice(0, this.speak_index), this.speak_text.slice(this.speak_index, this.speak_text.length));
+		return (addedCharIndex>0);
 	}
 
 }
