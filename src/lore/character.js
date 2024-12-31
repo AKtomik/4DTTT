@@ -112,7 +112,6 @@ class ByteCharacter {
 		//emotions
 		for (let emotion of this.emotions)
 		{
-			console.log("unit emotion:",emotion);
 			if (emotion.face.eyesType!==undefined)
 			{
 				eyesType=emotion.face.eyesType;

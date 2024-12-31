@@ -253,7 +253,7 @@ class Game {
       for (let moveKey of Object.keys(move_aviable))
       {
         if (game.grid.velocity[moveKey].velocity)
-          speeds+=`${Math.round(game.grid.velocity[moveKey].velocity*100)} ${matrix_move[moveKey].lore}\n`;
+          speeds+=`${Math.round(game.grid.velocity[moveKey].velocity)} ${matrix_move[moveKey].lore}\n`;
       }
       if (speeds)
         speeds="\nspeed :\n"+speeds;

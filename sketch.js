@@ -1,5 +1,6 @@
 //--- click ---
 var draging = false;
+/*
 function mouseClicked(event) {//like released
   if (draging)
   {
@@ -7,6 +8,20 @@ function mouseClicked(event) {//like released
     return;
   }
   Mechanic.eventWithObject(SketchEvents.CLICK, event);
+}
+*/
+{
+  var body = document.getElementById('back');
+  body.onclick = function (event) {
+    if(event.target.className !== "p5Canvas")
+      return;
+    if (draging)
+    {
+      draging=false;
+      return;
+    }
+    Mechanic.eventWithObject(SketchEvents.CLICK, event);
+  }
 }
 
 function mouseDragged(event) {
