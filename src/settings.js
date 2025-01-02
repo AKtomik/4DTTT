@@ -1,7 +1,7 @@
 class Settings {	
-	static FPS = 15;
+	static FPS = 30;
 	static SPEED = 1;
-	static DEBUG = true;
+	static DEBUG = false;
 	static PLAYERS = 2;
 	
 	//how many box width
@@ -21,7 +21,14 @@ class Settings {
 	static PERSPECTIVE_FOV = Math.PI/8;
 	static PERSPECTIVE_DISTANCE = 3;
 	static PERSPECTIVE_GAP = 1;
+
+	static STAR_SHOW = true;
+	static STAR_SEED = 0;
+	static STAR_LAYERS = 0;
 	
+	static STYLE_COLOR = 'space';
+	static STYLE_TWEEK = 'solid';
+
 	static PERSPECTIVE_MODE_WINRAY = true;
 	static PERSPECTIVE_SHOW_OUTLINE = true;//by tweek
 	//static PERSPECTIVE_SHOW_ = true;//by tweek
@@ -30,8 +37,8 @@ class Settings {
 	static VELOCITY_SCALE_STRAIGTH = .1;
 	static VELOCITY_SCALE_EXPO = .15;
 
-	static VELOCITY_ADD_PUSH = 10;
-	static VELOCITY_ADD_REMAIN = 12;//affected by delta
+	static VELOCITY_ADD_PUSH = 5;
+	static VELOCITY_ADD_REMAIN = 24;//affected by delta
 	static VELOCITY_ADD_DRAG = 50;
 	static VELOCITY_ADD_WHEEL = .02;//affected by wheel
 	static VELOCITY_FRICTION_Q = .5;//affected by delta

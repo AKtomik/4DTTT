@@ -96,7 +96,7 @@ function draw() {
     textAlign(LEFT,TOP);
     strokeWeight(0);
     textStyle(NORMAL);
-    text(`4D Tick Tac Toe`, Scale.x(20), Scale.y(20));
+    text(`Tick Tac Toe of space`, Scale.x(20), Scale.y(20));
   }
 
   //--

@@ -1,0 +1,6 @@
+/.git
+/.vscode
+/versions
+jsconfig.json
+tsconfig.json
+*.map

@@ -299,6 +299,7 @@ class Game {
     fill(ColorPalet.get("theme_text"));
     textSize(Scale.min(100));
     textAlign(LEFT, CENTER);
+    textStyle(NORMAL);
     text(`scores`, Scale.x(25), Scale.y(300));
     const here_text_size_score=120;
     const here_text_size_name=60;

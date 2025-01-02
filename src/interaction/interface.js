@@ -64,6 +64,11 @@ var action= {settings:{}, ui: {}, menu:{}};
 
 state.root=() => 
 {//first action here
+  
+  ColorPalet.switch(Settings.STYLE_COLOR);
+	ColorPalet.tweek(Settings.STYLE_TWEEK);
+  new StarsSky(100);
+
   state.menu.first.open(true);
 };
 
@@ -71,6 +76,7 @@ state.root=() =>
 var showSettingsColumn=true;
 action.settings.toggleColumnDisplay= () =>
 {
+  showSettingsColumn=!showSettingsColumn;
   action.settings.refreshColumnDisplay();
 }
 
@@ -79,12 +85,26 @@ action.settings.refreshColumnDisplay= () =>
   document.getElementsByClassName("gameSettingsColumn").forEach(element => {console.log(element);element.style.display=(showSettingsColumn) ? 'block' : 'none'});
 }
 
-action.settings.switchStyle= () =>
+action.settings.toggleDebug= () =>
+{
+  Settings.DEBUG=!Settings.DEBUG;
+}
+
+action.settings.switchStyle= (ifSettingsFirst) =>
 {
   const selectColorHtml=document.getElementById(buttonList.selectStyleColor.id);
   const selectTweekHtml=document.getElementById(buttonList.selectStyleTweek.id);
-  ColorPalet.switch(selectColorHtml.value);
-	ColorPalet.tweek(selectTweekHtml.value);
+  
+  if (ifSettingsFirst)
+  {
+  	selectColorHtml.value=Settings.STYLE_COLOR;
+  	selectTweekHtml.value=Settings.STYLE_TWEEK;
+  } else {
+  	Settings.STYLE_COLOR=selectColorHtml.value;
+  	Settings.STYLE_TWEEK=selectTweekHtml.value;
+  }
+  ColorPalet.switch(Settings.STYLE_COLOR);
+	ColorPalet.tweek(Settings.STYLE_TWEEK);
 }
 
 action.settings.changeRay= (element) =>
@@ -116,12 +136,11 @@ state.gamemode.free.start = () =>
     buttonList.buttonRestart.onClick(state.gamemode.free.restart, false);
 
     const styleColorSelector = [//!parameter
-        {value:"default", text:"default"},
-        {value:"sky", text:"sky"},
-        {value:"brigth", text:"brigth", default: true},
-        {value:"purple", text:"pinky pink"},
         {value:"space", text:"space"},
         {value:"nigth", text:"nigth"},
+        {value:"sky", text:"sky"},
+        {value:"brigth", text:"brigth"},
+        {value:"purple", text:"pinky pink"},
     ];
     
     const styleTweekSelector = [//!parameter
@@ -133,7 +152,7 @@ state.gamemode.free.start = () =>
     
     const raySelector = [//!parameter
         {value:"0", text:"ray off"},
-        {value:"1", text:"rays front", default: true},
+        {value:"1", text:"rays front"},
         {value:"2", text:"rays back"},
     ];
     
@@ -158,8 +177,13 @@ state.gamemode.free.start = () =>
     buttonList.selectStyleTweek=new HtmlButton("select", settingsButtonPos.slice(), optionsMaker(styleTweekSelector));
     buttonList.selectStyleTweek.setClass("gameSettingsColumn");
     buttonList.selectStyleTweek.onChange(action.settings.switchStyle, false);
+    
+    settingsButtonPos[1]+=50;
+    buttonList.buttonDebug=new HtmlButton("button", settingsButtonPos.slice(), [document.createTextNode('debug')]);
+    buttonList.buttonDebug.setClass("gameSettingsColumn");
+    buttonList.buttonDebug.onClick(action.settings.toggleDebug, false);
 
-    action.settings.switchStyle();//! init style
+    action.settings.switchStyle(true);//! init style
     action.settings.refreshColumnDisplay();//! init display
     
 
