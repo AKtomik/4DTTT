@@ -54,17 +54,17 @@ class Anchor {
 	}
 
 	//get
-	pos(bytePos) {//get {coordinates} from {0 to 1 position}
+	pos(justPos) {//get {coordinates} from {0 to 1 position}
 		return [
-			(this.topCoord[0]+bytePos[0]*this.sizeCoord[0]),
-			(this.topCoord[1]+bytePos[1]*this.sizeCoord[1])
+			(this.topCoord[0]+justPos[0]*this.sizeCoord[0]),
+			(this.topCoord[1]+justPos[1]*this.sizeCoord[1])
 		]
 	}
 
-	size(byteSize) {//get {distance to origin} from {0 to 1 position}
+	size(justSize) {//get {distance to origin} from {0 to 1 position}
 		return [
-			(byteSize[0]*this.sizeCoord[0]),
-			(byteSize[1]*this.sizeCoord[1])
+			(justSize[0]*this.sizeCoord[0]),
+			(justSize[1]*this.sizeCoord[1])
 		]
 	}
 }

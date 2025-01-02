@@ -193,25 +193,29 @@ state.gamemode.free.start = () =>
 
     if (Settings.RULE_BOX_D>=3)
     {
-      buttonList.moveFront=new HtmlButton("button", [450, 900], [document.createTextNode("-")]);
-      buttonList.moveFront.onClick(() => action.ui.move("z<->",false));
-      buttonList.moveBack=new HtmlButton("button", [450, 950], [document.createTextNode("+")]);
+      buttonList.moveBack=new HtmlButton("button", [750, 925], [document.createTextNode("+")]);
       buttonList.moveBack.onClick(() => action.ui.move("z<->",true));
+      buttonList.moveFront=new HtmlButton("button", [800, 925], [document.createTextNode("-")]);
+      buttonList.moveFront.onClick(() => action.ui.move("z<->",false));
     }
     
     if (Settings.RULE_BOX_D>=3)
     {
-      buttonList.moveAroundX=new HtmlButton("button", [500, 900], [document.createTextNode("x")]);
-      buttonList.moveAroundX.onClick(() => action.ui.move("x/",false));
-      buttonList.moveAroundY=new HtmlButton("button", [500, 950], [document.createTextNode("y")]);
-      buttonList.moveAroundY.onClick(() => action.ui.move("y/",false));
+      buttonList.moveAroundXMore=new HtmlButton("button", [850, 900], [document.createTextNode("x+")]);
+      buttonList.moveAroundXMore.onClick(() => action.ui.move("x/",false));
+      buttonList.moveAroundXLess=new HtmlButton("button", [850, 950], [document.createTextNode("x-")]);
+      buttonList.moveAroundXLess.onClick(() => action.ui.move("x/",true));
+      buttonList.moveAroundYMore=new HtmlButton("button", [900, 900], [document.createTextNode("y+")]);
+      buttonList.moveAroundYMore.onClick(() => action.ui.move("y/",false));
+      buttonList.moveAroundYLess=new HtmlButton("button", [900, 950], [document.createTextNode("y-")]);
+      buttonList.moveAroundYLess.onClick(() => action.ui.move("y/",true));
     }
     
     if (Settings.RULE_BOX_D>=4)
     {
-      buttonList.moveAna=new HtmlButton("button", [600, 900], [document.createTextNode("ana")]);
+      buttonList.moveAna=new HtmlButton("button", [950, 900], [document.createTextNode("ana")]);
       buttonList.moveAna.onClick(() => action.ui.move("wz/",false));
-      buttonList.moveKata=new HtmlButton("button", [600, 950], [document.createTextNode("kata")]);
+      buttonList.moveKata=new HtmlButton("button", [950, 950], [document.createTextNode("kata")]);
       buttonList.moveKata.onClick(() => action.ui.move("wz/",true));
     }
   }
