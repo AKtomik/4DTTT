@@ -60,7 +60,7 @@ function transition_buggy()
 
 var state= {gamemode:{free:{}}, menu:{first: {}}};
 var action= {settings:{}, ui: {}, menu:{}};
-//var effects= {};
+var effects= {};
 
 state.root=() => 
 {//first action here
@@ -69,8 +69,8 @@ state.root=() =>
 	ColorPalet.tweek(Settings.STYLE_TWEEK);
   
   //effects
-  new BugScreen();
-  new StarsSky(100);
+  effects.BugScreen=new BugScreen();
+  effects.StarsSky=new StarsSky();
 
   state.menu.first.open(true);
 };
@@ -123,6 +123,7 @@ state.gamemode.free.start = () =>
 {
   //transition
   transition_buggy();
+  effects.StarsSky.newSky();
 
 	//destroy
   stateDestroy();
@@ -220,11 +221,8 @@ state.gamemode.free.start = () =>
 state.gamemode.free.restart = () =>
 {
   //transition
-  {
-    for (let i=0;i<100;i++)
-      new HtmlBug(BugType.RECT_RANDOM_COLOR, undefined, undefined, undefined, [500, 500], 0, 10);
-    redraw();//!to see loading state
-  }
+  transition_buggy();
+  effects.StarsSky.newSky();
   //do
 	Mechanic.event(SketchEvents.INIT);
 }
@@ -235,6 +233,7 @@ state.menu.first.open = (isRoot) =>
   if (!isRoot)
   {
     transition_buggy();
+    effects.StarsSky.newSky();
   }
 
 	//destroy

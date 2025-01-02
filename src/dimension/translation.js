@@ -84,7 +84,8 @@ const matrix_move = {
 			positive: 90,
 			negative: 83
 		},
-		exposition: true
+		exposition: true,
+		starAction: (power) => effects.StarsSky.addSlide([0,power*-10])
 	},
 	"y/": {
 		lore: "roll Y",
@@ -93,7 +94,8 @@ const matrix_move = {
 			positive: 68,
 			negative: 81
 		},
-		exposition: true
+		exposition: true,
+		starAction: (power) => effects.StarsSky.addSlide([power*10,0])
 	},
 	"z/": {
 		lore: "roll Z",
@@ -304,6 +306,12 @@ async function translation_draw_nD(grid)
 				h_box.center=translationObject.translate(h_box.center, power, grid.center);
 			}
 			grid.center=translationObject.translate(grid.center, power, grid.center);
+
+			//misc
+			if (Settings.EFFECT_STAR_SHOW && matrix_move[moveKey].starAction)
+			{
+				matrix_move[moveKey].starAction(power);
+			}
 		}
 	}
 }
