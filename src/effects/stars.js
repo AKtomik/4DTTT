@@ -27,7 +27,7 @@ class StarsSky {
 
 	display()
 	{
-		if (!Settings.STAR_SHOW)
+		if (!Settings.EFFECT_STAR_SHOW)
 			return;
 		
 		fill(ColorPalet.get('theme_text'));

@@ -99,3 +99,34 @@ class HtmlBug {
 		this.element.style.height=parseInt(Scale.y(this.size[1]))+"px";
 	}
 }
+
+
+const bugScreenList=[
+  {chance: 10000, amount: 100},
+  {chance: 500, amount: 10},
+  {chance: 200, amount: 2}
+]
+
+class BugScreen {
+
+	constructor()
+	{
+		//mechanic
+		this.mechanic=new Mechanic(this);
+		this.mechanic.addAction(SketchEvents.DISPLAY, this.display);
+	}
+
+	display()
+  {//random bug
+		if (!Settings.EFFECT_BUG_SHOW)
+			return;
+    for (let bug of bugScreenList)
+    {
+      if (Math.floor(Math.random()*bug.chance)===0)
+      {
+        for (let i=0;i<bug.amount;i++)
+          new HtmlBug(BugType.RECT_RANDOM_COLOR);
+      }
+    }
+  }
+}

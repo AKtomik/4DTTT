@@ -28,7 +28,7 @@ class ColorPalet {
 		if (colorSet[colorSetKey].effects)
 		{
 			if (colorSet[colorSetKey].effects.stars!==undefined)
-				Settings.STAR_SHOW=colorSet[colorSetKey].effects.stars;
+				Settings.EFFECT_STAR_SHOW=colorSet[colorSetKey].effects.stars;
 		}
 	}
 	static tweek(colorTweekKey)

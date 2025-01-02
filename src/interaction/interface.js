@@ -67,6 +67,9 @@ state.root=() =>
   
   ColorPalet.switch(Settings.STYLE_COLOR);
 	ColorPalet.tweek(Settings.STYLE_TWEEK);
+  
+  //effects
+  new BugScreen();
   new StarsSky(100);
 
   state.menu.first.open(true);
@@ -159,7 +162,7 @@ state.gamemode.free.start = () =>
     buttonList.buttonTest=new HtmlButton("button", [100,200], [document.createTextNode("test")]);
     buttonList.buttonTest.onClick(action.ui.test, false);
 
-    settingsButtonPos=[925, 25];
+    settingsButtonPos=[925, 100];
     buttonList.buttonOpenSettings=new HtmlButton("button", settingsButtonPos.slice(), [document.createTextNode("SETTINGS")]);
     buttonList.buttonOpenSettings.onClick(action.settings.toggleColumnDisplay, false);
     

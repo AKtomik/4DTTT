@@ -22,9 +22,11 @@ class Settings {
 	static PERSPECTIVE_DISTANCE = 3;
 	static PERSPECTIVE_GAP = 1;
 
-	static STAR_SHOW = true;
-	static STAR_SEED = 0;
-	static STAR_LAYERS = 0;
+	static EFFECT_STAR_SHOW = true;
+	static EFFECT_STAR_SEED = 0;
+	static EFFECT_STAR_LAYERS = 0;
+	
+	static EFFECT_BUG_SHOW = true;
 	
 	static STYLE_COLOR = 'space';
 	static STYLE_TWEEK = 'solid';
