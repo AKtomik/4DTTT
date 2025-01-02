@@ -84,24 +84,26 @@ class ByteCharacter {
 	display() {
 		this.random=Math.random();
 
-		//head
+		//face
     fill(ColorPalet.get(`byte_fill`));
     stroke(ColorPalet.get(`byte_straigth`));
     strokeWeight(1);
-		rect(...this.anchor.pos([0,0]), ...this.anchor.size([1,1]));
-
-    fill(ColorPalet.get(`byte_straigth`));
-    noStroke();
-		//hairs
     beginShape();
+		//corners
+    //vertex(...this.anchor.pos([1,0]));
+    vertex(...this.anchor.pos([1,1]));
+    vertex(...this.anchor.pos([0,1]));
     vertex(...this.anchor.pos([0,0]));
+		//hairs
     vertex(...this.anchor.pos([1/3,2/12]));
     vertex(...this.anchor.pos([1/3,1/12]));
     vertex(...this.anchor.pos([2/3,3/12]));
     vertex(...this.anchor.pos([2/3,1.5/12]));
     vertex(...this.anchor.pos([3/3,4/12]));
-    vertex(...this.anchor.pos([1,0]));
     endShape(CLOSE);
+		//others
+    fill(0);
+    noStroke();
 
 		//expression
 		let eyesType=ByteEyes.OPEN;
