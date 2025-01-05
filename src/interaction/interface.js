@@ -287,7 +287,15 @@ state.menu.first.open = (isRoot) =>
         {value:"6", text:"⟺ 6"},
     ];
     buttonList.selectAlign=new HtmlButton("select", [500,550], optionsMaker(alignSelector));
-    buttonList.selectAlign.onChange(action.menu.select);
+    buttonList.selectAlign.onChange(action.menu.selectNoCubeRefresh);
+    
+    const playersSelector = [//!parameter
+        {value:"2", text:"2 players"},
+        {value:"3", text:"3 players"},
+        {value:"4", text:"4 players"},
+    ];
+    buttonList.selectPlayersAmount=new HtmlButton("select", [500,600], optionsMaker(playersSelector));
+    buttonList.selectPlayersAmount.onChange(action.menu.selectNoCubeRefresh);
 
     buttonList.doneStart=new HtmlButton("button", [500,700], [document.createTextNode("play")]);
     buttonList.doneStart.onClick(state.gamemode.free.start, false);
@@ -310,22 +318,26 @@ action.ui.move = (translationKey, oppose) =>
   translation_button_nD(translationKey, oppose, game.grid);
 }
 
-action.menu.select = (ifSettingsFirst) =>
+action.menu.selectNoCubeRefresh = () => action.menu.select(false, false);
+action.menu.select = (ifSettingsFirst, ifNewCube=true) =>
 {
   //settings
   const selectDimHtml=document.getElementById(buttonList.selectDim.id);
   const selectWidthHtml=document.getElementById(buttonList.selectWidth.id);
   const selectAlignHtml=document.getElementById(buttonList.selectAlign.id);
+  const selectPlayersHtml=document.getElementById(buttonList.selectPlayersAmount.id);
   if (ifSettingsFirst)
   {
   	selectDimHtml.value=Settings.RULE_BOX_D;
   	selectWidthHtml.value=Settings.RULE_BOX_WIDTH;
   	selectAlignHtml.value=Settings.RULE_BOX_ROW_LENGTH;
+    selectPlayersHtml.value=Settings.PLAYERS;
   } else
   {
   	Settings.RULE_BOX_D=parseInt(selectDimHtml.value);
   	Settings.RULE_BOX_WIDTH=parseInt(selectWidthHtml.value);
   	Settings.RULE_BOX_ROW_LENGTH=parseInt(selectAlignHtml.value);
+    Settings.PLAYERS=parseInt(selectPlayersHtml.value);
   }
 
   //const dimChildrens=selectDimHtml.children;
@@ -340,7 +352,10 @@ action.menu.select = (ifSettingsFirst) =>
   }
   
   //object
-  if (cube)
-    cube.kill();
-  cube=new JustCube();
+  if (ifNewCube)
+  {
+    if (cube)
+      cube.kill();
+    cube=new JustCube();
+  }
 }

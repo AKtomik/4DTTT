@@ -64,6 +64,9 @@ const colorSet = {
 			player_3_text:[0,255,0],
 			player_3_dark:[0,128,0],
 			player_3_ligth:[128,255,0],
+			player_4_text:[200,200,0],
+			player_4_dark:[100,100,0],
+			player_4_ligth:[255,255,0],
 		}
 	},
 	
