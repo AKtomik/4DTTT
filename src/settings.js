@@ -31,7 +31,7 @@ class Settings {
 	static STYLE_COLOR = 'space';
 	static STYLE_TWEEK = 'solid';
 
-	static PERSPECTIVE_MODE_WINRAY = true;
+	static PERSPECTIVE_MODE_WINRAY = 1;
 	static PERSPECTIVE_SHOW_OUTLINE = true;//by tweek
 	//static PERSPECTIVE_SHOW_ = true;//by tweek
 	

@@ -76,7 +76,7 @@ state.root=() =>
 };
 
 //--settings--
-var showSettingsColumn=true;
+var showSettingsColumn=false;
 action.settings.toggleColumnDisplay= () =>
 {
   showSettingsColumn=!showSettingsColumn;
@@ -110,9 +110,13 @@ action.settings.switchStyle= (ifSettingsFirst) =>
 	ColorPalet.tweek(Settings.STYLE_TWEEK);
 }
 
-action.settings.changeRay= (element) =>
+action.settings.changeRay= (ifSettingsFirst) =>
 {
-	Settings.PERSPECTIVE_MODE_WINRAY=parseInt(element.value);
+  const element=document.getElementById(buttonList.buttonRay.id);
+  if (ifSettingsFirst)
+	  element.value=`${Settings.PERSPECTIVE_MODE_WINRAY}`;
+  else
+	  Settings.PERSPECTIVE_MODE_WINRAY=parseInt(element.value);
 }
 
 
@@ -164,14 +168,14 @@ state.gamemode.free.start = () =>
     buttonList.buttonTest.onClick(action.ui.test, false);
 
     settingsButtonPos=[925, 100];
-    buttonList.buttonOpenSettings=new HtmlButton("button", settingsButtonPos.slice(), [document.createTextNode("SETTINGS")]);
+    buttonList.buttonOpenSettings=new HtmlButton("button", settingsButtonPos.slice(), [document.createTextNode("SHOW SETTINGS")]);
     buttonList.buttonOpenSettings.onClick(action.settings.toggleColumnDisplay, false);
     
 
     settingsButtonPos[1]+=75;
     buttonList.buttonRay=new HtmlButton("select", settingsButtonPos.slice(), optionsMaker(raySelector));
     buttonList.buttonRay.setClass("gameSettingsColumn");
-    buttonList.buttonRay.onChange(action.settings.changeRay, true);
+    buttonList.buttonRay.onChange(action.settings.changeRay, false);
 
     settingsButtonPos[1]+=50;
     buttonList.selectStyleColor=new HtmlButton("select", [settingsButtonPos[0]-75,settingsButtonPos[1]], optionsMaker(styleColorSelector));
@@ -188,6 +192,7 @@ state.gamemode.free.start = () =>
     buttonList.buttonDebug.onClick(action.settings.toggleDebug, false);
 
     action.settings.switchStyle(true);//! init style
+    action.settings.changeRay(true);
     action.settings.refreshColumnDisplay();//! init display
     
 
