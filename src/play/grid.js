@@ -113,6 +113,8 @@ class Box {
 		{
 			case (BoxStateType.EMPTY):
     		return ColorPalet.get(`box_empty_in`);
+			case (BoxStateType.BOLD):
+    		return ColorPalet.get(`box_bold`);
 			case (BoxStateType.FILL_BY):
 				return ColorPalet.get(`player_${this.check_player.igIndex+1}_dark`);
 			case (BoxStateType.WON_BY):
@@ -129,6 +131,10 @@ class Box {
 	{
 		this.state=BoxStateType.FILL_BY;
 		this.check_player=player;
+	};
+	bold()
+	{
+		this.state=BoxStateType.BOLD;
 	};
 	get checker()
 	{

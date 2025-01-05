@@ -46,6 +46,7 @@ const colorSet = {
 		colors: {
 			theme_background:[255],
 			theme_sign:[200],
+			theme_bold:[255,255,0],
 			theme_text:[0],
 			theme_netral:[128],//cant have Alpha
 			
@@ -74,6 +75,7 @@ const colorSet = {
 		colors: {
 			theme_background:[200,100,150],
 			theme_sign:[128,50,100],
+			theme_bold:[255,0,255],
 			theme_text:[255,128,255],
 			theme_netral:[250,150,200],
 		},
@@ -86,6 +88,7 @@ const colorSet = {
 		colors: {
 			theme_background:[0,100,200],
 			theme_sign:[0,127,255],
+			theme_bold:[255,255,0],
 			theme_text:[0],
 			theme_netral:[255],
 		},
@@ -98,6 +101,7 @@ const colorSet = {
 		colors: {
 			theme_background:[255],
 			theme_sign:[200],
+			theme_bold:[64],
 			theme_text:[0],
 			theme_netral:[128],
 		},
@@ -110,8 +114,9 @@ const colorSet = {
 		colors: {
 			theme_background:[0,32,64],
 			theme_sign:[0,64,128],
+			theme_bold:[255],
 			theme_text:[255],
-			theme_netral:[255],
+			theme_netral:[205],
 		},
 		effects: {
 			stars: true
@@ -122,8 +127,9 @@ const colorSet = {
 		colors: {
 			theme_background:[0],
 			theme_sign:[64],
+			theme_bold:[255],
 			theme_text:[255],
-			theme_netral:[255],
+			theme_netral:[205],
 		},
 		effects: {
 			stars: true

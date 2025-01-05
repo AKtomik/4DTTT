@@ -425,7 +425,8 @@ class Player {
 
 class JustCube {
   constructor(state=0) {
-    this.mechanic=new Mechanic(this, this.init, this.display);
+    this.mechanic=new Mechanic(this, undefined, this.display);
+    this.init();
     this.mechanic.addAction(SketchEvents.PRESS, this.action_press);
     this.mechanic.addAction(SketchEvents.DRAG, this.action_drag);
     this.mechanic.addAction(SketchEvents.WHEEL, this.action_wheel);

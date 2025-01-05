@@ -169,7 +169,7 @@ state.gamemode.free.start = () =>
     buttonList.buttonTest.onClick(action.ui.test, false);
 
     settingsButtonPos=[925, 100];
-    buttonList.buttonOpenSettings=new HtmlButton("button", settingsButtonPos.slice(), [document.createTextNode("SHOW SETTINGS")]);
+    buttonList.buttonOpenSettings=new HtmlButton("button", settingsButtonPos.slice(), [document.createTextNode("show settings")]);
     buttonList.buttonOpenSettings.onClick(action.settings.toggleColumnDisplay, false);
     
 
@@ -361,5 +361,16 @@ action.menu.select = (ifSettingsFirst, ifNewCube=true) =>
     if (cube)
       cube.kill();
     cube=new JustCube();
+    //show dim lines in evidence
+    for (let dim=0;dim<Settings.RULE_BOX_D;dim++)
+    {
+      let posKey=Array.from(new Array(Settings.RULE_BOX_D).fill(0));
+      for (let dist=0;dist<Settings.RULE_BOX_WIDTH;dist++)
+      {
+        posKey[dim]=dist;
+        cube.grid.at(posKey).bold();
+        console.log(posKey,cube.grid.at(posKey));
+      }
+    }
   }
 }

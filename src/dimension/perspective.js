@@ -273,9 +273,16 @@ function perspective_draw_nD(grid, square_top, square_size)
     //draw shape
     stroke(ColorPalet.get("theme_background"));
     if (grid.exposition)
-      fill(ColorPalet.get("theme_netral"));
+    {
+      if (h_box.state===BoxStateType.BOLD)
+        fill(ColorPalet.get("theme_bold"));
+      else
+        fill(ColorPalet.get("theme_netral"));
+    }
     else
+    {
       fill(h_box.color);
+    }
     strokeWeight(1);
     h_box.display();
 
