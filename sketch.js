@@ -73,12 +73,22 @@ function draw() {
 
   {//texts
     //title
-    fill(ColorPalet.get('theme_text'));
-    textSize(Scale.max(15));
-    textAlign(LEFT,TOP);
-    strokeWeight(0);
-    textStyle(NORMAL);
-    text(`Tick Tac Toe of space`, Scale.x(20), Scale.y(20));
+    if (mainTitle)
+    {
+      fill(ColorPalet.get('theme_text'));
+      textSize(Scale.x(50));
+      textAlign(CENTER,TOP);
+      noStroke();
+      textStyle(NORMAL);
+      text(`Tick Tac Toe of space`, Scale.x(500), Scale.y(200));
+    } else {
+      fill(ColorPalet.get('theme_text'));
+      textSize(Scale.max(15));
+      textAlign(LEFT,TOP);
+      noStroke();
+      textStyle(NORMAL);
+      text(`Tick Tac Toe of space`, Scale.x(20), Scale.y(20));
+    }
   }
 
   //--

@@ -458,9 +458,8 @@ class JustCube {
 	{
     translation_draw_nD(this.grid);//dont wait the promise to be resolved
 	  const margin = Scale.min(400);
-    // [/2] -> [/10]
-	  let square_top = [(Scale.x(Settings.POS_BOX_FULL) - Scale.min(Settings.POS_BOX_FULL))/10 + margin, (Scale.y(Settings.POS_BOX_FULL) - Scale.min(Settings.POS_BOX_FULL))/2 + margin];
 	  let square_size = [Scale.min(Settings.POS_BOX_FULL) - 2*margin, Scale.min(Settings.POS_BOX_FULL) - 2*margin];	
+	  let square_top = [Scale.x(400)-square_size[0]/2, Scale.y(500)-square_size[1]/2];
     perspective_draw_nD(this.grid, square_top, square_size);
 	}
 };

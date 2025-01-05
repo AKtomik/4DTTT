@@ -3,8 +3,9 @@ const rickMod= (n, m) => ((n % m) + m) % m;
 const starsLayersList=[
 	{speed: 1, amount: 10, size: 4},
 	{speed: 1/2, amount: 20, size: 3},
-	{speed: 1/5, amount: 30, size: 2},
-	{speed: 1/10, amount: 40, size: 1},
+	{speed: 1/10, amount: 30, size: 2},
+	{speed: 1/30, amount: 40, size: 1},
+	{speed: 1/100, amount: 20, size: 1},
 ]
 
 class StarsSky {

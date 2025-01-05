@@ -37,6 +37,7 @@ var buttonList= {};
 var game;
 var cube;
 var bytee;
+var mainTitle=false;
 var infos= {};
 
 //--- transition ---
@@ -224,7 +225,8 @@ state.gamemode.free.start = () =>
       buttonList.moveKata.onClick(() => action.ui.move("wz/",true));
     }
   }
-
+  //temp
+  mainTitle=false;
 }
 
 state.gamemode.free.restart = () =>
@@ -260,7 +262,7 @@ state.menu.first.open = (isRoot) =>
         //{value:"9", text:"9D"},
         //{value:"10", text:"10D"},
     ];
-    buttonList.selectDim=new HtmlButton("select", [500,450], optionsMaker(dimSelector));
+    buttonList.selectDim=new HtmlButton("select", [600,425], optionsMaker(dimSelector));
     buttonList.selectDim.onChange(action.menu.select);
     
     const widthSelector = [//!parameter
@@ -276,7 +278,7 @@ state.menu.first.open = (isRoot) =>
         {value:"50", text:"__x__"},
         {value:"99", text:"__x__"},
     ];
-    buttonList.selectWidth=new HtmlButton("select", [500,500], optionsMaker(widthSelector));
+    buttonList.selectWidth=new HtmlButton("select", [600,475], optionsMaker(widthSelector));
     buttonList.selectWidth.onChange(action.menu.select);
 
     const alignSelector = [//!parameter
@@ -286,7 +288,7 @@ state.menu.first.open = (isRoot) =>
         {value:"5", text:"⟺ 5"},
         {value:"6", text:"⟺ 6"},
     ];
-    buttonList.selectAlign=new HtmlButton("select", [500,550], optionsMaker(alignSelector));
+    buttonList.selectAlign=new HtmlButton("select", [600,525], optionsMaker(alignSelector));
     buttonList.selectAlign.onChange(action.menu.selectNoCubeRefresh);
     
     const playersSelector = [//!parameter
@@ -294,7 +296,7 @@ state.menu.first.open = (isRoot) =>
         {value:"3", text:"3 players"},
         {value:"4", text:"4 players"},
     ];
-    buttonList.selectPlayersAmount=new HtmlButton("select", [500,600], optionsMaker(playersSelector));
+    buttonList.selectPlayersAmount=new HtmlButton("select", [600,575], optionsMaker(playersSelector));
     buttonList.selectPlayersAmount.onChange(action.menu.selectNoCubeRefresh);
 
     buttonList.doneStart=new HtmlButton("button", [500,700], [document.createTextNode("play")]);
@@ -302,6 +304,8 @@ state.menu.first.open = (isRoot) =>
 
     action.menu.select(true);
   }
+  //temp
+  mainTitle=true;
 }
 
 action.ui.test = () =>
