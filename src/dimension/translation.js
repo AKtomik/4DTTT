@@ -130,6 +130,19 @@ const matrix_move = {
 			negative: 88
 		}
 	},
+	"0<-": {
+		lore: "slow down",
+		keycode: {
+			positive: 32,
+		},
+		otherAction: (power) => {
+      for (let moveKey of Object.keys(move_aviable))
+      {
+				const velocityElement=game.grid.velocity[moveKey];
+				velocityElement.velocity=0;
+      }
+		}
+	},
 	//sphere
 	/*
 	"x/me": {
@@ -258,7 +271,7 @@ function translation_init_nD(grid)
 	move_aviable={};
 	for (let moveKey of Object.keys(matrix_move))
 	{
-		if (!(matrix_move[moveKey].translation.dim>Settings.RULE_BOX_D))
+		if (!(matrix_move[moveKey].translation && matrix_move[moveKey].translation.dim>Settings.RULE_BOX_D))
 		{
 			move_aviable[moveKey]=true;
 			grid.velocity[moveKey]={velocity:0, center: (grid.exposition && matrix_move[moveKey].exposition) ? Settings.VELOCITY_SCALE_EXPO : 0};
@@ -296,21 +309,27 @@ async function translation_draw_nD(grid)
 		{
 			//find matrix
 			const translationObject=matrix_move[moveKey].translation;
-
-			//do the translation
-			translationObject.calibrate(power);
-		  for (let posKey of grid.map_keys)
-		  {
-		    const h_box = grid.at(posKey);
-				h_box.morph.each(pos => translationObject.translate(pos, power, grid.center));
-				h_box.center=translationObject.translate(h_box.center, power, grid.center);
+			if (translationObject)
+			{
+				//do the translation
+				translationObject.calibrate(power);
+			  for (let posKey of grid.map_keys)
+			  {
+			    const h_box = grid.at(posKey);
+					h_box.morph.each(pos => translationObject.translate(pos, power, grid.center));
+					h_box.center=translationObject.translate(h_box.center, power, grid.center);
+				}
+				grid.center=translationObject.translate(grid.center, power, grid.center);
 			}
-			grid.center=translationObject.translate(grid.center, power, grid.center);
 
 			//misc
 			if (Settings.EFFECT_STAR_SHOW && matrix_move[moveKey].starAction)
 			{
 				matrix_move[moveKey].starAction(power);
+			}
+			if (matrix_move[moveKey].otherAction)
+			{
+				matrix_move[moveKey].otherAction(power);
 			}
 		}
 	}
