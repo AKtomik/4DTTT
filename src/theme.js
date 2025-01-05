@@ -68,6 +68,13 @@ const colorSet = {
 			player_4_text:[200,200,0],
 			player_4_dark:[100,100,0],
 			player_4_ligth:[255,255,0],
+
+			dim_ax_1:[255,0,0],
+			dim_ax_2:[0,0,255],
+			dim_ax_3:[0,255,0],
+			dim_ax_4:[255,0,255],
+			dim_ax_5:[255,255,0],
+			dim_ax_6:[0,255,255],
 		}
 	},
 	

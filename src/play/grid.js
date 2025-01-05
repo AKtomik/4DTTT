@@ -66,9 +66,10 @@ class Grid {
 		//return undefined if not set
 	};
 
-	add_checkline(checkLineArray)
+	add_checkline(checkLineArray, color)
 	{
-		this.checklist.push(checkLineArray);
+		this.checklist.push(new CheckLine(checkLineArray, color));
+		console.log(this.checklist);
 	}
 
 	//display
@@ -150,3 +151,27 @@ class Box {
 		return this.won_dir;
 	};
 };
+
+class CheckLine {
+	constructor(pointsArray, color)
+	{
+		this.pointsArray=pointsArray;
+		this.color=color;
+	}
+	draw(projectToFlatPosFunction)
+	{
+    let lastPoint=this.pointsArray[0];
+		if (this.color)
+			stroke(this.color);
+		else
+    	stroke(lastPoint.color);
+    strokeWeight(4);
+    lastPoint=projectToFlatPosFunction(lastPoint.center);
+    for (let pointLineIndex=1;pointLineIndex<this.pointsArray.length;pointLineIndex++)
+    {
+      let actualPoint=projectToFlatPosFunction(this.pointsArray[pointLineIndex].center);
+      line(...lastPoint, ...actualPoint);
+      lastPoint=actualPoint;
+    }
+	}
+}

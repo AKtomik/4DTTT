@@ -101,7 +101,7 @@ function binToInt(binArray)
 function perspective_init_nD(grid)
 {
   const D=Settings.RULE_BOX_D;
-  console.log("creating an hypercube of dim:",Settings.RULE_BOX_D);
+  console.log("creating an hypercube of dimension ",Settings.RULE_BOX_D);
   //around
   const just_total = (Settings.RULE_BOX_WIDTH+((Settings.RULE_BOX_WIDTH-1)*Settings.PERSPECTIVE_GAP));
   const just_size = 1/just_total;
@@ -218,18 +218,9 @@ function perspective_draw_nD(grid, square_top, square_size)
           ];
 			};
   const draw_ray=(grid) => {
-        for (checkLine of grid.checklist)
+        for (let checkLine of grid.checklist)
         {
-          let lastPoint=checkLine[0];
-          stroke(lastPoint.color);
-          strokeWeight(4);
-          lastPoint=projectToFlatPos(lastPoint.center);
-          for (let pointLineIndex=1;pointLineIndex<checkLine.length;pointLineIndex++)
-          {
-            let actualPoint=projectToFlatPos(checkLine[pointLineIndex].center);
-            line(...lastPoint, ...actualPoint);
-            lastPoint=actualPoint;
-          }
+          checkLine.draw(projectToFlatPos);
         }
       }
 

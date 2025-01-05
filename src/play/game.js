@@ -47,7 +47,7 @@ class Game {
     //[ logic here
     if (stating)
     {//start the game
-      byteText=`lets go! ${playerPlayingName} start, because I want.`;
+      byteText=`Line up ${Settings.RULE_BOX_ROW_LENGTH} cube to earn a point. Slide to rotate the cube. \n${playerPlayingName} starts. Let's go!`;
       byteEmotion=byteEmotionFace.happy;
 
     }

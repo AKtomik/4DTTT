@@ -47,13 +47,9 @@ function transition_buggy()
   for (let i=0;i<100;i++)
     new HtmlBug(BugType.RECT_RANDOM_COLOR, undefined, undefined, undefined, [500, 500], 0, 10);
   background(0);
-  //console.time("redraw");
-  //console.log("before redraw",frameCount);
   noLoop();
   redraw(1);//!to see loading state
   loop();
-  //console.timeEnd("redraw");
-  //console.log("afgtrr redraw",frameCount);
 }
 
 
@@ -165,8 +161,8 @@ state.gamemode.free.start = () =>
         {value:"2", text:"rays back"},
     ];
     
-    buttonList.buttonTest=new HtmlButton("button", [100,200], [document.createTextNode("test")]);
-    buttonList.buttonTest.onClick(action.ui.test, false);
+    //buttonList.buttonTest=new HtmlButton("button", [100,200], [document.createTextNode("test")]);
+    //buttonList.buttonTest.onClick(action.ui.test, false);
 
     settingsButtonPos=[925, 100];
     buttonList.buttonOpenSettings=new HtmlButton("button", settingsButtonPos.slice(), [document.createTextNode("show settings")]);
@@ -362,15 +358,22 @@ action.menu.select = (ifSettingsFirst, ifNewCube=true) =>
       cube.kill();
     cube=new JustCube();
     //show dim lines in evidence
-    for (let dim=0;dim<Settings.RULE_BOX_D;dim++)
+    if (Settings.RULE_BOX_D>1)
     {
-      let posKey=Array.from(new Array(Settings.RULE_BOX_D).fill(0));
-      for (let dist=0;dist<Settings.RULE_BOX_WIDTH;dist++)
+      let firstPosKey=Array.from(new Array(Settings.RULE_BOX_D)).fill(0);
+      for (let dim=0;dim<Settings.RULE_BOX_D;dim++)
       {
-        posKey[dim]=dist;
-        cube.grid.at(posKey).bold();
-        console.log(posKey,cube.grid.at(posKey));
+        let lastPosKey=firstPosKey.slice();
+        lastPosKey[dim]=Settings.RULE_BOX_WIDTH-1;
+        let checkLineArray=[cube.grid.at(firstPosKey), cube.grid.at(lastPosKey)];
+        cube.grid.add_checkline(checkLineArray, ColorPalet.get(`dim_ax_${dim+1}`));
+        console.log("dim",dim,checkLineArray);
       }
+    }
+    //show middle
+    if (Settings.RULE_BOX_WIDTH%2===1)
+    {
+      cube.grid.at(Array.from(new Array(Settings.RULE_BOX_D)).fill(Math.round(Settings.RULE_BOX_WIDTH/2-1))).bold();
     }
   }
 }

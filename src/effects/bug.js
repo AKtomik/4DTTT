@@ -78,7 +78,6 @@ class HtmlBug {
 
 	display()
 	{
-		//console.log("show bug");
 		//self destruct
 		this.life-=1;
 		if (this.life<=0)
