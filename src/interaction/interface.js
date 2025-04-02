@@ -318,6 +318,52 @@ action.ui.move = (translationKey, oppose) =>
   translation_button_nD(translationKey, oppose, game.grid);
 }
 
+
+class Zmenu {
+  constructor() 
+  {
+    //this.dimension=-42;
+    throw Error("that a static class small minded.");
+  }
+  static check()
+  {
+    if (game) throw Error("use Zmenu in the menu.");
+  }
+  
+  static set dimension(value)
+  {
+    Zmenu.check();
+    Settings.RULE_BOX_D=value;
+    action.menu.select(true);
+  }
+  static get dimension() {return Settings.RULE_BOX_D;}
+  
+  static set width(value)
+  {
+    Zmenu.check();
+    Settings.RULE_BOX_WIDTH=value;
+    action.menu.select(true);
+  }
+  static get width() {return Settings.RULE_BOX_WIDTH;}
+  
+  static set row(value)
+  {
+    Zmenu.check();
+    Settings.RULE_BOX_ROW_LENGTH=value;
+    action.menu.select(true);
+  }
+  static get row() {return Settings.RULE_BOX_ROW_LENGTH;}
+  
+  static set players(value)
+  {
+    Zmenu.check();
+    Settings.RULE_BOX_ROW_LENGTH=value;
+    action.menu.select(true);
+  }
+  static get players() {return Settings.RULE_BOX_ROW_LENGTH;}
+}
+
+
 action.menu.selectNoCubeRefresh = () => action.menu.select(false, false);
 action.menu.select = (ifSettingsFirst, ifNewCube=true) =>
 {
