@@ -111,7 +111,7 @@ function perspective_init_nD(grid)
   const point_size = new Array(D).fill(just_size);//same for everyone
   //define points created for the shape
   const hypercube_points = pointsForHypercube(D);//same for everyone
-  console.log("hypercube_points:",hypercube_points);
+  console.debug("hypercube_points:",hypercube_points);
   //define sides created for the shape
   {
     hypercube_edges=[];
@@ -127,7 +127,7 @@ function perspective_init_nD(grid)
       }
     }
   }
-  console.log("hypercube_edges:",hypercube_edges);
+  console.debug("hypercube_edges:",hypercube_edges);
 
 
   for (let posKey of grid.map_keys)
@@ -175,7 +175,7 @@ function perspective_init_nD(grid)
   //front method
   grid.set_front_method((grid, posKey1, posKey2) => //check the z-axis of center
       //true
-      grid.map[posKey1].z[D-1]<grid.map[posKey2].center[D-1]
+      (grid.map[posKey1].center[D-1]<grid.map[posKey2].center[D-1]) ? 1 : -1
   );
 }
 

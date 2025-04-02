@@ -16,8 +16,8 @@ class Grid {
 
 		//build
 		this.build_map_deep(width, deepth);
-    console.log("Grid: this.map:", this.map);
-    console.log("Grid: this.map_keys:", this.map_keys);
+    console.debug("Grid: this.map:", this.map);
+    console.debug("Grid: this.map_keys:", this.map_keys);
 
 		//pos
     this.center=[];//the imaginary center
@@ -25,12 +25,13 @@ class Grid {
 		
 		//front
 		this.front_method = (grid, posKey1, posKey2) => true;
+		//this.front_method = (grid, posKey1, posKey2) => (grid.map[posKey1].z>=grid.map[posKey2]);
 
 		//vectors
 		this.vectors = [];
 		this.build_vectors_deep(deepth);
 		this.vectors=this.vectors.slice(Math.floor(this.vectors.length/2)+1);//remove nul and all mirror vector
-    console.log("Grid: this.vectors:", this.vectors);
+    console.debug("Grid: this.vectors:", this.vectors);
   };
   build_map_deep(width, layer, posKey=[])
   {
@@ -69,7 +70,6 @@ class Grid {
 	add_checkline(checkLineArray, color)
 	{
 		this.checklist.push(new CheckLine(checkLineArray, color));
-		console.log(this.checklist);
 	}
 
 	//display
@@ -79,7 +79,8 @@ class Grid {
 	}
 	is_in_front(posKey1, posKey2)
 	{
-		return this.map[posKey1].z>=this.map[posKey2].z;
+		return this.front_method(this, posKey1, posKey2);
+		//return this.map[posKey1].z>=this.map[posKey2].z;
 	};
 	set_front_method(frontFunction)
 	{//deperciated

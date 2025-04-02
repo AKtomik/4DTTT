@@ -12,7 +12,7 @@ class Game {
   }
 
   kill() {
-    console.log("kill game");
+    console.log("kill game", this);
     this.mechanic.kill();
   }
 
@@ -218,6 +218,8 @@ class Game {
 	
 	init()
 	{
+    console.log("init game", this);
+
 		this.grid=new Grid(Settings.RULE_BOX_WIDTH, Settings.RULE_BOX_D);
 	  this.players=[];
 	  for (let playerIndex=0;playerIndex<Settings.PLAYERS;playerIndex++)

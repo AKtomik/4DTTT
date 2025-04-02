@@ -49,7 +49,7 @@ const ByteMouthSpeak = [
 
 class ByteCharacter {
 	constructor(anchor) {
-		console.log("byte borned");
+		console.log("byte borned", this);
 		//self
 		this.anchor=anchor;
 		this.emotions=[];
@@ -70,7 +70,7 @@ class ByteCharacter {
 	}
 
 	kill() {
-		console.log("byte killed");
+		console.log("byte killed", this);
 		this.mechanic.kill();
 		this.mechanic=null;
 		this.bubbleObject.kill();
