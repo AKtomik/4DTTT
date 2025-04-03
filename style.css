@@ -43,5 +43,68 @@ body {
     /*background-color: #f0f0f0;*/
     /*border: 2px solid #cccccc;*/
   }
+}
 
+
+
+
+:root {
+  --primary-color: #f00;/*#fff*/ /* Customize */
+  --secondary-color: #f00;/*#ff00ff*/ /* Customize */
+  --bg-color: #f00;/*#0a0a1a*/ /* Dark space background */
+  --text-color: #f00;/*#ffffff*/
+}
+
+body {
+  font-family: Arial, sans-serif;
+}
+
+/* Button Styling */
+button {
+  background: var(--bg-color);
+  color: var(--text-color);
+  
+  border: 2px solid var(--primary-color);
+  box-shadow: 0 0 0 var(--primary-color);
+
+  padding: 1vmin 2vmin;
+  font-size: 2vmin;
+  border-radius: 1.5vmin;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+button:hover {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 15px var(--secondary-color);
+}
+button:focus:hover {
+  background: var(--secondary-color);
+}
+
+/* Select Styling */
+select {
+  background: var(--bg-color);
+  color: var(--text-color);
+  
+  border: 2px solid var(--primary-color);
+  box-shadow: 0 0 0 var(--primary-color);
+  
+  width: 20vmin;
+  padding: .5vmin 2vmin;
+  font-size: 2vmin;
+  border-radius: 0px;
+  
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+select:hover {
+  border-color: var(--secondary-color);
+}
+
+select:focus {
+  border-color: var(--secondary-color);
+  box-shadow: 0 0 15px var(--secondary-color);
+  /*outline: none;*/
 }

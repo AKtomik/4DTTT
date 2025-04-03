@@ -3,6 +3,8 @@
 //theme_sign - like a second background
 //theme_text - texts and some others things
 //theme_netral - is less contrasted for netral display
+//theme_cool - original color and verry brigth for menu
+//theme_out - mostly used for outline
 //box_empty_in - inside when the box not checked (by ColorTweek)
 //box_empty_out - any box outline, for now (by ColorTweek)
 //player_<x>_text - player's text color
@@ -30,6 +32,15 @@ class ColorPalet {
 			if (colorSet[colorSetKey].effects.stars!==undefined)
 				Settings.EFFECT_STAR_SHOW=colorSet[colorSetKey].effects.stars;
 		}
+		if (colorSet[colorSetKey].css)
+		{
+			ColorPalet.css_style(
+				colorSet[colorSetKey].colors["theme_netral"],//out
+				colorSet[colorSetKey].colors["theme_cool"], 
+				colorSet[colorSetKey].colors["theme_sign"],
+				colorSet[colorSetKey].colors["theme_text"]
+			)
+		}
 	}
 	static tweek(colorTweekKey)
 	{
@@ -38,6 +49,30 @@ class ColorPalet {
 	static set(colorKey, colorValue)
 	{
 		ColorPalet.colors[colorKey]=color(...colorValue);
+	}
+
+	static css_style(coloriPrimary, coloriSecondary, coloriBg, coloriText)
+	{
+		if (coloriPrimary) ColorPalet.css_set("primary-color", coloriPrimary);
+		if (coloriSecondary) ColorPalet.css_set("secondary-color", coloriSecondary);
+		if (coloriBg) ColorPalet.css_set("bg-color", coloriBg);
+		if (coloriText) ColorPalet.css_set("text-color", coloriText);
+	}
+	static css_set(valname, colorValue)
+	{
+		const leni=colorValue.length
+		let colortext = 
+				(leni===1)
+			? `rgb(${colorValue[0]},${colorValue[0]},${colorValue[0]})`
+			: (leni===2)
+			? `rgba(${colorValue[0]},${colorValue[0]},${colorValue[0]},${colorValue[1]})`
+			: (leni===3)
+			? `rgb(${colorValue[0]},${colorValue[1]},${colorValue[2]})`
+			: (leni===4)
+			? `rgba(${colorValue[0]},${colorValue[1]},${colorValue[2]},${colorValue[3]})`
+			: `red`
+			;
+		document.documentElement.style.setProperty(`--${valname}`, colortext);
 	}
 };
 
@@ -48,6 +83,8 @@ const colorSet = {
 			theme_sign:[200],
 			theme_bold:[255,255,0],
 			theme_text:[0],
+			theme_cool:[255,0,255],
+			theme_out:[0],
 			theme_netral:[128],//cant have Alpha
 			
 			box_empty_in:[128,128],
@@ -84,8 +121,11 @@ const colorSet = {
 			theme_sign:[128,50,100],
 			theme_bold:[255,0,255],
 			theme_text:[255,128,255],
+			theme_cool:[255,0,255],
+			theme_out:[0],
 			theme_netral:[250,150,200],
 		},
+		css: true,
 		effects: {
 			stars: true
 		}
@@ -97,8 +137,11 @@ const colorSet = {
 			theme_sign:[0,127,255],
 			theme_bold:[255,255,0],
 			theme_text:[0],
+			theme_cool:[255,0,255],
+			theme_out:[0],
 			theme_netral:[255],
 		},
+		css: true,
 		effects: {
 			stars: false
 		}
@@ -110,12 +153,32 @@ const colorSet = {
 			theme_sign:[200],
 			theme_bold:[64],
 			theme_text:[0],
+			theme_cool:[255,255,0],
+			theme_out:[0],
 			theme_netral:[128],
 		},
+		css: true,
 		effects: {
 			stars: false
 		}
 	},
+
+	fly: {
+		colors: {
+			theme_background:[255],
+			theme_sign:[0,0],
+			theme_bold:[0],
+			theme_text:[0],
+			theme_cool:[0],
+			theme_out:[255],
+			theme_netral:[220],
+		},
+		css: true,
+		effects: {
+			stars: true
+		}
+	},
+
 
 	nigth: {
 		colors: {
@@ -123,8 +186,11 @@ const colorSet = {
 			theme_sign:[0,64,128],
 			theme_bold:[255],
 			theme_text:[255],
+			theme_cool:[255,0,255],
+			theme_out:[0],
 			theme_netral:[205],
 		},
+		css: true,
 		effects: {
 			stars: true
 		}
@@ -136,32 +202,74 @@ const colorSet = {
 			theme_sign:[64],
 			theme_bold:[255],
 			theme_text:[255],
+			theme_cool:[255,0,255],
+			theme_out:[0],
 			theme_netral:[205],
 		},
+		css: true,
 		effects: {
 			stars: true
 		}
 	},
+
+
+	
+	grass: {
+		colors: {
+			theme_background:[73,100,45],
+			theme_sign:[100,65,40],
+			theme_bold:[0],
+			theme_text:[50,200,50],
+			theme_cool:[0,255,0],
+			theme_out:[50,45,20],
+			theme_netral:[120,85,60],
+		},
+		css: true,
+		effects: {
+			stars: true
+		}
+	},
+
+
+	burn: {
+		colors: {
+			theme_background:[235,54,54],
+			theme_sign:[255,100,30],
+			theme_bold:[255],
+			theme_text:[0],
+			theme_cool:[255,0,0],
+			theme_out:[64,32,0],
+			theme_netral:[255,100,30],
+		},
+		css: true,
+		effects: {
+			stars: true
+		}
+	},
+
 };
 
 const colorTweek = {
 	solid: () => {
 		let netralColorValue=ColorPalet.get('theme_netral').levels.slice();
+		let outColorValue=ColorPalet.get('theme_out').levels.slice();
 		ColorPalet.set('box_empty_in', netralColorValue);
-		ColorPalet.set('box_empty_out', [0]);
+		ColorPalet.set('box_empty_out', outColorValue);
 		Settings.PERSPECTIVE_SHOW_OUTLINE=true;
 	},
 
 	transparent: () => {
 		let netralColorValue=ColorPalet.get('theme_netral').levels.slice();
+		let outColorValue=ColorPalet.get('theme_out').levels.slice();
 		netralColorValue[3]=128;//set alpha
 		ColorPalet.set('box_empty_in', netralColorValue);
-		ColorPalet.set('box_empty_out', [0]);
+		ColorPalet.set('box_empty_out', outColorValue);
 		Settings.PERSPECTIVE_SHOW_OUTLINE=true;
 	},
 	
 	outline: () => {
 		let netralColorValue=ColorPalet.get('theme_text').levels.slice();
+		let outColorValue=ColorPalet.get('theme_out').levels.slice();
 		ColorPalet.set('box_empty_in', [0,0]);
 		ColorPalet.set('box_empty_out', netralColorValue);
 		Settings.PERSPECTIVE_SHOW_OUTLINE=true;
@@ -169,6 +277,7 @@ const colorTweek = {
 
 	smooth: () => {
 		let netralColorValue=ColorPalet.get('theme_netral').levels.slice();
+		let outColorValue=ColorPalet.get('theme_out').levels.slice();
 		netralColorValue[3]=128;//set alpha
 		ColorPalet.set('box_empty_in', netralColorValue);
 		Settings.PERSPECTIVE_SHOW_OUTLINE=false;

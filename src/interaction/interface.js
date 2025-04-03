@@ -146,6 +146,9 @@ state.gamemode.free.start = () =>
         {value:"sky", text:"sky"},
         {value:"brigth", text:"brigth"},
         {value:"purple", text:"pinky pink"},
+        {value:"fly", text:"fly"},
+        {value:"grass", text:"grass"},
+        {value:"burn", text:"burn"},
     ];
     
     const styleTweekSelector = [//!parameter
@@ -175,7 +178,7 @@ state.gamemode.free.start = () =>
     buttonList.buttonRay.onChange(action.settings.changeRay, false);
 
     settingsButtonPos[1]+=50;
-    buttonList.selectStyleColor=new HtmlButton("select", [settingsButtonPos[0]-75,settingsButtonPos[1]], optionsMaker(styleColorSelector));
+    buttonList.selectStyleColor=new HtmlButton("select", [settingsButtonPos[0]-100,settingsButtonPos[1]], optionsMaker(styleColorSelector));
     buttonList.selectStyleColor.setClass("gameSettingsColumn");
     buttonList.selectStyleColor.onChange(action.settings.switchStyle, false);
 
