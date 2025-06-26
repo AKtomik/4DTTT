@@ -1,75 +1,3 @@
-
-function perspective_draw_2D_flat(grid)
-{
-  const margin = Scale.min(Settings.POS_BOX_MARGIN);
-  let square_top = [(Scale.x(Settings.POS_BOX_FULL) - Scale.min(Settings.POS_BOX_FULL))/2 + margin, (Scale.y(Settings.POS_BOX_FULL) - Scale.min(Settings.POS_BOX_FULL))/2 + margin];
-  let square_size = [Scale.min(Settings.POS_BOX_FULL) - 2*margin, Scale.min(Settings.POS_BOX_FULL) - 2*margin];
-  
-  //little box
-  stroke(255);
-  strokeWeight(3);
-  for (let posKey of grid.map_keys)
-  {
-    const i = posKey[0];
-    const j = posKey[1];
-    const h_box = grid.at(posKey);
-    //position
-    h_box.shape.set_points(make_rectangle(square_top[0]+square_size[0]*i/3, square_top[1]+square_size[1]*j/3, square_size[0]/3, square_size[1]/3));
-    //display
-    h_box.display();
-  }
-  
-  //rectangle as outline
-  strokeWeight(6);
-  noFill();
-  rect(...square_top, ...square_size);
-}
-
-
-function perspective_init_3D_flat(grid)
-{
-  //front method
-  grid.set_front_method((grid, posKey1, posKey2) =>
-    {
-      for (let i=posKey1.length-1;i>=0;i-=1)//is 2 there
-      {
-        if (posKey1[i]<posKey2[i])
-          return -1;
-        else if (posKey1[i]>posKey2[i])
-          return 1;
-      }
-      throw new Error("no one in front between "+posKey1+posKey2);
-    }
-  );
-}
-
-
-function perspective_draw_3D_flat(grid)
-{
-  const margin = Scale.min(Settings.POS_BOX_MARGIN);
-  let square_top = [(Scale.x(Settings.POS_BOX_FULL) - Scale.min(Settings.POS_BOX_FULL))/2 + margin, (Scale.y(Settings.POS_BOX_FULL) - Scale.min(Settings.POS_BOX_FULL))/2 + margin];
-  let square_size = [Scale.min(Settings.POS_BOX_FULL) - 2*margin, Scale.min(Settings.POS_BOX_FULL) - 2*margin];
-  //3D
-  //little box
-  stroke(255);
-  strokeWeight(3);
-  grid.sort_keys();
-  for (let posKey of grid.map_keys)
-  {
-    const i = posKey[0];
-    const j = posKey[1];
-    const k = posKey[2];
-    strokeWeight((k+1)*2);
-    const h_box = grid.at(posKey);
-    //position
-    h_box.shape.set_points(make_rectangle(square_top[0]+square_size[0]*((i*3+k)/10), square_top[1]+square_size[1]*((j*3+k)/10), square_size[0]*2/10, square_size[1]*2/10));
-    //display
-    h_box.display();
-  }
-}
-
-var hypercube_edges = null;
-
 function pointsForHypercube(dim, current = [])
 {//give all binary list of length dim
   return dim === 0
@@ -309,34 +237,10 @@ function perspective_draw_nD(grid, square_top, square_size)
   //rect(...square_top, ...square_size);
 }
 
-
-function projection3Dto2D(pos3D, fovDist)
-{
-  const projectX = (pos3D[0]) * fovDist / (fovDist+pos3D[2]);
-  const projectY = (pos3D[1]) * fovDist / (fovDist+pos3D[2]);
-  return [projectX, projectY];
-};
-
-function projectionNDtoLessD(posND, fovDist)
-{
-  const dim=posND.length;
-  return Array.from(new Array(dim-1).keys()).map(i => (posND[i]) * fovDist / (fovDist+posND[dim-1]));
-};
-
 function projectionNDto2D(posND, fovDist)
 {
   const dim=posND.length;
   if (dim===2)
-  {
-    return posND;
-  }
-  return projectionNDto2D(Array.from(new Array(dim-1).keys()).map(i => (posND[i]) * fovDist / (fovDist+posND[dim-1])),fovDist);
-};
-
-function projectionNDtoXD(posND, fovDist, maxDim)
-{
-  const dim=posND.length;
-  if (dim===maxDim)
   {
     return posND;
   }
