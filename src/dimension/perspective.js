@@ -32,13 +32,13 @@ function perspective_init_3D_flat(grid)
   grid.set_front_method((grid, posKey1, posKey2) =>
     {
       for (let i=posKey1.length-1;i>=0;i-=1)//is 2 there
-  		{
-  			if (posKey1[i]<posKey2[i])
-  				return false;
-  			else if (posKey1[i]>posKey2[i])
-  				return true;
-  		}
-  		throw new Error("no one in front between "+posKey1+posKey2);
+      {
+        if (posKey1[i]<posKey2[i])
+          return -1;
+        else if (posKey1[i]>posKey2[i])
+          return 1;
+      }
+      throw new Error("no one in front between "+posKey1+posKey2);
     }
   );
 }
@@ -107,7 +107,7 @@ function perspective_init_nD(grid)
   const just_size = 1/just_total;
   const just_top = (at) => at*(1+Settings.PERSPECTIVE_GAP)/just_total;
   
-	//create cubes
+  //create cubes
   const point_size = new Array(D).fill(just_size);//same for everyone
   //define points created for the shape
   const hypercube_points = pointsForHypercube(D);//same for everyone
@@ -138,7 +138,7 @@ function perspective_init_nD(grid)
     const point_top = Array.from(new Array(D).keys()).map(dimIndex => just_top(posKey[dimIndex]));
 
     //imaginary pos using binary
-  	h_box.morph.clear();
+    h_box.morph.clear();
     for (let i in hypercube_points)
     {//all summits
       let v=hypercube_points[i].slice();//copy
@@ -150,7 +150,7 @@ function perspective_init_nD(grid)
       //!add distance to cote (dim 3, index 2)
       if (Settings.RULE_BOX_D>2)
         v[2] += Settings.PERSPECTIVE_DISTANCE;//add distance
-  	  //add the point to summits
+      //add the point to summits
       h_box.morph.add_point(v);
     }
     {//point at center of shape
@@ -163,19 +163,34 @@ function perspective_init_nD(grid)
       //!add distance to cote (dim 3, index 2)
       if (Settings.RULE_BOX_D>2)
         v[2] += Settings.PERSPECTIVE_DISTANCE;//add distance
-  	  //add the point to summits
+      //add the point to summits
       h_box.center=v;
     }
   }
-	//center
+  //center
   grid.center=new Array(D).fill(0);
   if (Settings.RULE_BOX_D>2)
-	  grid.center[2] += Settings.PERSPECTIVE_DISTANCE;
+    grid.center[2] += Settings.PERSPECTIVE_DISTANCE;
 
   //front method
   grid.set_front_method((grid, posKey1, posKey2) => //check the z-axis of center
       //true
-      (grid.map[posKey1].center[D-1]<grid.map[posKey2].center[D-1]) ? 1 : -1
+      {
+        //old good one
+        //if (grid.map[posKey1].center[D-1] < grid.map[posKey2].center[D-1]) return 1;
+        //else return -1;
+      
+        let pos1 = grid.map[posKey1].center;
+        let pos2 = grid.map[posKey2].center;
+        for (let i=D-1;i>=0;i-=1)
+        {
+          if (pos1[i]<pos2[i])
+            return 1;
+          else if (pos1[i]>pos2[i])
+            return -1;
+        }
+        throw new Error("no one in front between "+pos1+pos2);
+      }
   );
 }
 
@@ -208,15 +223,15 @@ const sizeScaleByDim=[
 function perspective_draw_nD(grid, square_top, square_size)
 {
   //projection
-	const fovDist = 1/Math.tan(Settings.PERSPECTIVE_FOV);
+  const fovDist = 1/Math.tan(Settings.PERSPECTIVE_FOV);
   const size_scale=sizeScaleByDim[Settings.RULE_BOX_D] ? sizeScaleByDim[Settings.RULE_BOX_D] : 1;
   const projectToFlatPos=pos => {
-				let flatPos=projectionNDto2D(pos,fovDist);
-				return [
+        let flatPos=projectionNDto2D(pos,fovDist);
+        return [
           square_top[0]+(flatPos[0]*size_scale+.5)*square_size[0],
           square_top[1]+(flatPos[1]*size_scale+.5)*square_size[1]
           ];
-			};
+      };
   const draw_ray=(grid) => {
         for (let checkLine of grid.checklist)
         {
@@ -229,15 +244,7 @@ function perspective_draw_nD(grid, square_top, square_size)
   for (let posKey of grid.map_keys)
   {
     const h_box = grid.at(posKey);
-    //project center for z index
-    {
-      h_box.z=0;
-      for (dim in Array.from(new Array(h_box.center.length).keys()))
-      {
-        h_box.z+=h_box.center[dim]*Math.exp(dim*10);//greater dim overlaps
-      }
-      h_box.z=1/h_box.z;
-    }
+    //console.log("h_box.center of ", posKey, "=", h_box.center);
   }
   grid.sort_keys();
 
@@ -251,7 +258,7 @@ function perspective_draw_nD(grid, square_top, square_size)
     const h_box = grid.at(posKey);
 
     //project points
-		let projections=h_box.morph.points.map(projectToFlatPos);
+    let projections=h_box.morph.points.map(projectToFlatPos);
 
     //Chan
     let projectionsOut=convexHull(projections.slice());
@@ -284,11 +291,11 @@ function perspective_draw_nD(grid, square_top, square_size)
       //stroke(h_box.color);
       stroke(ColorPalet.get("box_empty_out"));
       strokeWeight(1);
-  		for (let edge of hypercube_edges)
-  		{
-  	    line(...projections[edge[0]], ...projections[edge[1]]);
-  	    //point(...summit);
-  		}
+      for (let edge of hypercube_edges)
+      {
+        line(...projections[edge[0]], ...projections[edge[1]]);
+        //point(...summit);
+      }
     }
   }
 
@@ -305,33 +312,33 @@ function perspective_draw_nD(grid, square_top, square_size)
 
 function projection3Dto2D(pos3D, fovDist)
 {
-	const projectX = (pos3D[0]) * fovDist / (fovDist+pos3D[2]);
-	const projectY = (pos3D[1]) * fovDist / (fovDist+pos3D[2]);
-	return [projectX, projectY];
+  const projectX = (pos3D[0]) * fovDist / (fovDist+pos3D[2]);
+  const projectY = (pos3D[1]) * fovDist / (fovDist+pos3D[2]);
+  return [projectX, projectY];
 };
 
 function projectionNDtoLessD(posND, fovDist)
 {
-	const dim=posND.length;
-	return Array.from(new Array(dim-1).keys()).map(i => (posND[i]) * fovDist / (fovDist+posND[dim-1]));
+  const dim=posND.length;
+  return Array.from(new Array(dim-1).keys()).map(i => (posND[i]) * fovDist / (fovDist+posND[dim-1]));
 };
 
 function projectionNDto2D(posND, fovDist)
 {
-	const dim=posND.length;
+  const dim=posND.length;
   if (dim===2)
   {
     return posND;
   }
-	return projectionNDto2D(Array.from(new Array(dim-1).keys()).map(i => (posND[i]) * fovDist / (fovDist+posND[dim-1])),fovDist);
+  return projectionNDto2D(Array.from(new Array(dim-1).keys()).map(i => (posND[i]) * fovDist / (fovDist+posND[dim-1])),fovDist);
 };
 
 function projectionNDtoXD(posND, fovDist, maxDim)
 {
-	const dim=posND.length;
+  const dim=posND.length;
   if (dim===maxDim)
   {
     return posND;
   }
-	return projectionNDto2D(Array.from(new Array(dim-1).keys()).map(i => (posND[i]) * fovDist / (fovDist+posND[dim-1])),fovDist);
+  return projectionNDto2D(Array.from(new Array(dim-1).keys()).map(i => (posND[i]) * fovDist / (fovDist+posND[dim-1])),fovDist);
 };

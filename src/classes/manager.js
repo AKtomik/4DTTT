@@ -33,7 +33,7 @@ class Mechanic {
 			console.warn("event thrown before init. eventType:",eventType);
 			return;
 		}
-		//console.log("event ",eventType," called. so ",Mechanic.eventLisener[eventType].length)
+		console.debug("event ",eventType," called. so ",Mechanic.eventLisener[eventType].length)
 		for (let mechanic of Mechanic.eventLisener[eventType])
 			mechanic.action[eventType].method.call(mechanic.object)
 	}

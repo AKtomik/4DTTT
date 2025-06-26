@@ -416,7 +416,6 @@ action.menu.select = (ifSettingsFirst, ifNewCube=true) =>
         lastPosKey[dim]=Settings.RULE_BOX_WIDTH-1;
         let checkLineArray=[cube.grid.at(firstPosKey), cube.grid.at(lastPosKey)];
         cube.grid.add_checkline(checkLineArray, ColorPalet.get(`dim_ax_${dim+1}`));
-        //console.debug("dim",dim,checkLineArray);
       }
     }
     //show middle

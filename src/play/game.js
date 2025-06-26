@@ -287,6 +287,11 @@ class Game {
       text(`
       perfs :
       frame ${frameCount} delta ${Math.round(deltaTime)}
+      ${this.grid.at([0,0,0,0]).center}
+      ${this.grid.at([1,0,0,0]).center}
+      ${this.grid.at([0,1,0,0]).center}
+      ${this.grid.at([0,0,1,0]).center}
+      ${this.grid.at([0,0,0,1]).center}
       ${Math.round(1000/(deltaTime))} fps - now
       ${frameLoged[1]} fps -  1s
       ${frameLoged[3]} fps -  3s
